@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
+    "lint": "eslint --fix ./src",
+    "ci:lint": "eslint ./src",
     "prepare": "husky",
     "bash:pre-commit": "bash .husky/pre-commit",
     "bash:pre-push": "bash .husky/pre-push",
