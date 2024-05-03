@@ -1,0 +1,2 @@
+npx prettier --check ./src
+npx prettier --check index.html
