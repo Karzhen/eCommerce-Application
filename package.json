@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vitest && tsc && vite build",
     "preview": "vite preview",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
     "format": "prettier --write ./src",
     "ci:format": "prettier --check ./src",
     "lint": "eslint --fix ./src",

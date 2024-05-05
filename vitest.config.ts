@@ -6,6 +6,7 @@ export default mergeConfig(viteConfig, defineConfig({
   test: {
     coverage: {
       reportsDirectory: './tests/coverage'
-    }
+    },
+    watch: false
   },
 }))
