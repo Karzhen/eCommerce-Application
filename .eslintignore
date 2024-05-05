@@ -4,6 +4,10 @@
 .eslintrc
 .prettierrc
 .prettierignore
+vite.config.ts
+vitest.config.ts
+*.test.ts
+tests/coverage
 package-lock.json
 package.json
 tsconfig.json
