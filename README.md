@@ -20,3 +20,24 @@ Develop a fully functional single-page e-commerce application that provides user
 **Husky:** for managing Git hooks and automating tasks such as code checking and formatting during commits.  
 **Testing Framework (Vitest):** for writing and running tests that ensure code functionality.  
 **Development Scripts:** for executing tasks during development, such as running ESLint, Prettier, and tests.
+
+### Available Scripts
+
+In the project directory, you can run:
+
+- **npm run dev:** Runs the app in development mode using Vite.
+- **npm run build:** Builds the app for production, including running Vitest for tests, TypeScript compilation, and Vite build.
+- **npm run preview:** Runs the built app in preview mode using Vite.
+- **npm run format:** Formats all files in the src directory using Prettier.
+- **npm run ci:format:** Checks if all files in the src directory are formatted correctly using Prettier without applying changes.
+- **npm run lint:** Lints all files in the src directory and fixes fixable issues using ESLint.
+- **npm run ci:lint:** Checks for linting issues in all files in the src directory using ESLint without fixing them.
+- **npm run prepare:** Runs Husky's prepare script.
+- **npm run bash:pre-commit:** Runs the pre-commit Bash script.
+- **npm run bash:pre-push:** Runs the pre-push Bash script.
+- **npm run husky:pre-commit:** Runs Husky's pre-commit hook.
+- **npm run husky:pre-push:** Runs Husky's pre-push hook.
+- **npm test:** Runs Vitest to execute tests.
+- **npm run test:coverage:** Runs Vitest with coverage reporting to check how much of your code is covered by tests.
+
+Each script's usage and purpose are described above to help you utilize them effectively during development and testing processes.
