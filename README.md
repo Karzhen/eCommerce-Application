@@ -41,3 +41,72 @@ In the project directory, you can run:
 - **npm run test:coverage:** Runs Vitest with coverage reporting to check how much of your code is covered by tests.
 
 Each script's usage and purpose are described above to help you utilize them effectively during development and testing processes.
+
+## Setting Up the Project
+
+### Prerequisites
+
+Before getting started, ensure you have the following installed:
+
+- [Node.js](https://nodejs.org/) (v14.0.0 or higher)
+- [npm](https://www.npmjs.com/) (v6.0.0 or higher)
+
+## Installation
+
+1. Clone the repository to your local machine:
+
+```
+git clone https://github.com/Tabrisel/eCommerce-Application.git
+```
+
+2. Navigate to the project directory:
+
+```
+cd .\eCommerce-Application\
+```
+
+3.Install dependencies using npm:
+
+```
+npm install
+```
+
+## Running the Application:
+
+To run the application in development mode, use the following command:
+
+```
+npm run dev
+```
+
+## Building for Production:
+
+To build the application for production, including running tests and TypeScript compilation, use:
+
+```
+npm run build
+```
+
+This command will generate optimized production-ready assets.
+
+## Running Tests:
+
+To run tests using Vitest, use:
+
+```
+npm test
+```
+
+This command will execute all tests.
+
+To run tests with coverage reports using Vitest, use:
+
+```
+npm run test:coverage
+```
+
+## Other scripts:
+
+- **npm run format**: formats code using Prettier.
+- **npm run lint**: lints code using ESLint.
+- **npm run prepare**: sets up Husky Git hooks for code formatting and linting.
