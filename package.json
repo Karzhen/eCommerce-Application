@@ -40,5 +40,11 @@
     "typescript-eslint": "^7.8.0",
     "vite": "^5.1.0",
     "vitest": "^1.6.0"
+  },
+  "dependencies": {
+    "@commercetools/sdk-client": "^3.0.0",
+    "@commercetools/sdk-middleware-auth": "^7.0.1",
+    "@commercetools/sdk-middleware-http": "^7.0.4",
+    "node-fetch": "^3.3.2"
   }
 }
