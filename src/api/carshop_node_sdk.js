@@ -1,9 +1,7 @@
-const { createClient } = require('@commercetools/sdk-client');
-const {
-  createAuthMiddlewareForClientCredentialsFlow,
-} = require('@commercetools/sdk-middleware-auth');
-const { createHttpMiddleware } = require('@commercetools/sdk-middleware-http');
-const fetch = require('node-fetch');
+import { createClient } from '@commercetools/sdk-client';
+import { createAuthMiddlewareForClientCredentialsFlow } from '@commercetools/sdk-middleware-auth';
+import { createHttpMiddleware } from '@commercetools/sdk-middleware-http';
+import fetch from 'node-fetch';
 
 const projectKey = 'carshop';
 
