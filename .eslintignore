@@ -11,3 +11,5 @@ tests/coverage
 package-lock.json
 package.json
 tsconfig.json
+src/api/carshop.js
+src/api/carshop_node_sdk.js
