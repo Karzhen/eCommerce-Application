@@ -44,6 +44,7 @@
   "dependencies": {
     "@commercetools/sdk-client": "^3.0.0",
     "@commercetools/sdk-middleware-auth": "^7.0.1",
-    "@commercetools/sdk-middleware-http": "^7.0.4"
+    "@commercetools/sdk-middleware-http": "^7.0.4",
+    "node-fetch": "^3.3.2"
   }
 }
