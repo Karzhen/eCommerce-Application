@@ -1,6 +1,7 @@
 export enum Page {
   LOGIN = 'login',
   ERROR = 'error',
+  REGISTR = 'registration',
 }
 
 export enum Tag {
@@ -25,6 +26,13 @@ export enum TypeInput {
   PASS = 'password',
 }
 
+export enum TypeButton {
+  PRIMARY = 'primary',
+  SECONDARY = 'secondary',
+  GREEN = 'green',
+  TRANSPARENT = 'transparent',
+}
+
 export type TypeHandler = {
   'handlerClick'?: HandlerComponent;
   'handlerInput'?: HandlerComponent;
@@ -33,7 +41,7 @@ export type TypeHandler = {
 export type HandlerComponent = (event: Event) => void;
 
 export interface ParametersBaseComponent {
-  type?: TypeInput;
+  type?: TypeInput | TypeButton;
   option: Partial<HTMLElement>;
   handler: TypeHandler;
 }

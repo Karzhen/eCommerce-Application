@@ -58,3 +58,7 @@
 .eye[type='on'] {
   background: url('@assets/images/eye.png') no-repeat center / contain;
 }
+
+.register {
+  width: 50%;
+}

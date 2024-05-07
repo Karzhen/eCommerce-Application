@@ -1,0 +1,14 @@
+.button {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-secondary);
+  color: var(--color-secondary);
+}
+
+.button:hover {
+  filter: drop-shadow(4px 8px 16px rgb(112, 192, 91, 0.2));
+}
+
+.button:disabled {
+  background-color: var(--color-surface);
+  color: var(--color-light);
+}

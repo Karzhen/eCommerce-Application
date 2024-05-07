@@ -1,5 +1,6 @@
 import createLoginPage from '@pages/loginPage/loginPage';
 import createErrorPage from '@pages/errorPage/errorPage';
+import createRegistrationPage from '@pages/registrationPage/registrationPage';
 
 import { Page } from '@/interface';
 
@@ -22,12 +23,16 @@ class Router {
         return Page.LOGIN;
       case `${this.BASE_URL}${Page.LOGIN}`:
         return Page.LOGIN;
+      case `${this.BASE_URL}${Page.REGISTR}`:
+        return Page.REGISTR;
       default:
         return Page.ERROR;
     }
   }
 
   goPage(page: Page) {
+    console.log(this.currentPage);
+    console.log(page);
     window.history.pushState({ page }, '', page);
     this.currentPage = page;
     this.renderPage();
@@ -37,7 +42,10 @@ class Router {
     document.body.replaceChildren();
     switch (this.currentPage) {
       case Page.LOGIN:
-        document.body.append(createLoginPage());
+        document.body.append(createLoginPage(this.goPage.bind(this)));
+        break;
+      case Page.REGISTR:
+        document.body.append(createRegistrationPage());
         break;
       default:
         document.body.append(createErrorPage());
@@ -48,6 +56,9 @@ class Router {
     switch (event.state.page) {
       case Page.LOGIN:
         this.currentPage = Page.LOGIN;
+        break;
+      case Page.REGISTR:
+        this.currentPage = Page.REGISTR;
         break;
       default:
         this.currentPage = Page.ERROR;

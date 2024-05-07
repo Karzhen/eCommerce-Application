@@ -1,6 +1,7 @@
-import { Tag, TypeInput } from '@/interface';
+import { Tag, TypeInput, TypeButton, Page } from '@/interface';
 import createElement from '@utils/create-element';
 import createInput from '@baseComponents/input/input';
+import createButton from '@baseComponents/button/button';
 
 import validateForm from './validate-form';
 
@@ -38,6 +39,11 @@ function handlerClickEye(event: Event) {
       EL.removeAttribute('type');
     }
   }
+}
+
+function handlerClickRegister(event: Event, goPage: (page: Page) => void) {
+  event.preventDefault();
+  goPage(Page.REGISTR);
 }
 
 function createEmailField() {
@@ -111,12 +117,7 @@ function createPasswordField() {
   return PASSWORD_FIELD;
 }
 
-export default function createLoginPage() {
-  const LOGIN_PAGE = createElement(Tag.DIV, {
-    id: 'loginPage',
-    className: styles.loginPage,
-  });
-
+function createForm(goPage: (page: Page) => void) {
   const FORM = createElement(Tag.FORM, {
     id: 'loginForm',
     className: styles.loginForm,
@@ -137,8 +138,34 @@ export default function createLoginPage() {
   SUBMIT.setAttribute('disabled', 'disabled');
   SUBMIT.setAttribute('value', 'Sign in');
 
-  FORM.append(TITLE, createEmailField(), createPasswordField(), SUBMIT);
-  LOGIN_PAGE.append(FORM);
+  const BUTTON_REGISTRATION = createButton({
+    type: TypeButton.TRANSPARENT,
+    option: {
+      id: 'register',
+      className: styles.register,
+      textContent: 'Sign up',
+    },
+    handler: { handlerClick: (event) => handlerClickRegister(event, goPage) },
+  });
+
+  FORM.append(
+    TITLE,
+    createEmailField(),
+    createPasswordField(),
+    SUBMIT,
+    BUTTON_REGISTRATION,
+  );
+
+  return FORM;
+}
+
+export default function createLoginPage(goPage: (page: Page) => void) {
+  const LOGIN_PAGE = createElement(Tag.DIV, {
+    id: 'loginPage',
+    className: styles.loginPage,
+  });
+
+  LOGIN_PAGE.append(createForm(goPage));
 
   return LOGIN_PAGE;
 }
