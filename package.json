@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.12.8",
+    "@types/redux-logger": "^3.0.13",
     "@vitest/coverage-v8": "^1.6.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
@@ -45,6 +46,8 @@
     "@commercetools/sdk-client": "^3.0.0",
     "@commercetools/sdk-middleware-auth": "^7.0.1",
     "@commercetools/sdk-middleware-http": "^7.0.4",
-    "node-fetch": "^3.3.2"
+    "@reduxjs/toolkit": "^2.2.3",
+    "node-fetch": "^3.3.2",
+    "redux-logger": "^3.0.6"
   }
 }

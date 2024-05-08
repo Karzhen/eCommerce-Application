@@ -1,0 +1,31 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px 20px;
+}
+
+.button-catalog {
+  font: var(--text-s);
+}
+
+.input-search {
+  font: var(--text-s);
+}
+
+.wrapper-auth {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.button-regist {
+  font: var(--text-s);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

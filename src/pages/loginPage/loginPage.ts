@@ -1,3 +1,7 @@
+import store from '@redux/store/configureStore';
+
+import { LOGIN } from '@redux/actions/login';
+
 import { Tag, TypeInput, TypeButton, Page } from '@/interface';
 import createElement from '@utils/create-element';
 import createInput from '@baseComponents/input/input';
@@ -7,8 +11,11 @@ import validateForm from './validate-form';
 
 import styles from './loginPage.module.css';
 
-function handlerSubmit(event: Event) {
+function handlerSubmit(event: Event, goPage: (page: Page) => void) {
   event?.preventDefault();
+  // TODO: добавить api + проверку ошибок от сервера
+  store.dispatch(LOGIN({ value: 'token', isLogin: true }));
+  goPage(Page.MAIN);
 }
 
 function handlerInputPasswordEmail(event: Event) {
@@ -133,7 +140,7 @@ function createForm(goPage: (page: Page) => void) {
     option: {
       id: 'submit',
     },
-    handler: { handlerClick: (event) => handlerSubmit(event) },
+    handler: { handlerClick: (event) => handlerSubmit(event, goPage) },
   });
   SUBMIT.setAttribute('disabled', 'disabled');
   SUBMIT.setAttribute('value', 'Sign in');

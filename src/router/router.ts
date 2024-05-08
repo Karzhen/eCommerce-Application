@@ -1,6 +1,9 @@
 import createLoginPage from '@pages/loginPage/loginPage';
 import createErrorPage from '@pages/errorPage/errorPage';
 import createRegistrationPage from '@pages/registrationPage/registrationPage';
+import createMainPage from '@pages/mainPage/mainPage';
+import createProfilePage from '@pages/profilePage/profilePage';
+import createCatalogPage from '@pages/catalogPage/catalogPage';
 
 import { Page } from '@/interface';
 
@@ -20,19 +23,22 @@ class Router {
     const path = window.location.pathname;
     switch (path) {
       case this.BASE_URL:
-        return Page.LOGIN;
+      case `${this.BASE_URL}${Page.MAIN}`:
+        return Page.MAIN;
       case `${this.BASE_URL}${Page.LOGIN}`:
         return Page.LOGIN;
       case `${this.BASE_URL}${Page.REGISTR}`:
         return Page.REGISTR;
+      case `${this.BASE_URL}${Page.CATALOG}`:
+        return Page.CATALOG;
+      case `${this.BASE_URL}${Page.PROFILE}`:
+        return Page.PROFILE;
       default:
         return Page.ERROR;
     }
   }
 
   goPage(page: Page) {
-    console.log(this.currentPage);
-    console.log(page);
     window.history.pushState({ page }, '', page);
     this.currentPage = page;
     this.renderPage();
@@ -41,11 +47,20 @@ class Router {
   renderPage() {
     document.body.replaceChildren();
     switch (this.currentPage) {
+      case Page.MAIN:
+        document.body.append(createMainPage(this.goPage.bind(this)));
+        break;
       case Page.LOGIN:
         document.body.append(createLoginPage(this.goPage.bind(this)));
         break;
       case Page.REGISTR:
         document.body.append(createRegistrationPage());
+        break;
+      case Page.CATALOG:
+        document.body.append(createCatalogPage());
+        break;
+      case Page.PROFILE:
+        document.body.append(createProfilePage());
         break;
       default:
         document.body.append(createErrorPage());
@@ -54,11 +69,20 @@ class Router {
 
   handlerPopstate(event: PopStateEvent) {
     switch (event.state.page) {
+      case Page.MAIN:
+        this.currentPage = Page.MAIN;
+        break;
       case Page.LOGIN:
         this.currentPage = Page.LOGIN;
         break;
       case Page.REGISTR:
         this.currentPage = Page.REGISTR;
+        break;
+      case Page.CATALOG:
+        this.currentPage = Page.CATALOG;
+        break;
+      case Page.PROFILE:
+        this.currentPage = Page.PROFILE;
         break;
       default:
         this.currentPage = Page.ERROR;

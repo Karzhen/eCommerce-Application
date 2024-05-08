@@ -1,0 +1,39 @@
+.wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.user-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  padding: 10px;
+  background-color: var(--color-surface);
+  filter: drop-shadow(4px 8px 16px rgb(0, 0, 0, 0.1));
+  display: none;
+}
+
+/* .dropdown-menu li {
+  padding: 10px;
+}
+
+.dropdown-menu li a {
+  text-decoration: none;
+  color: #333;
+} */
+
+/* Показываем выпадающее меню, когда на него наведен курсор или фокус на нем */
+.wrapper:hover .dropdown-menu,
+.wrapper:focus-within .dropdown-menu,
+.dropdown-menu:focus-within {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

@@ -1,0 +1,15 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.wrapper:hover a {
+  color: var(--color-primary);
+}
+
+.icon {
+  width: 25px;
+}

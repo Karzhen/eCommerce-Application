@@ -1,0 +1,10 @@
+.wrapper {
+  position: relative;
+}
+
+.icon {
+  position: absolute;
+  right: 0px;
+  width: 25px;
+  cursor: pointer;
+}
