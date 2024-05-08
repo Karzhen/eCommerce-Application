@@ -7,7 +7,7 @@ import createElement from '@utils/create-element';
 import createInput from '@baseComponents/input/input';
 import createButton from '@baseComponents/button/button';
 
-import validateForm from './validate-form';
+import validateLoginForm from './validate-login-form';
 
 import styles from './loginPage.module.css';
 
@@ -22,7 +22,7 @@ function handlerInputPasswordEmail(event: Event) {
   if (event.target instanceof HTMLInputElement) {
     const SUBMIT = document.getElementById('submit');
     if (SUBMIT) {
-      if (validateForm()) {
+      if (validateLoginForm()) {
         SUBMIT.removeAttribute('disabled');
       } else {
         SUBMIT.setAttribute('disabled', 'disabled');
@@ -69,6 +69,7 @@ function createEmailField() {
     handler: { handlerInput: handlerInputPasswordEmail },
   });
   INPUT_EMAIL.setAttribute('required', 'required');
+  INPUT_EMAIL.setAttribute('autocomplete', 'username');
   INPUT_EMAIL.setAttribute('pattern', '^[a-zA-Z0-9_\\-]+@[a-z]+\\.[a-z]{2,4}$');
 
   const LABEL_ERROR = createElement(Tag.LABEL, {
@@ -102,6 +103,7 @@ function createPasswordField() {
   });
   INPUT_PASSWORD.setAttribute('required', 'required');
   INPUT_PASSWORD.setAttribute('minlength', '8');
+  INPUT_PASSWORD.setAttribute('autocomplete', 'current-password');
   INPUT_PASSWORD.setAttribute(
     'pattern',
     '^(?!.*\\s)(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,}(?<!\\s)$',

@@ -59,7 +59,7 @@ function generateErrorMessagePassword(element: HTMLInputElement) {
   return errorMessage;
 }
 
-export default function validateForm(): boolean {
+export default function validateLoginForm(): boolean {
   const labelMessageErrorEmail = document.getElementById('emailError');
 
   const labelMessageErrorPassword = document.getElementById('passwordError');

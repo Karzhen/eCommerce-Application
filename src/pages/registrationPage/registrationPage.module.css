@@ -1,0 +1,112 @@
+.registr-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.registr-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  margin: 20px;
+}
+
+.title {
+  color: var(--color-surface-text);
+  font: var(--text-header-s);
+  align-self: center;
+}
+
+.title-address,
+.title-customer {
+  color: var(--color-surface-text);
+  font: var(--text-header-xs);
+  align-self: center;
+}
+
+.registr-box {
+  gap: 20px;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.customer-box,
+.adress-box {
+  padding: 5px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.email-field,
+.password-field,
+.name-field,
+.lastname-field,
+.date-birth-field,
+.street-field,
+.city-field,
+.postalCode-field,
+.country-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.email,
+.password,
+.name,
+.lastname,
+.date-birth,
+.street,
+.city,
+.postalCode,
+.country {
+  color: var(--color-surface-text);
+  font: var(--text-l);
+  width: 100%;
+}
+
+.email-label,
+.password-label,
+.name-label,
+.lastname-label,
+.date-birth-label,
+.street-label,
+.city-label,
+.postalCode-label,
+.country-label {
+  color: var(--color-hard);
+  font: var(--text-l);
+}
+
+.email-error,
+.password-error,
+.name-error,
+.lastname-error,
+.date-birth-error,
+.street-error,
+.city-error,
+.postalCode-error,
+.country-error {
+  color: var(--color-error);
+  font: var(--text-s);
+}
+
+.wrapper-password {
+  position: relative;
+}
+
+.eye {
+  background: url('@assets/images/eye-off.png') no-repeat center / contain;
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  right: 5px;
+  top: 10px;
+  cursor: pointer;
+}
+
+.eye[type='on'] {
+  background: url('@assets/images/eye.png') no-repeat center / contain;
+}

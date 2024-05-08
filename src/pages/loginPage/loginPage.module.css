@@ -12,6 +12,7 @@
 }
 
 .title {
+  color: var(--color-surface-text);
   font: var(--text-header-s);
   align-self: center;
 }

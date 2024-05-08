@@ -1,3 +1,107 @@
+import { Tag, TypeInput } from '@/interface';
+import createElement from '@utils/create-element';
+import createInput from '@baseComponents/input/input';
+
+import styles from './registrationPage.module.css';
+import {
+  createCityField,
+  createCountryField,
+  createDateBirthField,
+  createEmailField,
+  createLastNameField,
+  createNameField,
+  createPasswordField,
+  createPostalCodeField,
+  createStreetField,
+} from './createFormElements';
+import { handlerSubmit } from './eventHandlers';
+
+function createCustomerBox() {
+  const CUSTOMER_BOX = createElement(Tag.DIV, {
+    className: styles.customerBox,
+  });
+
+  const TITLE_CUSTOMER = createElement(Tag.H2, {
+    className: styles.titleCustomer,
+    textContent: 'Customer',
+  });
+
+  CUSTOMER_BOX.append(
+    TITLE_CUSTOMER,
+    createEmailField(),
+    createPasswordField(),
+    createNameField(),
+    createLastNameField(),
+    createDateBirthField(),
+  );
+
+  return CUSTOMER_BOX;
+}
+
+function createAddressBox() {
+  const TITLE_ADDRESS = createElement(Tag.H2, {
+    className: styles.titleAddress,
+    textContent: 'Address',
+  });
+
+  const ADDRESS_BOX = createElement(Tag.DIV, {
+    className: styles.adressBox,
+  });
+
+  ADDRESS_BOX.append(
+    TITLE_ADDRESS,
+    createStreetField(),
+    createCityField(),
+    createPostalCodeField(),
+    createCountryField(),
+  );
+
+  return ADDRESS_BOX;
+}
+
+function createRegistrBox() {
+  const REGISTR_BOX = createElement(Tag.DIV, {
+    className: styles.registrBox,
+  });
+
+  REGISTR_BOX.append(createCustomerBox(), createAddressBox());
+
+  return REGISTR_BOX;
+}
+
+function createForm() {
+  const FORM = createElement(Tag.FORM, {
+    id: 'registrForm',
+    className: styles.registrForm,
+  });
+
+  const TITLE = createElement(Tag.H1, {
+    className: styles.title,
+    textContent: 'Registration',
+  });
+
+  const SUBMIT = createInput({
+    type: TypeInput.SUBMIT,
+    option: {
+      id: 'submit',
+    },
+    handler: { handlerClick: (event) => handlerSubmit(event) },
+  });
+  SUBMIT.setAttribute('disabled', 'disabled');
+  SUBMIT.setAttribute('value', 'Continue');
+
+  FORM.append(TITLE, createRegistrBox(), SUBMIT);
+
+  return FORM;
+}
+
 export default function createRegistrationPage() {
-  return REGISTRATION_PAGE;
+  const REGISTR_PAGE = createElement(Tag.DIV, {
+    id: 'registrPage',
+    className: styles.registrPage,
+  });
+
+  REGISTR_PAGE.append(createForm());
+
+  return REGISTR_PAGE;
 }

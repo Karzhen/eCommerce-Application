@@ -16,8 +16,11 @@ export enum Tag {
   NAV = 'nav',
   BUTTON = 'button',
   INPUT = 'input',
+  SELECT = 'select',
+  OPTION = 'option',
   LABEL = 'label',
   H1 = 'h1',
+  H2 = 'h2',
   FOOTER = 'footer',
   HEADER = 'header',
   MAIN = 'main',
@@ -26,6 +29,7 @@ export enum Tag {
 }
 
 export enum TypeInput {
+  DATE = 'date',
   TEXT = 'text',
   SUBMIT = 'submit',
   CHECKBOX = 'checkbox',
@@ -47,6 +51,7 @@ export enum TypeLink {
 export type TypeHandler = {
   handlerClick?: HandlerComponent;
   handlerInput?: HandlerComponent;
+  handlerChange?: HandlerComponent;
   handlerClickIcon?: HandlerComponent;
 };
 

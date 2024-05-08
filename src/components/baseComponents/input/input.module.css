@@ -1,4 +1,5 @@
-.input {
+.input,
+input[type='date'] {
   background-color: var(--color-surface);
   color: var(--color-surface-text);
   border: 1px solid var(--color-light);
@@ -9,7 +10,8 @@
   cursor: pointer;
 }
 
-.input:focus {
+.input:focus,
+input[type='date']:focus {
   outline: none;
   border-color: var(--color-secondary);
   filter: drop-shadow(4px 8px 16px rgb(112, 192, 91, 0.2));
@@ -22,9 +24,11 @@
   background-color: var(--color-primary);
   color: var(--color-primary-text);
   padding: 5px;
+  cursor: pointer;
 }
 
 .button:hover {
+  cursor: pointer;
   filter: drop-shadow(4px 8px 16px rgb(255, 102, 51, 0.2));
 }
 
