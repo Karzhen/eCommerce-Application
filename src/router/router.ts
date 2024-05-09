@@ -54,7 +54,7 @@ class Router {
         document.body.append(createLoginPage(this.goPage.bind(this)));
         break;
       case Page.REGISTR:
-        document.body.append(createRegistrationPage());
+        document.body.append(createRegistrationPage(this.goPage.bind(this)));
         break;
       case Page.CATALOG:
         document.body.append(createCatalogPage());

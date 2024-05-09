@@ -1,7 +1,7 @@
-import { Tag, TypeInput } from '@/interface';
+import { Page, Tag, TypeButton, TypeInput } from '@/interface';
 import createElement from '@utils/create-element';
 import createInput from '@baseComponents/input/input';
-
+import createButton from '@baseComponents/button/button';
 import styles from './registrationPage.module.css';
 import {
   createCityField,
@@ -14,7 +14,7 @@ import {
   createPostalCodeField,
   createStreetField,
 } from './createFormElements';
-import { handlerSubmit } from './eventHandlers';
+import { handlerClickLogin, handlerSubmit } from './eventHandlers';
 
 function createCustomerBox() {
   const CUSTOMER_BOX = createElement(Tag.DIV, {
@@ -69,7 +69,7 @@ function createRegistrBox() {
   return REGISTR_BOX;
 }
 
-function createForm() {
+function createForm(goPage: (page: Page) => void) {
   const FORM = createElement(Tag.FORM, {
     id: 'registrForm',
     className: styles.registrForm,
@@ -85,23 +85,44 @@ function createForm() {
     option: {
       id: 'submit',
     },
-    handler: { handlerClick: (event) => handlerSubmit(event) },
+    handler: { handlerClick: (event) => handlerSubmit(event, goPage) },
   });
   SUBMIT.setAttribute('disabled', 'disabled');
   SUBMIT.setAttribute('value', 'Continue');
 
-  FORM.append(TITLE, createRegistrBox(), SUBMIT);
+  const BOX_LOGIN_TEXT_BUTTON = createElement(Tag.DIV, {
+    className: styles.loginTextButton,
+  });
+
+  const TEXT_LOGIN = createElement(Tag.DIV, {
+    className: styles.titleQuestion,
+    textContent: 'Already have an account?',
+  });
+
+  const BUTTON_LOGIN = createButton({
+    type: TypeButton.TRANSPARENT,
+    option: {
+      id: 'login',
+      className: styles.login,
+      textContent: 'Sign in',
+    },
+    handler: { handlerClick: (event) => handlerClickLogin(event, goPage) },
+  });
+
+  BOX_LOGIN_TEXT_BUTTON.append(TEXT_LOGIN, BUTTON_LOGIN);
+
+  FORM.append(TITLE, createRegistrBox(), SUBMIT, BOX_LOGIN_TEXT_BUTTON);
 
   return FORM;
 }
 
-export default function createRegistrationPage() {
+export default function createRegistrationPage(goPage: (page: Page) => void) {
   const REGISTR_PAGE = createElement(Tag.DIV, {
     id: 'registrPage',
     className: styles.registrPage,
   });
 
-  REGISTR_PAGE.append(createForm());
+  REGISTR_PAGE.append(createForm(goPage));
 
   return REGISTR_PAGE;
 }

@@ -1,7 +1,15 @@
+import { Page } from '@/interface';
+import { REGISTER } from '@/redux/actions/register';
+import { LOGIN } from '@/redux/actions/login';
+import store from '@/redux/store/configureStore';
 import validateRegistrForm from './validate-registr-form';
 
-export function handlerSubmit(event: Event) {
+export function handlerSubmit(event: Event, goPage: (page: Page) => void) {
   event?.preventDefault();
+  // TODO: нужен ли api(?) + обработка ошибок
+  store.dispatch(REGISTER({ value: 'token', isRegister: true }));
+  store.dispatch(LOGIN({ value: 'token', isLogin: true }));
+  goPage(Page.MAIN);
 }
 
 export function handlerForm() {
@@ -15,6 +23,11 @@ export function handlerForm() {
   } else {
     SUBMIT.setAttribute('disabled', 'disabled');
   }
+}
+
+export function handlerClickLogin(event: Event, goPage: (page: Page) => void) {
+  event.preventDefault();
+  goPage(Page.LOGIN);
 }
 
 export function handlerClickEye(event: Event) {

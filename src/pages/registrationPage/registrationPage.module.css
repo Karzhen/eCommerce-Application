@@ -18,7 +18,8 @@
 }
 
 .title-address,
-.title-customer {
+.title-customer,
+.title-question {
   color: var(--color-surface-text);
   font: var(--text-header-xs);
   align-self: center;
@@ -109,4 +110,11 @@
 
 .eye[type='on'] {
   background: url('@assets/images/eye.png') no-repeat center / contain;
+}
+
+.login-text-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 10px;
 }

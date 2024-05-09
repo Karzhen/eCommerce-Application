@@ -68,3 +68,8 @@ export type StateLogin = {
   value: string | null;
   isLogin: boolean;
 };
+
+export type StateRegister = {
+  value: string | null;
+  isRegister: boolean;
+};
