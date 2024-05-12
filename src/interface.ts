@@ -11,6 +11,7 @@ export enum Page {
 
 export enum Tag {
   DIV = 'div',
+  P = 'p',
   FORM = 'form',
   LINK = 'a',
   NAV = 'nav',
@@ -21,6 +22,7 @@ export enum Tag {
   LABEL = 'label',
   H1 = 'h1',
   H2 = 'h2',
+  H3 = 'h3',
   FOOTER = 'footer',
   HEADER = 'header',
   MAIN = 'main',

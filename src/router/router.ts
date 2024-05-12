@@ -34,8 +34,18 @@ class Router {
       case `${this.BASE_URL}${Page.PROFILE}`:
         return Page.PROFILE;
       default:
-        return Page.ERROR;
+        return this.getErrorPage(path);
     }
+  }
+
+  getErrorPage(path: string): Page {
+    if (path.startsWith(this.BASE_URL)) {
+      const enteredPath = path.slice(this.BASE_URL.length);
+      if (enteredPath.trim() !== '') {
+        return enteredPath as Page;
+      }
+    }
+    return Page.ERROR;
   }
 
   goPage(page: Page) {
@@ -63,7 +73,7 @@ class Router {
         document.body.append(createProfilePage());
         break;
       default:
-        document.body.append(createErrorPage());
+        document.body.append(createErrorPage(this.goPage.bind(this)));
     }
   }
 
