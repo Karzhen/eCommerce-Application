@@ -65,7 +65,7 @@
 .country {
   color: var(--color-surface-text);
   font: var(--text-l);
-  width: 100%;
+  max-width: 280px;
 }
 
 .email-label,
@@ -79,6 +79,7 @@
 .country-label {
   color: var(--color-hard);
   font: var(--text-l);
+  max-width: 300px;
 }
 
 .email-error,
@@ -92,6 +93,7 @@
 .country-error {
   color: var(--color-error);
   font: var(--text-s);
+  max-width: 280px;
 }
 
 .wrapper-password {
