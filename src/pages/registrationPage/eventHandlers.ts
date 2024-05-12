@@ -3,6 +3,7 @@ import { REGISTER } from '@/redux/actions/register';
 import { LOGIN } from '@/redux/actions/login';
 import store from '@/redux/store/configureStore';
 import { createCustomer } from '@api/apiConnections';
+import getRegistrationData, { CustomerData } from "@utils/getRegistrationData.ts";
 import validateRegistrForm from './validate-registr-form';
 
 export async function handlerSubmit(
@@ -10,45 +11,12 @@ export async function handlerSubmit(
   goPage: (page: Page) => void,
 ) {
   event?.preventDefault();
-  const emailElement: HTMLInputElement = document.getElementById(
-    'email',
-  ) as HTMLInputElement;
-  const passwordElement: HTMLInputElement = document.getElementById(
-    'password',
-  ) as HTMLInputElement;
-  const nameElement: HTMLInputElement = document.getElementById(
-    'name',
-  ) as HTMLInputElement;
-  const lastnameElement: HTMLInputElement = document.getElementById(
-    'lastname',
-  ) as HTMLInputElement;
-  const dateBirthElement: HTMLInputElement = document.getElementById(
-    'dateBirth',
-  ) as HTMLInputElement;
+  const newCustomer: CustomerData = getRegistrationData();
 
-  const email: string = emailElement.value;
-  const password: string = passwordElement.value;
-  const firstName: string = nameElement.value;
-  const lastName: string = lastnameElement.value;
-  const dateOfBirth: string = dateBirthElement.value;
-
-  const newCustomer = {
-    email,
-    password,
-    firstName,
-    lastName,
-    dateOfBirth,
-  };
-
-  try {
-    await createCustomer(newCustomer).then().catch();
-    // console.log('Created customer:', createdCustomer);
-    store.dispatch(REGISTER({ value: 'token', isRegister: true }));
-    store.dispatch(LOGIN({ value: 'token', isLogin: true }));
-    goPage(Page.MAIN);
-  } catch (error) {
-    // console.error('Error creating customer', error);
-  }
+  await createCustomer(newCustomer).then().catch();
+  store.dispatch(REGISTER({ value: 'token', isRegister: true }));
+  store.dispatch(LOGIN({ value: 'token', isLogin: true }));
+  goPage(Page.MAIN);
 }
 
 export function handlerForm() {

@@ -9,6 +9,7 @@ import {
   createApiBuilderFromCtpClient,
 } from '@commercetools/platform-sdk';
 import fetch from 'node-fetch';
+import {CustomerData} from "@utils/getRegistrationData.ts";
 // import dotenv from 'dotenv';
 // dotenv.config();
 
@@ -79,27 +80,48 @@ async function getToken(): Promise<string> {
   return data.access_token;
 }
 
-export async function createCustomer(newCustomer: {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  dateOfBirth: string;
-}) {
+function getCountryCode(country: string): string {
+  switch (country.toLowerCase()) {
+    case 'germany':
+      return 'DE';
+    case 'united states':
+      return 'US';
+    case 'russia':
+      return 'RU';
+    default:
+      throw new Error(`Country code not found for ${country}`);
+  }
+}
+
+export async function createCustomer(newCustomer: CustomerData) {
   try {
-    const accessToken = await getToken(); // Получаем токен
+    const accessToken = await getToken();
+
     const response = await apiRoot
       .withProjectKey({ projectKey })
       .customers()
       .post({
-        body: newCustomer,
+        // body: newCustomer,
+        body: {
+          email: newCustomer.email,
+          password: newCustomer.password,
+          firstName: newCustomer.firstName,
+          lastName: newCustomer.lastName,
+          dateOfBirth: newCustomer.dateOfBirth,
+          addresses: [
+            {
+              ...newCustomer.address,
+              country: getCountryCode(newCustomer.address.country),
+            },
+          ],
+        },
         headers: {
           'Authorization': `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
       })
       .execute();
-
+    console.log(newCustomer);
     return response;
   } catch (error) {
     throw new Error(`${error}`);
