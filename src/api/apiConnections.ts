@@ -56,31 +56,27 @@ const client: Client = new ClientBuilder()
 const apiRoot: ApiRoot = createApiBuilderFromCtpClient(client);
 
 async function getToken(): Promise<string> {
-  try {
-    const response = await fetch(
-      `${authHost}/oauth/token?grant_type=client_credentials`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
-        },
+  const response = await fetch(
+    `${authHost}/oauth/token?grant_type=client_credentials`,
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
       },
-    );
+    },
+  );
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch access token: ${response.statusText}`);
-    }
-
-    const data: TokenData = (await response.json()) as TokenData;
-
-    if (!data.access_token) {
-      throw new Error(`Access token not found in response`);
-    }
-
-    return data.access_token;
-  } catch (error) {
-    throw new Error(`Failed to fetch access token: ${error.message}`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch access token: ${response.statusText}`);
   }
+
+  const data: TokenData = (await response.json()) as TokenData;
+
+  if (!data.access_token) {
+    throw new Error(`Access token not found in response`);
+  }
+
+  return data.access_token;
 }
 
 export async function createCustomer(newCustomer: {
@@ -88,6 +84,7 @@ export async function createCustomer(newCustomer: {
   password: string;
   firstName: string;
   lastName: string;
+  dateOfBirth: string;
 }) {
   try {
     const accessToken = await getToken(); // Получаем токен
@@ -106,43 +103,5 @@ export async function createCustomer(newCustomer: {
     return response;
   } catch (error) {
     throw new Error(`${error}`);
-  }
-}
-
-export async function loginUser(
-  username: string,
-  password: string,
-): Promise<string> {
-  try {
-    const response = await fetch(
-      `${authHost}/oauth/${projectKey}/customers/token`,
-      {
-        method: 'POST',
-        headers: {
-          'Authorization': `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          grant_type: 'password',
-          username,
-          password,
-          scope: scopes.join(' '),
-        }),
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error(`Failed to login: ${response.statusText}`);
-    }
-
-    const data: TokenData = await response.json();
-
-    if (!data.access_token) {
-      throw new Error(`Access token not found in response`);
-    }
-
-    return data.access_token;
-  } catch (error) {
-    throw new Error(`Failed to login: ${error.message}`);
   }
 }
