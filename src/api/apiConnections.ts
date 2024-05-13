@@ -9,9 +9,17 @@ import {
   createApiBuilderFromCtpClient,
 } from '@commercetools/platform-sdk';
 import fetch from 'node-fetch';
-import {CustomerData} from "@utils/getRegistrationData.ts";
+import { CustomerData } from '@utils/getRegistrationData.ts';
 // import dotenv from 'dotenv';
 // dotenv.config();
+
+// Данный тип будет позже вынесен в файл interface.ts
+type TokenData = {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  scope: string;
+};
 
 export const projectKey: string = 'carshop';
 const clientId: string = '36POpxvWT7izt09GMAeH6aey';
@@ -22,14 +30,6 @@ const scopes: string[] =
   'manage_customers:carshop:carStore manage_my_profile:carshop:carStore manage_my_shopping_lists:carshop:carStore manage_orders:carshop:carStore manage_my_orders:carshop:carStore manage_project:carshop manage_shopping_lists:carshop:carStore manage_cart_discounts:carshop:carStore'.split(
     ' ',
   );
-
-// Данный тип будет позже вынесен в файл interface.ts
-type TokenData = {
-  access_token: string;
-  token_type: string;
-  expires_in: number;
-  scope: string;
-};
 
 const authMiddlewareOptions: AuthMiddlewareOptions = {
   host: authHost,
@@ -96,12 +96,10 @@ function getCountryCode(country: string): string {
 export async function createCustomer(newCustomer: CustomerData) {
   try {
     const accessToken = await getToken();
-
     const response = await apiRoot
       .withProjectKey({ projectKey })
       .customers()
       .post({
-        // body: newCustomer,
         body: {
           email: newCustomer.email,
           password: newCustomer.password,
