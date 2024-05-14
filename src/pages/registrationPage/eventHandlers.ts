@@ -2,14 +2,68 @@ import { Page } from '@/interface';
 import { REGISTER } from '@/redux/actions/register';
 import { LOGIN } from '@/redux/actions/login';
 import store from '@/redux/store/configureStore';
+import { createCustomer } from '@api/apiConnections';
+import getRegistrationData, {
+  CustomerData,
+} from '@utils/getRegistrationData.ts';
+import styles from './eventHandlers.module.css';
 import validateRegistrForm from './validate-registr-form';
 
-export function handlerSubmit(event: Event, goPage: (page: Page) => void) {
+function showPopup(name: string, secondName: string, requestCode?: number) {
+  const successMessage = `User ${name} ${secondName} has been successfully registered`;
+  const errorMessage = `User ${name} ${secondName} registration is not complete\n${requestCode}`;
+
+  const popup = document.createElement('div');
+  popup.className = styles.popup;
+  popup.textContent = requestCode === 201 ? successMessage : errorMessage;
+
+  const okButton = document.createElement('button');
+  okButton.className = styles.button;
+  okButton.textContent = 'ОК';
+  okButton.onclick = () => {
+    popup.remove();
+  };
+
+  popup.appendChild(okButton);
+  document.body.appendChild(popup);
+
+  const closePopupOnOutsideClick = (event: MouseEvent) => {
+    if (!popup.contains(event.target as Node)) {
+      popup.remove();
+      document.removeEventListener('click', closePopupOnOutsideClick);
+    }
+  };
+
+  document.addEventListener('click', closePopupOnOutsideClick);
+
+  document.addEventListener('keydown', () => {
+    popup.remove();
+  });
+}
+
+export async function handlerSubmit(
+  event: Event,
+  goPage: (page: Page) => void,
+) {
   event?.preventDefault();
-  // TODO: нужен ли api(?) + обработка ошибок
-  store.dispatch(REGISTER({ value: 'token', isRegister: true }));
-  store.dispatch(LOGIN({ value: 'token', isLogin: true }));
-  goPage(Page.MAIN);
+  const newCustomer: CustomerData = getRegistrationData();
+
+  await createCustomer(newCustomer)
+    .then((response) => {
+      if (response.statusCode === 201) {
+        store.dispatch(REGISTER({ value: 'token', isRegister: true }));
+        store.dispatch(LOGIN({ value: 'token', isLogin: true }));
+        goPage(Page.MAIN);
+        showPopup(
+          newCustomer.firstName,
+          newCustomer.lastName,
+          response.statusCode,
+        );
+      }
+    })
+    .catch((error) =>
+      showPopup(newCustomer.firstName, newCustomer.lastName, error),
+    );
 }
 
 export function handlerForm() {
