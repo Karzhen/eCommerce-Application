@@ -10,37 +10,25 @@ import styles from './eventHandlers.module.css';
 import validateRegistrForm from './validate-registr-form';
 
 function showPopup(name: string, secondName: string, requestCode?: number) {
-  function closePopup() {
-    const popup = document.querySelector(`.${styles.popup}`);
-    if (popup) {
-      popup.remove();
-    }
-  }
+  const successMessage = `User ${name} ${secondName} has been successfully registered`;
+  const errorMessage = `User ${name} ${secondName} registration is not complete\n${requestCode}`;
 
-  if (requestCode === 201) {
-    const successMessage = `Пользователь ${name} ${secondName} успешно зарегистрирован`;
-    const popup = document.createElement('div');
-    popup.className = styles.popup;
-    popup.textContent = successMessage;
-    const okButton = document.createElement('button');
-    okButton.textContent = 'ОК';
-    okButton.onclick = closePopup;
-    popup.appendChild(okButton);
-    document.body.appendChild(popup);
-  } else {
-    const errorMessage = `Пользователь ${name} ${secondName} не зарегистрирован`;
-    const popup = document.createElement('div');
-    popup.className = styles.popup;
-    popup.textContent = errorMessage;
-    const okButton = document.createElement('button');
-    okButton.textContent = 'ОК';
-    okButton.onclick = closePopup;
-    popup.appendChild(okButton);
-    document.body.appendChild(popup);
-  }
+  const popup = document.createElement('div');
+  popup.className = styles.popup;
+  popup.textContent = requestCode === 201 ? successMessage : errorMessage;
+
+  const okButton = document.createElement('button');
+  okButton.className = styles.button;
+  okButton.textContent = 'ОК';
+  okButton.onclick = () => {
+    popup.remove();
+  };
+
+  popup.appendChild(okButton);
+  document.body.appendChild(popup);
 
   document.addEventListener('keydown', () => {
-    closePopup()
+    popup.remove();
   });
 }
 
@@ -51,18 +39,20 @@ export async function handlerSubmit(
   event?.preventDefault();
   const newCustomer: CustomerData = getRegistrationData();
 
-  await createCustomer(newCustomer).then(
-      (response) => {
-        if (response.statusCode === 201) {
-          store.dispatch(REGISTER({ value: 'token', isRegister: true }));
-          store.dispatch(LOGIN({ value: 'token', isLogin: true }));
-          goPage(Page.MAIN);
-          showPopup(newCustomer.firstName, newCustomer.lastName, response.statusCode);
-        }
+  await createCustomer(newCustomer)
+    .then((response) => {
+      if (response.statusCode === 201) {
+        store.dispatch(REGISTER({ value: 'token', isRegister: true }));
+        store.dispatch(LOGIN({ value: 'token', isLogin: true }));
+        goPage(Page.MAIN);
+        showPopup(
+          newCustomer.firstName,
+          newCustomer.lastName,
+          response.statusCode,
+        );
       }
-  ).catch(
-      () => showPopup(newCustomer.firstName, newCustomer.lastName)
-  );
+    })
+    .catch((error) => showPopup(newCustomer.firstName, newCustomer.lastName, error));
 }
 
 export function handlerForm() {
