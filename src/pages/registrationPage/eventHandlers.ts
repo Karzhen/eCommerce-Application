@@ -52,7 +52,9 @@ export async function handlerSubmit(
         );
       }
     })
-    .catch((error) => showPopup(newCustomer.firstName, newCustomer.lastName, error));
+    .catch((error) =>
+      showPopup(newCustomer.firstName, newCustomer.lastName, error),
+    );
 }
 
 export function handlerForm() {

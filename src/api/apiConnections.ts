@@ -3,7 +3,7 @@ import {
   type Client,
   type AuthMiddlewareOptions,
   type HttpMiddlewareOptions,
-  type PasswordAuthMiddlewareOptions,
+  // type PasswordAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
 import {
   ApiRoot,
@@ -115,7 +115,6 @@ export async function createCustomer(newCustomer: CustomerData) {
         },
       })
       .execute();
-    console.log(newCustomer);
     return response;
   } catch (error) {
     throw new Error(`${error}`);
