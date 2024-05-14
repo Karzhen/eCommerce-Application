@@ -27,6 +27,15 @@ function showPopup(name: string, secondName: string, requestCode?: number) {
   popup.appendChild(okButton);
   document.body.appendChild(popup);
 
+  const closePopupOnOutsideClick = (event: MouseEvent) => {
+    if (!popup.contains(event.target as Node)) {
+      popup.remove();
+      document.removeEventListener('click', closePopupOnOutsideClick);
+    }
+  };
+
+  document.addEventListener('click', closePopupOnOutsideClick);
+
   document.addEventListener('keydown', () => {
     popup.remove();
   });
