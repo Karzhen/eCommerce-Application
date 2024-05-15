@@ -76,6 +76,8 @@ function createAuthField(goPage: (page: Page) => void) {
     className: styles.wrapperAuth,
   });
 
+  console.log(store.getState().login.isLogin);
+
   if (store.getState().login.isLogin)
     WRAPPER_AUTH.append(createProfile(goPage));
   else WRAPPER_AUTH.append(...createAuthFieldWithoutLogin(goPage));

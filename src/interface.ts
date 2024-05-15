@@ -41,7 +41,6 @@ export enum TypeInput {
 export enum TypeButton {
   PRIMARY = 'primary',
   SECONDARY = 'secondary',
-  GREEN = 'green',
   TRANSPARENT = 'transparent',
 }
 
