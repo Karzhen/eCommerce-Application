@@ -14,7 +14,7 @@
   width: 40%;
   /* height: 30%; */
   padding: 10px;
-
+  
   border: none;
   border-radius: 4px;
   background-color: var(--color-hard);
@@ -28,7 +28,6 @@
 .title {
   font: var(--text-header-s);
   color: var(--color-primary);
-
   overflow-wrap: break-word;
   word-break: break-word;
   text-align: center;
@@ -37,7 +36,6 @@
 .message {
   font: var(--text-m);
   color: var(--color-primary-text);
-
   overflow-wrap: break-word;
   word-break: break-word;
   text-align: center;

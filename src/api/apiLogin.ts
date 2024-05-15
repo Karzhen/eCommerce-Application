@@ -33,7 +33,6 @@ export default async function apiLogin(login: string, password: string) {
       })
       .catch((error) => {
         console.log('ERROR --->', error);
-
         store.dispatch(ERROR_LOGIN({ value: error.message, isLogin: false }));
       });
   } catch (error) {

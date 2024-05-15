@@ -1,14 +1,13 @@
 import store from '@redux/store/configureStore';
 import apiLogin from '@/api/apiLogin';
 
-import apiFindEmail from '@api/apiFindEmail';
-
 import { Tag, TypeInput, TypeButton, Page } from '@/interface';
 import createElement from '@utils/create-element';
 import createInput from '@baseComponents/input/input';
 import createButton from '@baseComponents/button/button';
 import createPopUp from '@components/popUp/popUp';
 
+import loginUser from '@utils/login';
 import validateLoginForm from './validate-login-form';
 
 import styles from './loginPage.module.css';
@@ -27,19 +26,18 @@ async function handlerSubmit(event: Event, goPage: (page: Page) => void) {
     const login = INPUT_EMAIL.value;
     const password = INPUT_PASSWORD.value;
 
-    await apiLogin(login, password);
+    await loginUser(login, password);
     if (store.getState().login.isLogin) goPage(Page.MAIN);
     else {
-      await apiFindEmail(login);
       const popup = createPopUp(
         'Authorisation Error',
         store.getState().login.value || 'Something went wrong',
       );
       document.body.append(popup);
       (popup as HTMLDialogElement).showModal();
-      (event.target as HTMLButtonElement).removeAttribute('disabled');
     }
   }
+  (event.target as HTMLButtonElement).removeAttribute('disabled');
 }
 
 function handlerInputPasswordEmail(event: Event) {
