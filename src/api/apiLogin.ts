@@ -33,7 +33,7 @@ export default async function apiLogin(login: string, password: string) {
       })
       .catch((error) => {
         console.log('ERROR --->', error);
-        // TODO: добавить проверку ошибок от сервера
+
         store.dispatch(ERROR_LOGIN({ value: error.message, isLogin: false }));
       });
   } catch (error) {
