@@ -1,5 +1,4 @@
 import store from '@redux/store/configureStore';
-import apiLogin from '@/api/apiLogin';
 
 import { Tag, TypeInput, TypeButton, Page } from '@/interface';
 import createElement from '@utils/create-element';

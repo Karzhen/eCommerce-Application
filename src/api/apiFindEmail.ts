@@ -36,6 +36,7 @@ export default async function apiLogin(email: string) {
             ERROR_LOGIN({ value: LoginError.ERROR_PASSWORD, isLogin: false }),
           );
         }
+      });
   } catch (error) {
     console.log('ERROR --->', error);
     store.dispatch(
