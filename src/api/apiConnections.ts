@@ -3,25 +3,14 @@ import {
   type Client,
   type AuthMiddlewareOptions,
   type HttpMiddlewareOptions,
+  // type PasswordAuthMiddlewareOptions,
 } from '@commercetools/sdk-client-v2';
 import {
   ApiRoot,
   createApiBuilderFromCtpClient,
 } from '@commercetools/platform-sdk';
 import fetch from 'node-fetch';
-import {CustomerData} from "@utils/getRegistrationData.ts";
-// import dotenv from 'dotenv';
-// dotenv.config();
-
-export const projectKey: string = 'carshop';
-const clientId: string = '36POpxvWT7izt09GMAeH6aey';
-const clientSecret: string = 'tqEbcb2O4YFL_caMarIQ0sMnUlKf8Nra';
-const authHost: string = 'https://auth.eu-central-1.aws.commercetools.com';
-const apiHost: string = 'https://api.eu-central-1.aws.commercetools.com';
-const scopes: string[] =
-  'manage_customers:carshop:carStore manage_my_profile:carshop:carStore manage_my_shopping_lists:carshop:carStore manage_orders:carshop:carStore manage_my_orders:carshop:carStore manage_project:carshop manage_shopping_lists:carshop:carStore manage_cart_discounts:carshop:carStore'.split(
-    ' ',
-  );
+import { CustomerData } from '@utils/getRegistrationData.ts';
 
 // Данный тип будет позже вынесен в файл interface.ts
 type TokenData = {
@@ -30,6 +19,13 @@ type TokenData = {
   expires_in: number;
   scope: string;
 };
+
+export const projectKey: string = import.meta.env.VITE_CTP_PROJECT_KEY;
+const clientId: string = import.meta.env.VITE_CTP_CLIENT_ID;
+const clientSecret: string = import.meta.env.VITE_CTP_CLIENT_SECRET;
+const authHost: string = import.meta.env.VITE_CTP_AUTH_URL;
+const apiHost: string = import.meta.env.VITE_CTP_API_URL;
+const scopes: string[] = import.meta.env.VITE_CTP_SCOPES.split(',');
 
 const authMiddlewareOptions: AuthMiddlewareOptions = {
   host: authHost,
@@ -96,12 +92,10 @@ function getCountryCode(country: string): string {
 export async function createCustomer(newCustomer: CustomerData) {
   try {
     const accessToken = await getToken();
-
     const response = await apiRoot
       .withProjectKey({ projectKey })
       .customers()
       .post({
-        // body: newCustomer,
         body: {
           email: newCustomer.email,
           password: newCustomer.password,
@@ -121,7 +115,6 @@ export async function createCustomer(newCustomer: CustomerData) {
         },
       })
       .execute();
-    console.log(newCustomer);
     return response;
   } catch (error) {
     throw new Error(`${error}`);

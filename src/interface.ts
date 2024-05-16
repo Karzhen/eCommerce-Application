@@ -41,7 +41,6 @@ export enum TypeInput {
 export enum TypeButton {
   PRIMARY = 'primary',
   SECONDARY = 'secondary',
-  GREEN = 'green',
   TRANSPARENT = 'transparent',
 }
 
@@ -75,3 +74,8 @@ export type StateRegister = {
   value: string | null;
   isRegister: boolean;
 };
+
+export enum LoginError {
+  ERROR_EMAIL = 'This user does not exist',
+  ERROR_PASSWORD = 'Wrong data',
+}

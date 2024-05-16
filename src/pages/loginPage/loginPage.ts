@@ -1,21 +1,42 @@
 import store from '@redux/store/configureStore';
 
-import { LOGIN } from '@redux/actions/login';
-
 import { Tag, TypeInput, TypeButton, Page } from '@/interface';
 import createElement from '@utils/create-element';
 import createInput from '@baseComponents/input/input';
 import createButton from '@baseComponents/button/button';
+import createPopUp from '@components/popUp/popUp';
 
+import loginUser from '@utils/login';
 import validateLoginForm from './validate-login-form';
 
 import styles from './loginPage.module.css';
 
-function handlerSubmit(event: Event, goPage: (page: Page) => void) {
+async function handlerSubmit(event: Event, goPage: (page: Page) => void) {
   event?.preventDefault();
-  // TODO: добавить api + проверку ошибок от сервера
-  store.dispatch(LOGIN({ value: 'token', isLogin: true }));
-  goPage(Page.MAIN);
+  (event.target as HTMLButtonElement).setAttribute('disabled', 'disabled');
+
+  const INPUT_EMAIL = document.getElementById('email');
+  const INPUT_PASSWORD = document.getElementById('password');
+
+  if (
+    INPUT_EMAIL instanceof HTMLInputElement &&
+    INPUT_PASSWORD instanceof HTMLInputElement
+  ) {
+    const login = INPUT_EMAIL.value;
+    const password = INPUT_PASSWORD.value;
+
+    await loginUser(login, password);
+    if (store.getState().login.isLogin) goPage(Page.MAIN);
+    else {
+      const popup = createPopUp(
+        'Authorisation Error',
+        store.getState().login.value || 'Something went wrong',
+      );
+      document.body.append(popup);
+      (popup as HTMLDialogElement).showModal();
+    }
+  }
+  (event.target as HTMLButtonElement).removeAttribute('disabled');
 }
 
 function handlerInputPasswordEmail(event: Event) {

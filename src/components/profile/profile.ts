@@ -1,9 +1,7 @@
-import store from '@redux/store/configureStore';
-
-import { LOGOUT } from '@redux/actions/login';
-
 import createElement from '@utils/create-element';
 import createLink from '@baseComponents/link/link';
+
+import logout from '@utils/logout';
 
 import { Tag, Page } from '@/interface';
 
@@ -18,7 +16,7 @@ function handleProfileClick(event: Event, goPage: (page: Page) => void) {
 
 function handleLogoutClick(event: Event, goPage: (page: Page) => void) {
   event.preventDefault();
-  store.dispatch(LOGOUT());
+  logout();
   goPage(Page.MAIN);
 }
 
