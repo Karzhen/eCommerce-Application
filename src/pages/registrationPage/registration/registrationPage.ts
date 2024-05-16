@@ -15,6 +15,8 @@ import {
   createStreetField,
 } from './createFormElements';
 import { handlerClickLogin, handlerSubmit } from './eventHandlers';
+import createHeader from '../header/headerRegistr';
+import createFooter from '../footer/footerRegistr';
 
 function createCustomerBox() {
   const CUSTOMER_BOX = createElement(Tag.DIV, {
@@ -122,7 +124,7 @@ export default function createRegistrationPage(goPage: (page: Page) => void) {
     className: styles.registrPage,
   });
 
-  REGISTR_PAGE.append(createForm(goPage));
+  REGISTR_PAGE.append(createHeader(goPage), createForm(goPage), createFooter());
 
   return REGISTR_PAGE;
 }

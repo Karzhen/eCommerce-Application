@@ -1,11 +1,11 @@
-import createLoginPage from '@pages/loginPage/loginPage';
+import createLoginPage from '@/pages/loginPage/login/loginPage';
 import createErrorPage from '@pages/errorPage/errorPage';
-import createRegistrationPage from '@pages/registrationPage/registrationPage';
+import createRegistrationPage from '@/pages/registrationPage/registration/registrationPage';
 import createMainPage from '@pages/mainPage/mainPage';
-import createProfilePage from '@pages/profilePage/profilePage';
-import createCatalogPage from '@pages/catalogPage/catalogPage';
-import createBasketPage from '@pages/basketPage/basketPage';
-import createAboutPage from '@pages/aboutPage/aboutPage';
+import createProfilePage from '@/pages/profilePage/profile/profilePage';
+import createCatalogPage from '@/pages/catalogPage/catalog/catalogPage';
+import createBasketPage from '@/pages/basketPage/basket/basketPage';
+import createAboutPage from '@/pages/aboutPage/about/aboutPage';
 
 import { Page } from '@/interface';
 
@@ -69,16 +69,16 @@ class Router {
         document.body.append(createRegistrationPage(this.goPage.bind(this)));
         break;
       case Page.CATALOG:
-        document.body.append(createCatalogPage());
+        document.body.append(createCatalogPage(this.goPage.bind(this)));
         break;
       case Page.PROFILE:
-        document.body.append(createProfilePage());
+        document.body.append(createProfilePage(this.goPage.bind(this)));
         break;
       case Page.BASKET:
-        document.body.append(createBasketPage());
+        document.body.append(createBasketPage(this.goPage.bind(this)));
         break;
       case Page.ABOUT:
-        document.body.append(createAboutPage());
+        document.body.append(createAboutPage(this.goPage.bind(this)));
         break;
       default:
         document.body.append(createErrorPage(this.goPage.bind(this)));
