@@ -4,6 +4,8 @@ import createRegistrationPage from '@pages/registrationPage/registrationPage';
 import createMainPage from '@pages/mainPage/mainPage';
 import createProfilePage from '@pages/profilePage/profilePage';
 import createCatalogPage from '@pages/catalogPage/catalogPage';
+import createBasketPage from '@pages/basketPage/basketPage';
+import createAboutPage from '@pages/aboutPage/aboutPage';
 
 import { Page } from '@/interface';
 
@@ -71,6 +73,12 @@ class Router {
         break;
       case Page.PROFILE:
         document.body.append(createProfilePage());
+        break;
+      case Page.BASKET:
+        document.body.append(createBasketPage());
+        break;
+      case Page.ABOUT:
+        document.body.append(createAboutPage());
         break;
       default:
         document.body.append(createErrorPage(this.goPage.bind(this)));
