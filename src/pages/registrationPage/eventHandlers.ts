@@ -25,6 +25,7 @@ export async function handlerSubmit(
         const popup = createPopUp(
           'Registration was successful',
           `User ${newCustomer.firstName} ${newCustomer.lastName} has been successfully registered`,
+          true,
         );
         document.body.append(popup);
         (popup as HTMLDialogElement).showModal();
