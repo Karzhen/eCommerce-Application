@@ -1,17 +1,17 @@
 import createElement from '@utils/create-element';
 import { Tag, TypeButton } from '@/interface';
 
-import styles from './popUp.module.css';
+import styles from '@components/popUp/popUp.module.css';
 import createButton from '../baseComponents/button/button';
 
-export default function createPopUp(title: string, message: string) {
+export default function createPopUp(title: string, message: string, isSuccess?: boolean) {
   const POPUP = createElement(Tag.DIALOG, {
     className: styles.modal,
     id: 'modal',
   });
 
   const TITLE = createElement(Tag.H2, {
-    className: styles.title,
+    className: isSuccess? `${styles.title} ${styles.secondary}` : `${styles.title}`,
     textContent: title,
   });
 
