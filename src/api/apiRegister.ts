@@ -1,80 +1,11 @@
-import {
-  ClientBuilder,
-  type Client,
-  type AuthMiddlewareOptions,
-  type HttpMiddlewareOptions,
-  // type PasswordAuthMiddlewareOptions,
-} from '@commercetools/sdk-client-v2';
-import {
-  ApiRoot,
-  createApiBuilderFromCtpClient,
-} from '@commercetools/platform-sdk';
-import fetch from 'node-fetch';
-import { CustomerData } from '@utils/getRegistrationData.ts';
+import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import createCtpClientAnonymous from '@api/buildClient/buildAnonymousSessionFlow';
+import { CustomerData } from '@utils/getRegistrationData';
 
-// Данный тип будет позже вынесен в файл interface.ts
-type TokenData = {
-  access_token: string;
-  token_type: string;
-  expires_in: number;
-  scope: string;
-};
+const projectKey: string = import.meta.env.VITE_CTP_PROJECT_KEY;
 
-export const projectKey: string = import.meta.env.VITE_CTP_PROJECT_KEY;
-const clientId: string = import.meta.env.VITE_CTP_CLIENT_ID;
-const clientSecret: string = import.meta.env.VITE_CTP_CLIENT_SECRET;
-const authHost: string = import.meta.env.VITE_CTP_AUTH_URL;
-const apiHost: string = import.meta.env.VITE_CTP_API_URL;
-const scopes: string[] = import.meta.env.VITE_CTP_SCOPES.split(',');
-
-const authMiddlewareOptions: AuthMiddlewareOptions = {
-  host: authHost,
-  projectKey,
-  credentials: {
-    clientId,
-    clientSecret,
-  },
-  scopes,
-  fetch,
-};
-
-const httpMiddlewareOptions: HttpMiddlewareOptions = {
-  host: apiHost,
-  fetch,
-};
-
-const client: Client = new ClientBuilder()
-  .withProjectKey(projectKey)
-  .withHttpMiddleware(httpMiddlewareOptions)
-  .withAuthMiddleware(authMiddlewareOptions)
-  .withLoggerMiddleware()
-  .build();
-
-const apiRoot: ApiRoot = createApiBuilderFromCtpClient(client);
-
-async function getToken(): Promise<string> {
-  const response = await fetch(
-    `${authHost}/oauth/token?grant_type=client_credentials`,
-    {
-      method: 'POST',
-      headers: {
-        'Authorization': `Basic ${btoa(`${clientId}:${clientSecret}`)}`,
-      },
-    },
-  );
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch access token: ${response.statusText}`);
-  }
-
-  const data: TokenData = (await response.json()) as TokenData;
-
-  if (!data.access_token) {
-    throw new Error(`Access token not found in response`);
-  }
-
-  return data.access_token;
-}
+const client = createCtpClientAnonymous();
+const apiRoot = createApiBuilderFromCtpClient(client);
 
 function getCountryCode(country: string): string {
   switch (country.toLowerCase()) {
@@ -95,7 +26,6 @@ async function assignBillingAddressToCustomer(
   version: number,
 ) {
   try {
-    const accessToken = await getToken();
     const response = await apiRoot
       .withProjectKey({ projectKey })
       .customers()
@@ -109,10 +39,6 @@ async function assignBillingAddressToCustomer(
               addressId,
             },
           ],
-        },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
         },
       })
       .execute();
@@ -128,7 +54,6 @@ async function assignShippingAddressToCustomer(
   version: number,
 ) {
   try {
-    const accessToken = await getToken();
     const response = await apiRoot
       .withProjectKey({ projectKey })
       .customers()
@@ -143,10 +68,6 @@ async function assignShippingAddressToCustomer(
             },
           ],
         },
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
       })
       .execute();
     return response;
@@ -155,11 +76,10 @@ async function assignShippingAddressToCustomer(
   }
 }
 
-export async function createCustomer(newCustomer: CustomerData) {
+export default async function createCustomer(newCustomer: CustomerData) {
   let CUSTOMER_ID: string | undefined = '';
   let ADDRESS_ID: string | undefined = '';
   try {
-    const accessToken = await getToken();
     const defaultBilling = localStorage.getItem('defaultBilling') === 'true';
     const defaultShipping = localStorage.getItem('defaultShipping') === 'true';
 
@@ -181,10 +101,6 @@ export async function createCustomer(newCustomer: CustomerData) {
           ],
           defaultBillingAddress: defaultBilling ? 0 : undefined,
           defaultShippingAddress: defaultShipping ? 0 : undefined,
-        },
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
         },
       })
       .execute();

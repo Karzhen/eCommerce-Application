@@ -33,6 +33,10 @@
   text-align: center;
 }
 
+.title.secondary {
+  color: var(--color-secondary);
+}
+
 .message {
   font: var(--text-m);
   color: var(--color-primary-text);

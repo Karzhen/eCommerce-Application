@@ -2,8 +2,10 @@ import { Page, Tag, TypeButton, TypeInput } from '@/interface';
 import createElement from '@utils/create-element';
 import createInput from '@baseComponents/input/input';
 import createButton from '@baseComponents/button/button';
+import clearDefaultAddresses from '@/utils/clearDefaultLS';
 import styles from './registrationPage.module.css';
 import {
+  createBillingCheckbox,
   createCityField,
   createCountryField,
   createDateBirthField,
@@ -12,6 +14,7 @@ import {
   createNameField,
   createPasswordField,
   createPostalCodeField,
+  createShippingCheckbox,
   createStreetField,
 } from './createFormElements';
 import { handlerClickLogin, handlerSubmit } from './eventHandlers';
@@ -56,6 +59,8 @@ function createAddressBox() {
     createCityField(),
     createPostalCodeField(),
     createCountryField(),
+    createShippingCheckbox(),
+    createBillingCheckbox(),
   );
 
   return ADDRESS_BOX;
@@ -125,6 +130,8 @@ export default function createRegistrationPage(goPage: (page: Page) => void) {
   });
 
   REGISTR_PAGE.append(createHeader(goPage), createForm(goPage), createFooter());
+
+  clearDefaultAddresses();
 
   return REGISTR_PAGE;
 }

@@ -2,6 +2,9 @@ import { Tag, TypeInput } from '@/interface';
 import createElement from '@utils/create-element';
 import createInput from '@baseComponents/input/input';
 import createSelect from '@baseComponents/select/select';
+import checkDefaultShipping, {
+  checkDefaultBilling,
+} from '@/utils/checkDefaultAddresses';
 import styles from './registrationPage.module.css';
 import { handlerClickEye, handlerCountry, handlerForm } from './eventHandlers';
 
@@ -292,4 +295,46 @@ export function createCountryField() {
   COUNTRY_FIELD.append(LABEL_COUNTRY, SELECT_COUNTRY, LABEL_ERROR);
 
   return COUNTRY_FIELD;
+}
+
+export function createShippingCheckbox() {
+  const CHECKBOX_WRAPPER = createElement(Tag.DIV, {
+    className: styles.checkboxWrapper,
+  });
+
+  const TITLE_CHECKBOX = createElement(Tag.H3, {
+    className: styles.titleCheckbox,
+    textContent: 'Default Shipping',
+  });
+
+  const SHIPPING_CHECKBOX = createInput({
+    type: TypeInput.CHECKBOX,
+    option: { id: 'shippingCheck', className: styles.checkbox },
+    handler: { handlerInput: checkDefaultShipping },
+  });
+
+  CHECKBOX_WRAPPER.append(TITLE_CHECKBOX, SHIPPING_CHECKBOX);
+
+  return CHECKBOX_WRAPPER;
+}
+
+export function createBillingCheckbox() {
+  const CHECKBOX_WRAPPER = createElement(Tag.DIV, {
+    className: styles.checkboxWrapper,
+  });
+
+  const TITLE_CHECKBOX = createElement(Tag.H3, {
+    className: styles.titleCheckbox,
+    textContent: 'Default Billing',
+  });
+
+  const SHIPPING_CHECKBOX = createInput({
+    type: TypeInput.CHECKBOX,
+    option: { id: 'billingCheck', className: styles.checkbox },
+    handler: { handlerInput: checkDefaultBilling },
+  });
+
+  CHECKBOX_WRAPPER.append(TITLE_CHECKBOX, SHIPPING_CHECKBOX);
+
+  return CHECKBOX_WRAPPER;
 }
