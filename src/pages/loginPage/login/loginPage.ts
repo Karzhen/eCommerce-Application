@@ -10,6 +10,8 @@ import loginUser from '@utils/login';
 import validateLoginForm from './validate-login-form';
 
 import styles from './loginPage.module.css';
+import createHeader from '../header/headerLogin';
+import createFooter from '../footer/footerLogin';
 
 async function handlerSubmit(event: Event, goPage: (page: Page) => void) {
   event?.preventDefault();
@@ -195,7 +197,7 @@ export default function createLoginPage(goPage: (page: Page) => void) {
     className: styles.loginPage,
   });
 
-  LOGIN_PAGE.append(createForm(goPage));
+  LOGIN_PAGE.append(createHeader(goPage), createForm(goPage), createFooter());
 
   return LOGIN_PAGE;
 }
