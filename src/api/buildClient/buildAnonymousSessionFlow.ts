@@ -6,33 +6,33 @@ import {
 } from '@commercetools/sdk-client-v2';
 
 export default function createCtpClientAnonymous() {
-  const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
-  const scopes = import.meta.env.VITE_CTP_SCOPES?.split(' ') || [''];
-  const clientId = import.meta.env.VITE_CTP_CLIENT_ID;
-  const clientSecret = import.meta.env.VITE_CTP_CLIENT_SECRET;
-  const hostAuth = import.meta.env.VITE_CTP_AUTH_URL;
-  const hostApi = import.meta.env.VITE_CTP_API_URL;
+  const projectKey: string = import.meta.env.VITE_CTP_PROJECT_KEY;
+  const clientId: string = import.meta.env.VITE_CTP_CLIENT_ID;
+  const clientSecret: string = import.meta.env.VITE_CTP_CLIENT_SECRET;
+  const authHost: string = import.meta.env.VITE_CTP_AUTH_URL;
+  const apiHost: string = import.meta.env.VITE_CTP_API_URL;
+  const scopes: string[] = import.meta.env.VITE_CTP_SCOPES?.split(' ') || [''];
 
   const anonymousAuthMiddlewareOptions: AnonymousAuthMiddlewareOptions = {
-    host: hostAuth || '',
-    projectKey: projectKey || '',
+    host: authHost,
+    projectKey,
     credentials: {
-      clientId: clientId || '',
-      clientSecret: clientSecret || '',
+      clientId,
+      clientSecret,
     },
     scopes,
     fetch,
   };
 
   const httpMiddlewareOptions: HttpMiddlewareOptions = {
-    host: hostApi || '',
+    host: apiHost,
     fetch,
   };
 
   const ctpClient = new ClientBuilder()
     .withAnonymousSessionFlow(anonymousAuthMiddlewareOptions)
     .withHttpMiddleware(httpMiddlewareOptions)
-    .withLoggerMiddleware() // Include middleware for logging
+    .withLoggerMiddleware()
     .build();
 
   return ctpClient;

@@ -1,7 +1,7 @@
 import createElement from '@utils/create-element';
 import { Tag, TypeButton } from '@/interface';
 
-import styles from './popUp.module.css';
+import styles from '@components/popUp/popUp.module.css';
 import createButton from '../baseComponents/button/button';
 
 export default function createPopUp(title: string, message: string) {
