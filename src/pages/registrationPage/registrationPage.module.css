@@ -120,3 +120,28 @@
   justify-content: flex-end;
   gap: 10px;
 }
+
+.checkbox-wrapper {
+  margin-top: 13px;
+  display: flex;
+  padding: 5px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: var(--color-primary-muted);
+}
+
+.title-checkbox {
+  color: var(--color-surface-text);
+  font: var(--text-header);
+}
+
+.checkbox {
+  width: 15px;
+  height: 15px;
+}
+
+input[type='checkbox'] {
+  accent-color: var(--color-primary);
+}

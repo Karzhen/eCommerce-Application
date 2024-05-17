@@ -89,9 +89,80 @@ function getCountryCode(country: string): string {
   }
 }
 
-export async function createCustomer(newCustomer: CustomerData) {
+async function assignBillingAddressToCustomer(
+  addressId: string,
+  customerId: string,
+  version: number,
+) {
   try {
     const accessToken = await getToken();
+    const response = await apiRoot
+      .withProjectKey({ projectKey })
+      .customers()
+      .withId({ ID: customerId })
+      .post({
+        body: {
+          version,
+          actions: [
+            {
+              action: 'addBillingAddressId',
+              addressId,
+            },
+          ],
+        },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .execute();
+    return response;
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+}
+
+async function assignShippingAddressToCustomer(
+  addressId: string,
+  customerId: string,
+  version: number,
+) {
+  try {
+    const accessToken = await getToken();
+    const response = await apiRoot
+      .withProjectKey({ projectKey })
+      .customers()
+      .withId({ ID: customerId })
+      .post({
+        body: {
+          version,
+          actions: [
+            {
+              action: 'addShippingAddressId',
+              addressId,
+            },
+          ],
+        },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .execute();
+    return response;
+  } catch (error) {
+    throw new Error(`${error}`);
+  }
+}
+
+export async function createCustomer(newCustomer: CustomerData) {
+  let CUSTOMER_ID: string | undefined = '';
+  let ADDRESS_ID: string | undefined = '';
+  try {
+    const accessToken = await getToken();
+    const defaultBilling = localStorage.getItem('defaultBilling') === 'true';
+    const defaultShipping = localStorage.getItem('defaultShipping') === 'true';
+
     const response = await apiRoot
       .withProjectKey({ projectKey })
       .customers()
@@ -108,6 +179,8 @@ export async function createCustomer(newCustomer: CustomerData) {
               country: getCountryCode(newCustomer.address.country),
             },
           ],
+          defaultBillingAddress: defaultBilling ? 0 : undefined,
+          defaultShippingAddress: defaultShipping ? 0 : undefined,
         },
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -115,6 +188,20 @@ export async function createCustomer(newCustomer: CustomerData) {
         },
       })
       .execute();
+    ADDRESS_ID = response.body.customer.addresses[0].id;
+    CUSTOMER_ID = response.body.customer.id;
+    if (ADDRESS_ID && CUSTOMER_ID) {
+      await assignBillingAddressToCustomer(
+        ADDRESS_ID,
+        CUSTOMER_ID,
+        response.body.customer.version,
+      );
+      await assignShippingAddressToCustomer(
+        ADDRESS_ID,
+        CUSTOMER_ID,
+        response.body.customer.version + 1,
+      );
+    }
     return response;
   } catch (error) {
     throw new Error(`${error}`);
