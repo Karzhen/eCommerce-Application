@@ -58,10 +58,14 @@ export type TypeHandler = {
 
 export type HandlerComponent = (event: Event) => void;
 
+interface CheckboxOption extends Partial<HTMLInputElement> {
+  checked?: boolean;
+}
+
 export interface ParametersBaseComponent {
   type?: TypeInput | TypeButton;
   iconUrl?: string;
-  option: Partial<HTMLElement>;
+  option: Partial<HTMLElement> | CheckboxOption;
   handler: TypeHandler;
 }
 

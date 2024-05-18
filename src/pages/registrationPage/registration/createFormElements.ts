@@ -5,6 +5,7 @@ import createSelect from '@baseComponents/select/select';
 import checkDefaultShipping, {
   checkDefaultBilling,
 } from '@/utils/checkDefaultAddresses';
+import checkSameAddress from '@/utils/checkSameAddress';
 import styles from './registrationPage.module.css';
 import { handlerClickEye, handlerCountry, handlerForm } from './eventHandlers';
 
@@ -175,26 +176,26 @@ export function createPasswordField() {
   return PASSWORD_FIELD;
 }
 
-export function createStreetField() {
+export function createStreetField(prefix: string) {
   const STREET_FIELD = createElement(Tag.DIV, {
     className: styles.streetField,
   });
 
   const LABEL_STREET = createElement(Tag.LABEL, {
     className: styles.streetLabel,
-    textContent: 'Street',
+    textContent: `${prefix.charAt(0).toUpperCase() + prefix.slice(1)} Street`,
   });
 
   const INPUT_STREET = createInput({
     type: TypeInput.TEXT,
-    option: { id: 'street', className: styles.street },
+    option: { id: `${prefix}Street`, className: styles.street },
     handler: { handlerInput: handlerForm },
   });
   INPUT_STREET.setAttribute('required', 'required');
   INPUT_STREET.setAttribute('pattern', '^[a-zA-Z0-9 ,]+$');
 
   const LABEL_ERROR = createElement(Tag.LABEL, {
-    id: 'streetError',
+    id: `${prefix}StreetError`,
     className: styles.streetError,
   });
 
@@ -203,26 +204,26 @@ export function createStreetField() {
   return STREET_FIELD;
 }
 
-export function createCityField() {
+export function createCityField(prefix: string) {
   const CITY_FIELD = createElement(Tag.DIV, {
     className: styles.cityField,
   });
 
   const LABEL_CITY = createElement(Tag.LABEL, {
     className: styles.cityLabel,
-    textContent: 'City',
+    textContent: `${prefix.charAt(0).toUpperCase() + prefix.slice(1)} City`,
   });
 
   const INPUT_CITY = createInput({
     type: TypeInput.TEXT,
-    option: { id: 'city', className: styles.city },
+    option: { id: `${prefix}City`, className: styles.city },
     handler: { handlerInput: handlerForm },
   });
   INPUT_CITY.setAttribute('required', 'required');
   INPUT_CITY.setAttribute('pattern', '^[a-zA-Z]+$');
 
   const LABEL_ERROR = createElement(Tag.LABEL, {
-    id: 'cityError',
+    id: `${prefix}CityError`,
     className: styles.cityError,
   });
 
@@ -231,26 +232,26 @@ export function createCityField() {
   return CITY_FIELD;
 }
 
-export function createPostalCodeField() {
+export function createPostalCodeField(prefix: string) {
   const POSTAL_CODE_FIELD = createElement(Tag.DIV, {
     className: styles.postalCodeField,
   });
 
   const LABEL_POSTAL_CODE = createElement(Tag.LABEL, {
     className: styles.postalCodeLabel,
-    textContent: 'Postal Code',
+    textContent: `${prefix.charAt(0).toUpperCase() + prefix.slice(1)} Postal Code`,
   });
 
   const INPUT_POSTAL_CODE = createInput({
     type: TypeInput.TEXT,
-    option: { id: 'postalCode', className: styles.postalCode },
+    option: { id: `${prefix}PostalCode`, className: styles.postalCode },
     handler: { handlerInput: handlerForm },
   });
   INPUT_POSTAL_CODE.setAttribute('required', 'required');
   INPUT_POSTAL_CODE.setAttribute('pattern', '\\d{6}');
 
   const LABEL_ERROR = createElement(Tag.LABEL, {
-    id: 'postalCodeError',
+    id: `${prefix}PostalCodeError`,
     className: styles.postalCodeError,
   });
 
@@ -258,18 +259,18 @@ export function createPostalCodeField() {
   return POSTAL_CODE_FIELD;
 }
 
-export function createCountryField() {
+export function createCountryField(prefix: string) {
   const COUNTRY_FIELD = createElement(Tag.DIV, {
     className: styles.countryField,
   });
 
   const LABEL_COUNTRY = createElement(Tag.LABEL, {
     className: styles.countryLabel,
-    textContent: 'Select country',
+    textContent: `Select ${prefix.charAt(0).toUpperCase() + prefix.slice(1)} Country`,
   });
 
   const SELECT_COUNTRY = createSelect({
-    option: { id: 'country', className: styles.country },
+    option: { id: `${prefix}Country`, className: styles.country },
     handler: {
       handlerChange: (event) => {
         handlerCountry(event);
@@ -288,7 +289,7 @@ export function createCountryField() {
   });
 
   const LABEL_ERROR = createElement(Tag.LABEL, {
-    id: 'countryError',
+    id: `${prefix}CountryError`,
     className: styles.countryError,
   });
 
@@ -335,6 +336,31 @@ export function createBillingCheckbox() {
   });
 
   CHECKBOX_WRAPPER.append(TITLE_CHECKBOX, SHIPPING_CHECKBOX);
+
+  return CHECKBOX_WRAPPER;
+}
+
+export function createSameAddressCheckbox() {
+  const CHECKBOX_WRAPPER = createElement(Tag.DIV, {
+    className: styles.checkboxWrapper,
+  });
+
+  const TITLE_CHECKBOX = createElement(Tag.H3, {
+    className: styles.titleCheckbox,
+    textContent: 'Same as billing address',
+  });
+
+  const SAME_ADDRESS_CHECKBOX = createInput({
+    type: TypeInput.CHECKBOX,
+    option: {
+      id: 'sameAddressCheck',
+      className: styles.checkbox,
+      checked: true,
+    },
+    handler: { handlerInput: checkSameAddress },
+  });
+
+  CHECKBOX_WRAPPER.append(TITLE_CHECKBOX, SAME_ADDRESS_CHECKBOX);
 
   return CHECKBOX_WRAPPER;
 }

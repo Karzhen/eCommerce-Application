@@ -12,7 +12,7 @@
   flex-direction: column;
   gap: 20px;
   padding: 20px;
-  margin: 20px;
+  border: var(--color-primary-muted) 5px solid;
 }
 
 .title {
@@ -26,19 +26,51 @@
 .title-question {
   color: var(--color-surface-text);
   font: var(--text-header-xs);
-  align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.shipping-title {
+  font: var(--text-header-xs);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .registr-box {
   gap: 20px;
   height: auto;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
 }
 
+.address-box {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+  padding: 5px;
+  border: 1px var(--color-light) solid;
+  border-radius: 4px;
+}
+
+.main-data-box {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  background: var(--color-primary-muted);
+  padding: 5px;
+  border-radius: 4px;
+}
+
 .customer-box,
-.adress-box {
+.email-password-box,
+.name-birth-box,
+.shipping-address-box,
+.billing-address-box {
   padding: 5px;
   height: auto;
   display: flex;
@@ -56,6 +88,12 @@
 .country-field {
   display: flex;
   flex-direction: column;
+}
+
+input:disabled,
+select:disabled {
+  cursor: default;
+  background: var(--color-lightest);
 }
 
 .email,
