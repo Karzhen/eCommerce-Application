@@ -106,17 +106,21 @@ export default async function createCustomer(newCustomer: CustomerData) {
       .execute();
     ADDRESS_ID = response.body.customer.addresses[0].id;
     CUSTOMER_ID = response.body.customer.id;
+    let { version } = response.body.customer;
     if (ADDRESS_ID && CUSTOMER_ID) {
-      await assignBillingAddressToCustomer(
+      const billingResponse = await assignBillingAddressToCustomer(
         ADDRESS_ID,
         CUSTOMER_ID,
-        response.body.customer.version,
+        version,
       );
-      await assignShippingAddressToCustomer(
+      version = billingResponse.body.version;
+
+      const shippingResponse = await assignShippingAddressToCustomer(
         ADDRESS_ID,
         CUSTOMER_ID,
-        response.body.customer.version + 1,
+        version,
       );
+      version = shippingResponse.body.version;
     }
     return response;
   } catch (error) {
