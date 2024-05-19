@@ -1,12 +1,12 @@
 import { Page, Tag } from '@/interface';
 import createElement from '@/utils/create-element';
+import createHeader from '@/components/header/header';
 import styles from './basketPage.module.css';
-import createHeader from '../header/headerBasket';
 import createFooter from '../footer/footerBasket';
 
 export default function createBasketPage(goPage: (page: Page) => void) {
   const BASKET_PAGE = createElement(Tag.DIV, {
-    id: 'errorPage',
+    id: 'basketPage',
     className: styles.basketPage,
   });
 
