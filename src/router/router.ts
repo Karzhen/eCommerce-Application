@@ -1,3 +1,5 @@
+import state from '@redux/store/configureStore';
+
 import createLoginPage from '@/pages/loginPage/login/loginPage';
 import createErrorPage from '@pages/errorPage/errorPage';
 import createRegistrationPage from '@/pages/registrationPage/registration/registrationPage';
@@ -29,8 +31,10 @@ class Router {
       case `${this.BASE_URL}${Page.MAIN}`:
         return Page.MAIN;
       case `${this.BASE_URL}${Page.LOGIN}`:
+        if (state.getState().login.isLogin) return Page.MAIN;
         return Page.LOGIN;
       case `${this.BASE_URL}${Page.REGISTR}`:
+        if (state.getState().login.isLogin) return Page.MAIN;
         return Page.REGISTR;
       case `${this.BASE_URL}${Page.CATALOG}`:
         return Page.CATALOG;
@@ -52,8 +56,15 @@ class Router {
   }
 
   goPage(page: Page) {
-    window.history.pushState({ page }, '', page);
-    this.currentPage = page;
+    if (
+      (page === Page.LOGIN && state.getState().login.isLogin) ||
+      (page === Page.REGISTR && state.getState().login.isLogin)
+    ) {
+      this.currentPage = Page.MAIN;
+    } else {
+      this.currentPage = page;
+    }
+    window.history.pushState({ page: this.currentPage }, '', this.currentPage);
     this.renderPage();
   }
 
