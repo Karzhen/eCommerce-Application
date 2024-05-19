@@ -10,16 +10,17 @@ export default function createInputWithIcon({
   handler: { handlerInput, handlerClickIcon },
   iconUrl,
 }: ParametersBaseComponent) {
-  const OPTION = option;
-  OPTION.className = `${option.className} ${stylesInputWithIcon.link}`;
+  const OPTION = { ...option };
+  OPTION.className = `${option.className} ${stylesInputWithIcon.option}`;
 
   const WRAPPER = createElement(Tag.DIV, {
-    className: stylesInputWithIcon.wrapper,
+    className: `${option.className} ${stylesInputWithIcon.wrapper}`,
   });
 
   const ICON = createElement(Tag.IMG, {
-    className: stylesInputWithIcon.icon,
+    className: `${option.className} ${stylesInputWithIcon.icon}`,
   });
+
   if (iconUrl) ICON.setAttribute('src', iconUrl);
   if (handlerClickIcon) ICON.addEventListener('click', handlerClickIcon);
 

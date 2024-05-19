@@ -9,18 +9,18 @@ export default function createLinkWithIcon({
   handler: { handlerClick },
   iconUrl,
 }: ParametersBaseComponent) {
-  const OPTION = option;
-  OPTION.className = `${option.className} ${stylesLinkWithIcon.link}`;
-
   const WRAPPER = createElement(Tag.DIV, {
     className: stylesLinkWithIcon.wrapper,
   });
 
   const ICON = createElement(Tag.IMG, {
-    className: stylesLinkWithIcon.icon,
+    className: `${option.className} ${stylesLinkWithIcon.icon}`,
   });
   if (iconUrl) ICON.setAttribute('src', iconUrl);
-  const LINK_WITH_ICON = createLink({ option: OPTION, handler: {} });
+  const LINK_WITH_ICON = createLink({
+    option: { textContent: option.textContent },
+    handler: {},
+  });
 
   WRAPPER.append(ICON, LINK_WITH_ICON);
 
