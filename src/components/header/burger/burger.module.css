@@ -74,11 +74,13 @@
 
 @media (max-width: 350px) {
   .dropdown-menu {
+    box-sizing: border-box;
     width: 100vw;
-    height: 100vh;
-    top: -25px;
+    top: -20px;
+    min-height: 100vh;
     right: -20px;
     padding: 65px 30px;
+    align-items: center;
   }
 
   .dropdown-link {

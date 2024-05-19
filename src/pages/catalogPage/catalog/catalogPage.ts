@@ -1,7 +1,7 @@
 import { Page, Tag } from '@/interface';
 import createElement from '@/utils/create-element';
+import createHeader from '@/components/header/header';
 import styles from './catalogPage.module.css';
-import createHeader from '../header/headerCatalog';
 import createFooter from '../footer/footerCatalog';
 
 export default function createCatalogPage(goPage: (page: Page) => void) {

@@ -1,7 +1,7 @@
-import { Tag, Page, TypeButton } from '@/interface';
+import { Tag, Page } from '@/interface';
 import createElement from '@utils/create-element';
-import iconMain from '@assets/images/home.png';
-import createButtonWithIcon from '@/components/baseComponents/buttonWithIcon/buttonWithIcon';
+import createLinkWithIcon from '@/components/baseComponents/linkWithIcon/linkWithIcon';
+import iconLogo from '@assets/images/logo.jpg';
 
 import styles from './headerRegistr.module.css';
 
@@ -12,14 +12,13 @@ function handlerMainClick(goPage: (page: Page) => void) {
 export default function createHeader(goPage: (page: Page) => void) {
   const HEADER = createElement(Tag.HEADER, { className: styles.header });
 
-  const BUTTON_MAIN = createButtonWithIcon({
-    type: TypeButton.SECONDARY,
-    option: { textContent: 'Main Page', className: styles.buttonMain },
-    iconUrl: iconMain,
+  const LINK_LOGO = createLinkWithIcon({
+    option: { className: styles.logo },
+    iconUrl: iconLogo,
     handler: { handlerClick: () => handlerMainClick(goPage) },
   });
 
-  HEADER.append(BUTTON_MAIN);
+  HEADER.append(LINK_LOGO);
 
   return HEADER;
 }
