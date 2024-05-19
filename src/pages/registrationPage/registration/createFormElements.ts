@@ -196,7 +196,9 @@ export function createStreetField(prefix: string) {
   if (INPUT_STREET.id === 'billingStreet') {
     INPUT_STREET.addEventListener('input', () => {
       if (localStorage.getItem('sameAddress') === 'true') {
-        const SHIPPING_INPUT_STREET: HTMLInputElement = document.getElementById('shippingStreet') as HTMLInputElement;
+        const SHIPPING_INPUT_STREET: HTMLInputElement = document.getElementById(
+          'shippingStreet',
+        ) as HTMLInputElement;
         if (SHIPPING_INPUT_STREET) {
           SHIPPING_INPUT_STREET.value = INPUT_STREET.value;
         }
@@ -234,7 +236,9 @@ export function createCityField(prefix: string) {
   if (INPUT_CITY.id === 'billingCity') {
     INPUT_CITY.addEventListener('input', () => {
       if (localStorage.getItem('sameAddress') === 'true') {
-        const SHIPPING_INPUT_CITY: HTMLInputElement = document.getElementById('shippingCity') as HTMLInputElement;
+        const SHIPPING_INPUT_CITY: HTMLInputElement = document.getElementById(
+          'shippingCity',
+        ) as HTMLInputElement;
         if (SHIPPING_INPUT_CITY) {
           SHIPPING_INPUT_CITY.value = INPUT_CITY.value;
         }
@@ -272,7 +276,8 @@ export function createPostalCodeField(prefix: string) {
   if (INPUT_POSTAL_CODE.id === 'billingPostalCode') {
     INPUT_POSTAL_CODE.addEventListener('input', () => {
       if (localStorage.getItem('sameAddress') === 'true') {
-        const SHIPPING_INPUT_POSTAL_CODE: HTMLInputElement = document.getElementById('shippingPostalCode') as HTMLInputElement;
+        const SHIPPING_INPUT_POSTAL_CODE: HTMLInputElement =
+          document.getElementById('shippingPostalCode') as HTMLInputElement;
         if (SHIPPING_INPUT_POSTAL_CODE) {
           SHIPPING_INPUT_POSTAL_CODE.value = INPUT_POSTAL_CODE.value;
         }
@@ -311,7 +316,8 @@ export function createCountryField(prefix: string) {
   if (SELECT_COUNTRY.id === 'billingCountry') {
     SELECT_COUNTRY.addEventListener('input', () => {
       if (localStorage.getItem('sameAddress') === 'true') {
-        const SHIPPING_SELECT_COUNTRY: HTMLInputElement = document.getElementById('shippingCountry') as HTMLInputElement;
+        const SHIPPING_SELECT_COUNTRY: HTMLInputElement =
+          document.getElementById('shippingCountry') as HTMLInputElement;
         if (SHIPPING_SELECT_COUNTRY) {
           SHIPPING_SELECT_COUNTRY.value = SELECT_COUNTRY.value;
         }
@@ -399,7 +405,10 @@ export function createSameAddressCheckbox() {
     },
     handler: { handlerInput: checkSameAddress },
   }) as HTMLInputElement;
-  localStorage.setItem('sameAddress', SAME_ADDRESS_CHECKBOX.checked ? 'true' : 'false');
+  localStorage.setItem(
+    'sameAddress',
+    SAME_ADDRESS_CHECKBOX.checked ? 'true' : 'false',
+  );
 
   CHECKBOX_WRAPPER.append(TITLE_CHECKBOX, SAME_ADDRESS_CHECKBOX);
 

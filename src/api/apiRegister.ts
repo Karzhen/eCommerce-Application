@@ -20,7 +20,16 @@ function getCountryCode(country: string): string {
   }
 }
 function getAddresses(newCustomer: CustomerData) {
-  if (newCustomer.shippingAddress.city !== '') {
+  if (
+    newCustomer.shippingAddress.streetName !==
+      newCustomer.billingAddress.streetName ||
+    newCustomer.shippingAddress.streetNumber !==
+      newCustomer.billingAddress.streetNumber ||
+    newCustomer.shippingAddress.postalCode !==
+      newCustomer.billingAddress.postalCode ||
+    newCustomer.shippingAddress.country !==
+      newCustomer.billingAddress.country
+  ) {
     return [
       {
         ...newCustomer.billingAddress,
@@ -107,7 +116,7 @@ export default async function createCustomer(newCustomer: CustomerData) {
     let defaultShippingAddress;
 
     if (defaultShipping) {
-      if (newCustomer.shippingAddress.city !== '') {
+      if (getAddresses(newCustomer).length > 1) {
         defaultShippingAddress = 1;
       } else {
         defaultShippingAddress = 0;

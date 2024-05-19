@@ -1,4 +1,4 @@
-import copyBillingToShipping from "@utils/registrationSameInputs";
+import copyBillingToShipping from '@utils/registrationSameInputs';
 import toggleShippingInputs from './toggleInputs';
 
 export function applyStylesToContainer(element: HTMLElement | Element) {
