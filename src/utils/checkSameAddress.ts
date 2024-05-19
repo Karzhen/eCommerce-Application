@@ -1,3 +1,4 @@
+import copyBillingToShipping from "@utils/registrationSameInputs";
 import toggleShippingInputs from './toggleInputs';
 
 export function applyStylesToContainer(element: HTMLElement | Element) {
@@ -33,12 +34,11 @@ export default function checkSameAddress(event: Event) {
   const wrapper = document.getElementById(
     'shipping-address-box',
   ) as HTMLElement;
-  if (!isChecked) {
-    toggleShippingInputs(wrapper, false);
-    removeStylesToContainer(wrapper);
-  }
+  toggleShippingInputs(wrapper, isChecked);
   if (isChecked) {
-    toggleShippingInputs(wrapper, true);
+    copyBillingToShipping();
     applyStylesToContainer(wrapper);
+  } else {
+    removeStylesToContainer(wrapper);
   }
 }

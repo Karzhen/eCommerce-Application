@@ -132,7 +132,6 @@ export default async function createCustomer(newCustomer: CustomerData) {
         },
       })
       .execute();
-    console.log(newCustomer);
     if (response.body.customer.addresses.length > 1) {
       BILLING_ADDRESS_ID = response.body.customer.addresses[0].id;
       SHIPPING_ADDRESS_ID = response.body.customer.addresses[1].id;

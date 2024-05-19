@@ -186,13 +186,23 @@ export function createStreetField(prefix: string) {
     textContent: `${prefix.charAt(0).toUpperCase() + prefix.slice(1)} Street`,
   });
 
-  const INPUT_STREET = createInput({
+  const INPUT_STREET: HTMLInputElement = createInput({
     type: TypeInput.TEXT,
     option: { id: `${prefix}Street`, className: styles.street },
     handler: { handlerInput: handlerForm },
-  });
+  }) as HTMLInputElement;
   INPUT_STREET.setAttribute('required', 'required');
   INPUT_STREET.setAttribute('pattern', '^[a-zA-Z0-9 ,]+$');
+  if (INPUT_STREET.id === 'billingStreet') {
+    INPUT_STREET.addEventListener('input', () => {
+      if (localStorage.getItem('sameAddress') === 'true') {
+        const SHIPPING_INPUT_STREET: HTMLInputElement = document.getElementById('shippingStreet') as HTMLInputElement;
+        if (SHIPPING_INPUT_STREET) {
+          SHIPPING_INPUT_STREET.value = INPUT_STREET.value;
+        }
+      }
+    });
+  }
 
   const LABEL_ERROR = createElement(Tag.LABEL, {
     id: `${prefix}StreetError`,
@@ -214,13 +224,23 @@ export function createCityField(prefix: string) {
     textContent: `${prefix.charAt(0).toUpperCase() + prefix.slice(1)} City`,
   });
 
-  const INPUT_CITY = createInput({
+  const INPUT_CITY: HTMLInputElement = createInput({
     type: TypeInput.TEXT,
     option: { id: `${prefix}City`, className: styles.city },
     handler: { handlerInput: handlerForm },
-  });
+  }) as HTMLInputElement;
   INPUT_CITY.setAttribute('required', 'required');
   INPUT_CITY.setAttribute('pattern', '^[a-zA-Z]+$');
+  if (INPUT_CITY.id === 'billingCity') {
+    INPUT_CITY.addEventListener('input', () => {
+      if (localStorage.getItem('sameAddress') === 'true') {
+        const SHIPPING_INPUT_CITY: HTMLInputElement = document.getElementById('shippingCity') as HTMLInputElement;
+        if (SHIPPING_INPUT_CITY) {
+          SHIPPING_INPUT_CITY.value = INPUT_CITY.value;
+        }
+      }
+    });
+  }
 
   const LABEL_ERROR = createElement(Tag.LABEL, {
     id: `${prefix}CityError`,
@@ -242,13 +262,23 @@ export function createPostalCodeField(prefix: string) {
     textContent: `${prefix.charAt(0).toUpperCase() + prefix.slice(1)} Postal Code`,
   });
 
-  const INPUT_POSTAL_CODE = createInput({
+  const INPUT_POSTAL_CODE: HTMLInputElement = createInput({
     type: TypeInput.TEXT,
     option: { id: `${prefix}PostalCode`, className: styles.postalCode },
     handler: { handlerInput: handlerForm },
-  });
+  }) as HTMLInputElement;
   INPUT_POSTAL_CODE.setAttribute('required', 'required');
   INPUT_POSTAL_CODE.setAttribute('pattern', '\\d{6}');
+  if (INPUT_POSTAL_CODE.id === 'billingPostalCode') {
+    INPUT_POSTAL_CODE.addEventListener('input', () => {
+      if (localStorage.getItem('sameAddress') === 'true') {
+        const SHIPPING_INPUT_POSTAL_CODE: HTMLInputElement = document.getElementById('shippingPostalCode') as HTMLInputElement;
+        if (SHIPPING_INPUT_POSTAL_CODE) {
+          SHIPPING_INPUT_POSTAL_CODE.value = INPUT_POSTAL_CODE.value;
+        }
+      }
+    });
+  }
 
   const LABEL_ERROR = createElement(Tag.LABEL, {
     id: `${prefix}PostalCodeError`,
@@ -269,7 +299,7 @@ export function createCountryField(prefix: string) {
     textContent: `Select ${prefix.charAt(0).toUpperCase() + prefix.slice(1)} Country`,
   });
 
-  const SELECT_COUNTRY = createSelect({
+  const SELECT_COUNTRY: HTMLInputElement = createSelect({
     option: { id: `${prefix}Country`, className: styles.country },
     handler: {
       handlerChange: (event) => {
@@ -277,7 +307,17 @@ export function createCountryField(prefix: string) {
         handlerForm();
       },
     },
-  });
+  }) as HTMLInputElement;
+  if (SELECT_COUNTRY.id === 'billingCountry') {
+    SELECT_COUNTRY.addEventListener('input', () => {
+      if (localStorage.getItem('sameAddress') === 'true') {
+        const SHIPPING_SELECT_COUNTRY: HTMLInputElement = document.getElementById('shippingCountry') as HTMLInputElement;
+        if (SHIPPING_SELECT_COUNTRY) {
+          SHIPPING_SELECT_COUNTRY.value = SELECT_COUNTRY.value;
+        }
+      }
+    });
+  }
 
   const countries = ['Russia', 'United States', 'Germany'];
 
@@ -350,7 +390,7 @@ export function createSameAddressCheckbox() {
     textContent: 'Same as billing address',
   });
 
-  const SAME_ADDRESS_CHECKBOX = createInput({
+  const SAME_ADDRESS_CHECKBOX: HTMLInputElement = createInput({
     type: TypeInput.CHECKBOX,
     option: {
       id: 'sameAddressCheck',
@@ -358,7 +398,8 @@ export function createSameAddressCheckbox() {
       checked: true,
     },
     handler: { handlerInput: checkSameAddress },
-  });
+  }) as HTMLInputElement;
+  localStorage.setItem('sameAddress', SAME_ADDRESS_CHECKBOX.checked ? 'true' : 'false');
 
   CHECKBOX_WRAPPER.append(TITLE_CHECKBOX, SAME_ADDRESS_CHECKBOX);
 
