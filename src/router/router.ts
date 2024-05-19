@@ -1,3 +1,5 @@
+import state from '@redux/store/configureStore';
+
 import createLoginPage from '@/pages/loginPage/login/loginPage';
 import createErrorPage from '@pages/errorPage/errorPage';
 import createRegistrationPage from '@/pages/registrationPage/registration/registrationPage';
@@ -16,9 +18,10 @@ class Router {
 
   init() {
     window.addEventListener('popstate', this.handlerPopstate.bind(this));
-
     const initialPage = this.getInitialPage();
-    this.goPage(initialPage);
+    this.currentPage = initialPage;
+    window.history.replaceState({ page: initialPage }, '', initialPage);
+    this.renderPage();
   }
 
   getInitialPage(): Page {
@@ -28,8 +31,10 @@ class Router {
       case `${this.BASE_URL}${Page.MAIN}`:
         return Page.MAIN;
       case `${this.BASE_URL}${Page.LOGIN}`:
+        if (state.getState().login.isLogin) return Page.MAIN;
         return Page.LOGIN;
       case `${this.BASE_URL}${Page.REGISTR}`:
+        if (state.getState().login.isLogin) return Page.MAIN;
         return Page.REGISTR;
       case `${this.BASE_URL}${Page.CATALOG}`:
         return Page.CATALOG;
@@ -51,61 +56,77 @@ class Router {
   }
 
   goPage(page: Page) {
-    window.history.pushState({ page }, '', page);
-    this.currentPage = page;
+    if (
+      (page === Page.LOGIN && state.getState().login.isLogin) ||
+      (page === Page.REGISTR && state.getState().login.isLogin)
+    ) {
+      this.currentPage = Page.MAIN;
+    } else {
+      this.currentPage = page;
+    }
+    window.history.pushState({ page: this.currentPage }, '', this.currentPage);
     this.renderPage();
   }
 
   renderPage() {
     document.body.replaceChildren();
+    const bindGoPage = this.goPage.bind(this);
     switch (this.currentPage) {
       case Page.MAIN:
-        document.body.append(createMainPage(this.goPage.bind(this)));
+        document.body.append(createMainPage(bindGoPage));
         break;
       case Page.LOGIN:
-        document.body.append(createLoginPage(this.goPage.bind(this)));
+        document.body.append(createLoginPage(bindGoPage));
         break;
       case Page.REGISTR:
-        document.body.append(createRegistrationPage(this.goPage.bind(this)));
+        document.body.append(createRegistrationPage(bindGoPage));
         break;
       case Page.CATALOG:
-        document.body.append(createCatalogPage(this.goPage.bind(this)));
+        document.body.append(createCatalogPage(bindGoPage));
         break;
       case Page.PROFILE:
-        document.body.append(createProfilePage(this.goPage.bind(this)));
+        document.body.append(createProfilePage(bindGoPage));
         break;
       case Page.BASKET:
-        document.body.append(createBasketPage(this.goPage.bind(this)));
+        document.body.append(createBasketPage(bindGoPage));
         break;
       case Page.ABOUT:
-        document.body.append(createAboutPage(this.goPage.bind(this)));
+        document.body.append(createAboutPage(bindGoPage));
         break;
       default:
-        document.body.append(createErrorPage(this.goPage.bind(this)));
+        document.body.append(createErrorPage(bindGoPage));
     }
   }
 
   handlerPopstate(event: PopStateEvent) {
-    switch (event.state.page) {
-      case Page.MAIN:
-        this.currentPage = Page.MAIN;
-        break;
-      case Page.LOGIN:
-        this.currentPage = Page.LOGIN;
-        break;
-      case Page.REGISTR:
-        this.currentPage = Page.REGISTR;
-        break;
-      case Page.CATALOG:
-        this.currentPage = Page.CATALOG;
-        break;
-      case Page.PROFILE:
-        this.currentPage = Page.PROFILE;
-        break;
-      default:
-        this.currentPage = Page.ERROR;
+    if (event.state) {
+      switch (event.state.page) {
+        case Page.MAIN:
+          this.currentPage = Page.MAIN;
+          break;
+        case Page.LOGIN:
+          this.currentPage = Page.LOGIN;
+          break;
+        case Page.REGISTR:
+          this.currentPage = Page.REGISTR;
+          break;
+        case Page.CATALOG:
+          this.currentPage = Page.CATALOG;
+          break;
+        case Page.PROFILE:
+          this.currentPage = Page.PROFILE;
+          break;
+        case Page.ABOUT:
+          this.currentPage = Page.ABOUT;
+          break;
+        case Page.BASKET:
+          this.currentPage = Page.BASKET;
+          break;
+        default:
+          this.currentPage = Page.ERROR;
+      }
+      this.renderPage();
     }
-    this.renderPage();
   }
 }
 

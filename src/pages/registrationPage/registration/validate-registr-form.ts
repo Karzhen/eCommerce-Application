@@ -9,7 +9,7 @@ function validateEmail(input: HTMLInputElement): string {
       errorMessage +=
         'Email address must contain a domain name (e.g., example.com). ';
     }
-    if (!/^[a-zA-Z0-9_\\-]+@[a-z]+\.([a-z]{2,4})/.test(input.value)) {
+    if (!/^[a-zA-Z0-9_\\-\\.]+@[a-z]+\.([a-z]{2,4})/.test(input.value)) {
       errorMessage +=
         'Email address must be properly formatted (e.g., user@example.com). ';
     }

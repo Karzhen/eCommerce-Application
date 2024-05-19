@@ -25,7 +25,10 @@ export function createEmailField() {
   });
   INPUT_EMAIL.setAttribute('required', 'required');
   INPUT_EMAIL.setAttribute('autocomplete', 'username');
-  INPUT_EMAIL.setAttribute('pattern', '^[a-zA-Z0-9_\\-]+@[a-z]+\\.[a-z]{2,4}$');
+  INPUT_EMAIL.setAttribute(
+    'pattern',
+    '^[a-zA-Z0-9_\\-\\.]+@[a-z]+\\.[a-z]{2,4}$',
+  );
 
   const LABEL_ERROR = createElement(Tag.LABEL, {
     id: 'emailError',

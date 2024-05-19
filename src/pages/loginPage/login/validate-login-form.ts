@@ -1,15 +1,15 @@
 function generateErrorMessageEmail(element: HTMLInputElement) {
   let errorMessage = '';
 
-  if (element.validity.valueMissing) {
-    errorMessage += 'Required field. ';
-  }
+  // if (element.validity.valueMissing) {
+  //   errorMessage += 'Required field. ';
+  // }
   if (element.validity.patternMismatch) {
     if (!/[a-z]+\.([a-z]{2,4})$/.test(element.value)) {
       errorMessage +=
         'Email address must contain a domain name (e.g., example.com). ';
     }
-    if (!/^[a-zA-Z0-9_\\-]+@[a-z]+\.([a-z]{2,4})/.test(element.value)) {
+    if (!/^[a-zA-Z0-9_\\-\\.]+@[a-z]+\.([a-z]{2,4})/.test(element.value)) {
       errorMessage +=
         'Email address must be properly formatted (e.g., user@example.com). ';
     }
