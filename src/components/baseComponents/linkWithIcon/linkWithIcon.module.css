@@ -6,10 +6,12 @@
   cursor: pointer;
 }
 
-.wrapper:hover a {
-  color: var(--color-primary);
-}
-
 .icon {
   width: 25px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .wrapper:hover a {
+    color: var(--color-primary);
+  }
 }

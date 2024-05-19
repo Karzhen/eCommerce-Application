@@ -1,7 +1,7 @@
 import { Tag, Page } from '@/interface';
 import createElement from '@utils/create-element';
 
-import createHeader from './header/header';
+import createHeader from '@components/header/header';
 import createMain from './main/main';
 import createFooter from './footer/footer';
 

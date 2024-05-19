@@ -3,11 +3,14 @@
   color: var(--color-secondary-text);
 }
 
-.button:hover {
-  filter: drop-shadow(4px 8px 16px rgb(112, 192, 91, 0.2));
-}
-
 .button:disabled {
   background-color: var(--color-secondary-muted);
   color: var(--color-secondary);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button:hover {
+    filter: drop-shadow(4px 8px 16px rgb(112, 192, 91, 0.2));
+    cursor: pointer;
+  }
 }

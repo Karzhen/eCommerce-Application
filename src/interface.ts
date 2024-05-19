@@ -28,6 +28,7 @@ export enum Tag {
   MAIN = 'main',
   IMG = 'img',
   DIALOG = 'dialog',
+  SPAN = 'span',
 }
 
 export enum TypeInput {
