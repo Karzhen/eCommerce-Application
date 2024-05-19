@@ -16,9 +16,10 @@ class Router {
 
   init() {
     window.addEventListener('popstate', this.handlerPopstate.bind(this));
-
     const initialPage = this.getInitialPage();
-    this.goPage(initialPage);
+    this.currentPage = initialPage;
+    window.history.replaceState({ page: initialPage }, '', initialPage);
+    this.renderPage();
   }
 
   getInitialPage(): Page {
@@ -58,54 +59,63 @@ class Router {
 
   renderPage() {
     document.body.replaceChildren();
+    const bindGoPage = this.goPage.bind(this);
     switch (this.currentPage) {
       case Page.MAIN:
-        document.body.append(createMainPage(this.goPage.bind(this)));
+        document.body.append(createMainPage(bindGoPage));
         break;
       case Page.LOGIN:
-        document.body.append(createLoginPage(this.goPage.bind(this)));
+        document.body.append(createLoginPage(bindGoPage));
         break;
       case Page.REGISTR:
-        document.body.append(createRegistrationPage(this.goPage.bind(this)));
+        document.body.append(createRegistrationPage(bindGoPage));
         break;
       case Page.CATALOG:
-        document.body.append(createCatalogPage(this.goPage.bind(this)));
+        document.body.append(createCatalogPage(bindGoPage));
         break;
       case Page.PROFILE:
-        document.body.append(createProfilePage(this.goPage.bind(this)));
+        document.body.append(createProfilePage(bindGoPage));
         break;
       case Page.BASKET:
-        document.body.append(createBasketPage(this.goPage.bind(this)));
+        document.body.append(createBasketPage(bindGoPage));
         break;
       case Page.ABOUT:
-        document.body.append(createAboutPage(this.goPage.bind(this)));
+        document.body.append(createAboutPage(bindGoPage));
         break;
       default:
-        document.body.append(createErrorPage(this.goPage.bind(this)));
+        document.body.append(createErrorPage(bindGoPage));
     }
   }
 
   handlerPopstate(event: PopStateEvent) {
-    switch (event.state.page) {
-      case Page.MAIN:
-        this.currentPage = Page.MAIN;
-        break;
-      case Page.LOGIN:
-        this.currentPage = Page.LOGIN;
-        break;
-      case Page.REGISTR:
-        this.currentPage = Page.REGISTR;
-        break;
-      case Page.CATALOG:
-        this.currentPage = Page.CATALOG;
-        break;
-      case Page.PROFILE:
-        this.currentPage = Page.PROFILE;
-        break;
-      default:
-        this.currentPage = Page.ERROR;
+    if (event.state) {
+      switch (event.state.page) {
+        case Page.MAIN:
+          this.currentPage = Page.MAIN;
+          break;
+        case Page.LOGIN:
+          this.currentPage = Page.LOGIN;
+          break;
+        case Page.REGISTR:
+          this.currentPage = Page.REGISTR;
+          break;
+        case Page.CATALOG:
+          this.currentPage = Page.CATALOG;
+          break;
+        case Page.PROFILE:
+          this.currentPage = Page.PROFILE;
+          break;
+        case Page.ABOUT:
+          this.currentPage = Page.ABOUT;
+          break;
+        case Page.BASKET:
+          this.currentPage = Page.BASKET;
+          break;
+        default:
+          this.currentPage = Page.ERROR;
+      }
+      this.renderPage();
     }
-    this.renderPage();
   }
 }
 
