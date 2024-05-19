@@ -12,7 +12,8 @@ export interface CustomerData {
   firstName: string;
   lastName: string;
   dateOfBirth: string;
-  address: AddressData;
+  shippingAddress: AddressData;
+  billingAddress: AddressData;
 }
 
 function getElementValueById(id: string): string {
@@ -22,16 +23,42 @@ function getElementValueById(id: string): string {
   return element.value;
 }
 
-export default function getRegistrationData() {
-  const email: string = getElementValueById('email');
-  const password: string = getElementValueById('password');
-  const firstName: string = getElementValueById('name');
-  const lastName: string = getElementValueById('lastname');
-  const dateOfBirth: string = getElementValueById('dateBirth');
-  const country: string = getElementValueById('country');
-  const city: string = getElementValueById('city');
-  const street: string = getElementValueById('street');
-  const postalCode: string = getElementValueById('postalCode');
+function parseStreet(street: string): {
+  streetName: string;
+  streetNumber: string;
+} {
+  const parts = street.split(' ');
+  return {
+    streetName: parts.slice(0, -1).join(' '),
+    streetNumber: parts.pop() as string,
+  };
+}
+
+function getAddressData(prefix: string): AddressData {
+  const street = getElementValueById(`${prefix}Street`);
+  const { streetName, streetNumber } = parseStreet(street);
+  const postalCode = getElementValueById(`${prefix}PostalCode`);
+  const city = getElementValueById(`${prefix}City`);
+  const country = getElementValueById(`${prefix}Country`);
+
+  return {
+    streetName,
+    streetNumber,
+    postalCode,
+    city,
+    country,
+  };
+}
+
+export default function getRegistrationData(): CustomerData {
+  const email = getElementValueById('email');
+  const password = getElementValueById('password');
+  const firstName = getElementValueById('name');
+  const lastName = getElementValueById('lastname');
+  const dateOfBirth = getElementValueById('dateBirth');
+
+  const shippingAddress = getAddressData('shipping');
+  const billingAddress = getAddressData('billing');
 
   const newCustomer: CustomerData = {
     email,
@@ -39,13 +66,8 @@ export default function getRegistrationData() {
     firstName,
     lastName,
     dateOfBirth,
-    address: {
-      streetName: street.split(' ').slice(0, -1).join(' ') as string,
-      streetNumber: street.split(' ').pop() as string,
-      postalCode,
-      city,
-      country,
-    },
+    shippingAddress,
+    billingAddress,
   };
 
   return newCustomer;

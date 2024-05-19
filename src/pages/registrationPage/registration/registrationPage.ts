@@ -3,6 +3,8 @@ import createElement from '@utils/create-element';
 import createInput from '@baseComponents/input/input';
 import createButton from '@baseComponents/button/button';
 import clearDefaultAddresses from '@/utils/clearDefaultLS';
+import toggleShippingInputs from '@/utils/toggleInputs';
+import { applyStylesToContainer } from '@/utils/checkSameAddress';
 import styles from './registrationPage.module.css';
 import {
   createBillingCheckbox,
@@ -15,6 +17,7 @@ import {
   createPasswordField,
   createPostalCodeField,
   createShippingCheckbox,
+  createSameAddressCheckbox,
   createStreetField,
 } from './createFormElements';
 import { handlerClickLogin, handlerSubmit } from './eventHandlers';
@@ -26,42 +29,100 @@ function createCustomerBox() {
     className: styles.customerBox,
   });
 
-  const TITLE_CUSTOMER = createElement(Tag.H2, {
-    className: styles.titleCustomer,
-    textContent: 'Customer',
+  const MAIN_DATA_BOX = createElement(Tag.DIV, {
+    className: styles.mainDataBox,
   });
 
-  CUSTOMER_BOX.append(
-    TITLE_CUSTOMER,
-    createEmailField(),
-    createPasswordField(),
+  const EMAIL_PASSWORD_BOX = createElement(Tag.DIV, {
+    className: styles.emailPasswordBox,
+  });
+
+  EMAIL_PASSWORD_BOX.append(createEmailField(), createPasswordField());
+
+  const NAME_BIRTH_BOX = createElement(Tag.DIV, {
+    className: styles.nameBirthBox,
+  });
+
+  NAME_BIRTH_BOX.append(
     createNameField(),
     createLastNameField(),
     createDateBirthField(),
   );
 
+  MAIN_DATA_BOX.append(EMAIL_PASSWORD_BOX, NAME_BIRTH_BOX);
+
+  const TITLE_CUSTOMER = createElement(Tag.H2, {
+    className: styles.titleCustomer,
+    textContent: 'Customer',
+  });
+
+  CUSTOMER_BOX.append(TITLE_CUSTOMER, MAIN_DATA_BOX);
+
   return CUSTOMER_BOX;
 }
 
-function createAddressBox() {
+function createAddresses(title: string, prefix: string, isShipping?: boolean) {
+  if (isShipping) {
+    const TITLE_BOX = createElement(Tag.DIV, {});
+    const TITLE = createElement(Tag.H2, {
+      className: styles.shippingTitle,
+      textContent: title,
+    });
+
+    TITLE_BOX.append(TITLE, createSameAddressCheckbox());
+
+    const ADDRESS_WRAPPER = createElement(Tag.DIV, {
+      id: 'shipping-address-box',
+    });
+
+    ADDRESS_WRAPPER.append(
+      TITLE_BOX,
+      createStreetField(prefix),
+      createCityField(prefix),
+      createPostalCodeField(prefix),
+      createCountryField(prefix),
+    );
+
+    toggleShippingInputs(ADDRESS_WRAPPER, true);
+    applyStylesToContainer(ADDRESS_WRAPPER);
+    return ADDRESS_WRAPPER;
+  }
+
   const TITLE_ADDRESS = createElement(Tag.H2, {
     className: styles.titleAddress,
-    textContent: 'Address',
+    textContent: title,
   });
 
-  const ADDRESS_BOX = createElement(Tag.DIV, {
-    className: styles.adressBox,
+  const ADDRESS_WRAPPER = createElement(Tag.DIV, {
+    id: 'billing-address-box',
   });
 
-  ADDRESS_BOX.append(
+  ADDRESS_WRAPPER.append(
     TITLE_ADDRESS,
-    createStreetField(),
-    createCityField(),
-    createPostalCodeField(),
-    createCountryField(),
-    createShippingCheckbox(),
-    createBillingCheckbox(),
+    createStreetField(prefix),
+    createCityField(prefix),
+    createPostalCodeField(prefix),
+    createCountryField(prefix),
   );
+
+  return ADDRESS_WRAPPER;
+}
+
+function createAddressBox() {
+  const ADDRESS_BOX = createElement(Tag.DIV, {
+    className: styles.addressBox,
+  });
+
+  const SHIPPING_ADDRESS_BOX = createAddresses(
+    'Shipping Address',
+    'shipping',
+    true,
+  );
+  const BILLING_ADDRESS_BOX = createAddresses('Billing Address', 'billing');
+
+  BILLING_ADDRESS_BOX.append(createShippingCheckbox(), createBillingCheckbox());
+
+  ADDRESS_BOX.append(BILLING_ADDRESS_BOX, SHIPPING_ADDRESS_BOX);
 
   return ADDRESS_BOX;
 }

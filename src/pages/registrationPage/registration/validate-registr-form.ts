@@ -141,10 +141,14 @@ function getAllInputs(): HTMLInputElement[] {
   const inputDateBirth = document.getElementById(
     'dateBirth',
   ) as HTMLInputElement;
-  const inputStreet = document.getElementById('street') as HTMLInputElement;
-  const inputCity = document.getElementById('city') as HTMLInputElement;
-  const inputPostalCode = document.getElementById(
-    'postalCode',
+  const inputBillingStreet = document.getElementById(
+    'billingStreet',
+  ) as HTMLInputElement;
+  const inputBillingCity = document.getElementById(
+    'billingCity',
+  ) as HTMLInputElement;
+  const inputBillingPostalCode = document.getElementById(
+    'billingPostalCode',
   ) as HTMLInputElement;
 
   return [
@@ -153,9 +157,9 @@ function getAllInputs(): HTMLInputElement[] {
     inputName,
     inputLastname,
     inputDateBirth,
-    inputStreet,
-    inputCity,
-    inputPostalCode,
+    inputBillingStreet,
+    inputBillingCity,
+    inputBillingPostalCode,
   ];
 }
 
@@ -167,9 +171,9 @@ export default function validateRegistrForm(): boolean {
     'nameError',
     'lastnameError',
     'dateBirthError',
-    'streetError',
-    'cityError',
-    'postalCodeError',
+    'billingStreetError',
+    'billingCityError',
+    'billingPostalCodeError',
   ];
   const errors = [
     validateEmail(inputs[0]),
