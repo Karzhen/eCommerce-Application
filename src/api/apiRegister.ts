@@ -19,6 +19,35 @@ function getCountryCode(country: string): string {
       throw new Error(`Country code not found for ${country}`);
   }
 }
+function getAddresses(newCustomer: CustomerData) {
+  if (
+    newCustomer.shippingAddress.streetName !==
+      newCustomer.billingAddress.streetName ||
+    newCustomer.shippingAddress.streetNumber !==
+      newCustomer.billingAddress.streetNumber ||
+    newCustomer.shippingAddress.postalCode !==
+      newCustomer.billingAddress.postalCode ||
+    newCustomer.shippingAddress.country !==
+      newCustomer.billingAddress.country
+  ) {
+    return [
+      {
+        ...newCustomer.billingAddress,
+        country: getCountryCode(newCustomer.billingAddress.country),
+      },
+      {
+        ...newCustomer.shippingAddress,
+        country: getCountryCode(newCustomer.shippingAddress.country),
+      },
+    ];
+  }
+  return [
+    {
+      ...newCustomer.billingAddress,
+      country: getCountryCode(newCustomer.billingAddress.country),
+    },
+  ];
+}
 
 async function assignBillingAddressToCustomer(
   addressId: string,
@@ -78,10 +107,23 @@ async function assignShippingAddressToCustomer(
 
 export default async function createCustomer(newCustomer: CustomerData) {
   let CUSTOMER_ID: string | undefined = '';
-  let ADDRESS_ID: string | undefined = '';
+  // let ADDRESS_ID: string | undefined = '';
+  let BILLING_ADDRESS_ID: string | undefined = '';
+  let SHIPPING_ADDRESS_ID: string | undefined = '';
   try {
     const defaultBilling = localStorage.getItem('defaultBilling') === 'true';
     const defaultShipping = localStorage.getItem('defaultShipping') === 'true';
+    let defaultShippingAddress;
+
+    if (defaultShipping) {
+      if (getAddresses(newCustomer).length > 1) {
+        defaultShippingAddress = 1;
+      } else {
+        defaultShippingAddress = 0;
+      }
+    } else {
+      defaultShippingAddress = undefined;
+    }
 
     const response = await apiRoot
       .withProjectKey({ projectKey })
@@ -93,30 +135,31 @@ export default async function createCustomer(newCustomer: CustomerData) {
           firstName: newCustomer.firstName,
           lastName: newCustomer.lastName,
           dateOfBirth: newCustomer.dateOfBirth,
-          addresses: [
-            {
-              ...newCustomer.address,
-              country: getCountryCode(newCustomer.address.country),
-            },
-          ],
+          addresses: getAddresses(newCustomer),
           defaultBillingAddress: defaultBilling ? 0 : undefined,
-          defaultShippingAddress: defaultShipping ? 0 : undefined,
+          defaultShippingAddress,
         },
       })
       .execute();
-    ADDRESS_ID = response.body.customer.addresses[0].id;
+    if (response.body.customer.addresses.length > 1) {
+      BILLING_ADDRESS_ID = response.body.customer.addresses[0].id;
+      SHIPPING_ADDRESS_ID = response.body.customer.addresses[1].id;
+    } else {
+      BILLING_ADDRESS_ID = response.body.customer.addresses[0].id;
+    }
+    // ADDRESS_ID = response.body.customer.addresses[0].id;
     CUSTOMER_ID = response.body.customer.id;
     let { version } = response.body.customer;
-    if (ADDRESS_ID && CUSTOMER_ID) {
+    if (BILLING_ADDRESS_ID && CUSTOMER_ID) {
       const billingResponse = await assignBillingAddressToCustomer(
-        ADDRESS_ID,
+        BILLING_ADDRESS_ID,
         CUSTOMER_ID,
         version,
       );
       version = billingResponse.body.version;
 
       const shippingResponse = await assignShippingAddressToCustomer(
-        ADDRESS_ID,
+        SHIPPING_ADDRESS_ID || BILLING_ADDRESS_ID,
         CUSTOMER_ID,
         version,
       );

@@ -95,7 +95,7 @@ export function handlerCountry(event: Event) {
     const postalCodePattern = getPostalCodePattern(selectedCountry);
 
     const INPUT_POSTAL_CODE = document.getElementById(
-      'postalCode',
+      'billingPostalCode',
     ) as HTMLInputElement;
     if (postalCodePattern instanceof RegExp) {
       INPUT_POSTAL_CODE?.setAttribute('pattern', postalCodePattern.source);

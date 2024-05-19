@@ -175,8 +175,8 @@ export async function createCustomer(newCustomer: CustomerData) {
           dateOfBirth: newCustomer.dateOfBirth,
           addresses: [
             {
-              ...newCustomer.address,
-              country: getCountryCode(newCustomer.address.country),
+              ...newCustomer.billingAddress,
+              country: getCountryCode(newCustomer.billingAddress.country),
             },
           ],
           defaultBillingAddress: defaultBilling ? 0 : undefined,
