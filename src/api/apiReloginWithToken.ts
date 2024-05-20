@@ -19,8 +19,7 @@ export default async function apiReloginWithToken() {
       .me()
       .get()
       .execute()
-      .then(({ body }) => {
-        console.log('Relogin --->', body);
+      .then(() => {
         store.dispatch(
           LOGIN({ value: tokenCache.get().refreshToken || '', isLogin: true }),
         );

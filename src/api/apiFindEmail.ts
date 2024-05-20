@@ -25,8 +25,6 @@ export default async function apiLogin(email: string) {
       })
       .execute()
       .then(({ body }) => {
-        console.log('Has email --->', body);
-        console.log(body.count);
         if (body.count === 0) {
           store.dispatch(
             ERROR_LOGIN({ value: LoginError.ERROR_EMAIL, isLogin: false }),
@@ -38,7 +36,6 @@ export default async function apiLogin(email: string) {
         }
       });
   } catch (error) {
-    console.log('ERROR --->', error);
     store.dispatch(
       ERROR_LOGIN({ value: 'Something went wrong', isLogin: false }),
     );
