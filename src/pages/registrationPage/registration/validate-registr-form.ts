@@ -59,6 +59,7 @@ function getAllInputs(sameAddressChecked: boolean): HTMLInputElement[] {
 export default function validateRegistrForm(): boolean {
   const sameAddressChecked = localStorage.getItem('sameAddress') === 'true';
   const inputs = getAllInputs(sameAddressChecked);
+
   const labels = [
     'emailError',
     'passwordError',
@@ -69,14 +70,6 @@ export default function validateRegistrForm(): boolean {
     'billingCityError',
     'billingPostalCodeError',
   ];
-
-  if (!sameAddressChecked) {
-    labels.push(
-      'shippingStreetError',
-      'shippingCityError',
-      'shippingPostalCodeError',
-    );
-  }
 
   const errors = [
     validateEmail(inputs[0]),
@@ -90,6 +83,11 @@ export default function validateRegistrForm(): boolean {
   ];
 
   if (!sameAddressChecked) {
+    labels.push(
+      'shippingStreetError',
+      'shippingCityError',
+      'shippingPostalCodeError',
+    );
     errors.push(
       validateStreet(inputs[8]),
       validateName(inputs[9]),
