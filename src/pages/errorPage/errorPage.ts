@@ -1,6 +1,7 @@
 import { Page, Tag, TypeButton } from '@/interface';
 import createElement from '@/utils/create-element';
 import createButton from '@/components/baseComponents/button/button';
+import errorGif from '@assets/images/error.gif';
 import styles from './errorPage.module.css';
 
 function handlerClickBack(event: Event, goPage: (page: Page) => void) {
@@ -69,7 +70,7 @@ function createGif() {
     id: 'dancingRacoon',
     className: styles.errorGif,
   });
-  gif.setAttribute('src', './src/assets/images/error.gif');
+  gif.setAttribute('src', errorGif);
   gif.setAttribute('alt', 'Dancing Racoon');
   wrapper.append(gif);
   return wrapper;
