@@ -7,7 +7,7 @@ const projectKey: string = import.meta.env.VITE_CTP_PROJECT_KEY;
 const client = createCtpClientAnonymous();
 const apiRoot = createApiBuilderFromCtpClient(client);
 
-function getCountryCode(country: string): string {
+export function getCountryCode(country: string): string {
   switch (country.toLowerCase()) {
     case 'germany':
       return 'DE';
@@ -19,7 +19,7 @@ function getCountryCode(country: string): string {
       throw new Error(`Country code not found for ${country}`);
   }
 }
-function getAddresses(newCustomer: CustomerData) {
+export function getAddresses(newCustomer: CustomerData) {
   if (
     newCustomer.shippingAddress.streetName !==
       newCustomer.billingAddress.streetName ||
@@ -27,8 +27,7 @@ function getAddresses(newCustomer: CustomerData) {
       newCustomer.billingAddress.streetNumber ||
     newCustomer.shippingAddress.postalCode !==
       newCustomer.billingAddress.postalCode ||
-    newCustomer.shippingAddress.country !==
-      newCustomer.billingAddress.country
+    newCustomer.shippingAddress.country !== newCustomer.billingAddress.country
   ) {
     return [
       {
