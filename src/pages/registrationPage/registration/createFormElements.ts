@@ -186,7 +186,7 @@ export function createStreetField(prefix: string) {
 
   const LABEL_STREET = createElement(Tag.LABEL, {
     className: styles.streetLabel,
-    textContent: `${prefix.charAt(0).toUpperCase() + prefix.slice(1)} Street`,
+    textContent: `Street`,
   });
 
   const INPUT_STREET: HTMLInputElement = createInput({
@@ -226,7 +226,7 @@ export function createCityField(prefix: string) {
 
   const LABEL_CITY = createElement(Tag.LABEL, {
     className: styles.cityLabel,
-    textContent: `${prefix.charAt(0).toUpperCase() + prefix.slice(1)} City`,
+    textContent: `City`,
   });
 
   const INPUT_CITY: HTMLInputElement = createInput({
@@ -266,7 +266,7 @@ export function createPostalCodeField(prefix: string) {
 
   const LABEL_POSTAL_CODE = createElement(Tag.LABEL, {
     className: styles.postalCodeLabel,
-    textContent: `${prefix.charAt(0).toUpperCase() + prefix.slice(1)} Postal Code`,
+    textContent: `Postal Code`,
   });
 
   const INPUT_POSTAL_CODE: HTMLInputElement = createInput({
@@ -304,14 +304,14 @@ export function createCountryField(prefix: string) {
 
   const LABEL_COUNTRY = createElement(Tag.LABEL, {
     className: styles.countryLabel,
-    textContent: `Select ${prefix.charAt(0).toUpperCase() + prefix.slice(1)} Country`,
+    textContent: `Select Country`,
   });
 
   const SELECT_COUNTRY: HTMLInputElement = createSelect({
     option: { id: `${prefix}Country`, className: styles.country },
     handler: {
       handlerChange: (event) => {
-        handlerCountry(event);
+        handlerCountry(event, prefix);
         handlerForm();
       },
     },

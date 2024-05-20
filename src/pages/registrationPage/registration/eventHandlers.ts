@@ -1,25 +1,21 @@
+import store from '@redux/store/configureStore';
+
 import { Page } from '@/interface';
-import { REGISTER } from '@/redux/actions/register';
-import { LOGIN } from '@/redux/actions/login';
-import store from '@/redux/store/configureStore';
+
+import loginUser from '@/utils/login';
+
 import createCustomer from '@api/apiRegister';
 import createPopUp from '@/components/popUp/popUp';
 import getRegistrationData, {
   CustomerData,
 } from '@utils/getRegistrationData.ts';
+
 import validateRegistrForm from './validate-registr-form';
 
-function createAndShowPopup(title: string, message: string, success?: boolean) {
+export function createAndShowPopup(title: string, message: string, success?: boolean) {
   const popup = createPopUp(title, message, success);
   document.body.append(popup);
   (popup as HTMLDialogElement).showModal();
-}
-
-function handleSuccess(newCustomer: CustomerData) {
-  store.dispatch(REGISTER({ value: 'token', isRegister: true }));
-  store.dispatch(LOGIN({ value: 'token', isLogin: true }));
-  const message = `User ${newCustomer.firstName} ${newCustomer.lastName} has been successfully registered`;
-  createAndShowPopup('Registration was successful', message, true);
 }
 
 export async function handlerSubmit(
@@ -27,25 +23,37 @@ export async function handlerSubmit(
   goPage: (page: Page) => void,
 ) {
   event?.preventDefault();
-  const newCustomer: CustomerData = getRegistrationData();
+  if (!validateRegistrForm()) {
+    createAndShowPopup(
+        'Authorisation Error',
+        'One or more fields do not match the input data format. Refresh the page and try again',
+        false
+    );
+  } else {
+    const newCustomer: CustomerData = getRegistrationData();
 
-  await createCustomer(newCustomer)
-    .then((response) => {
-      if (response.statusCode === 201) {
-        store.dispatch(REGISTER({ value: 'token', isRegister: true }));
-        store.dispatch(LOGIN({ value: 'token', isLogin: true }));
+    await createCustomer(newCustomer);
+    if (store.getState().register.isRegister) {
+      await loginUser(newCustomer.email, newCustomer.password);
+      if (store.getState().login.isLogin) {
         goPage(Page.MAIN);
-        handleSuccess(newCustomer);
+        const message = `User ${newCustomer.firstName} ${newCustomer.lastName} has been successfully registered`;
+        createAndShowPopup('Registration was successful', message, true);
+      } else {
+        createAndShowPopup(
+            'Registration Error',
+            store.getState().login.value || 'Something went wrong',
+            false,
+        );
       }
-    })
-    .catch((error) => {
-      const popup = createPopUp(
-        'Registration Error',
-        error || 'Something went wrong',
+    } else {
+      createAndShowPopup(
+          'Registration Error',
+          store.getState().register.value || 'Something went wrong',
+          false,
       );
-      document.body.append(popup);
-      (popup as HTMLDialogElement).showModal();
-    });
+    }
+  }
 }
 
 export function handlerForm() {
@@ -96,13 +104,13 @@ export function getPostalCodePattern(country: string): RegExp | null {
   }
 }
 
-export function handlerCountry(event: Event) {
+export function handlerCountry(event: Event, prefix: string) {
   if (event.target instanceof HTMLSelectElement) {
     const selectedCountry = event.target.value;
     const postalCodePattern = getPostalCodePattern(selectedCountry);
 
     const INPUT_POSTAL_CODE = document.getElementById(
-      'billingPostalCode',
+      `${prefix}PostalCode`,
     ) as HTMLInputElement;
     if (postalCodePattern instanceof RegExp) {
       INPUT_POSTAL_CODE?.setAttribute('pattern', postalCodePattern.source);

@@ -24,18 +24,19 @@ export default async function apiLogin(login: string, password: string) {
           password,
         },
       })
-      .execute()
-      .then(({ body }) => {
-        console.log('Login --->', body);
-        store.dispatch(
-          LOGIN({ value: tokenCache.get().refreshToken || '', isLogin: true }),
-        );
-      })
-      .catch((error) => {
-        console.log('ERROR --->', error);
-        store.dispatch(ERROR_LOGIN({ value: error.message, isLogin: false }));
-      });
+      .execute();
+
+    store.dispatch(
+      LOGIN({ value: tokenCache.get().refreshToken || '', isLogin: true }),
+    );
   } catch (error) {
-    console.log('ERROR --->', error);
+    if (error instanceof Error) {
+      store.dispatch(
+        ERROR_LOGIN({
+          value: 'Something went wrong. Please should try again later.',
+          isLogin: false,
+        }),
+      );
+    }
   }
 }

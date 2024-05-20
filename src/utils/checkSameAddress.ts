@@ -1,5 +1,7 @@
 import copyBillingToShipping from '@utils/registrationSameInputs';
+import validateRegistrForm from '@/pages/registrationPage/registration/validate-registr-form';
 import toggleShippingInputs from './toggleInputs';
+import updatePostalCodePattern from './updatePostalCodePattern';
 
 export function applyStylesToContainer(element: HTMLElement | Element) {
   if (element instanceof HTMLElement) {
@@ -41,4 +43,6 @@ export default function checkSameAddress(event: Event) {
   } else {
     removeStylesToContainer(wrapper);
   }
+  updatePostalCodePattern('shipping');
+  validateRegistrForm();
 }

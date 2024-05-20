@@ -1,3 +1,6 @@
+import store from '@redux/store/configureStore';
+import { ERROR_REGISTER, REGISTER } from '@redux/actions/register';
+
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import createCtpClientAnonymous from '@api/buildClient/buildAnonymousSessionFlow';
 import { CustomerData } from '@utils/getRegistrationData';
@@ -164,8 +167,25 @@ export default async function createCustomer(newCustomer: CustomerData) {
       );
       version = shippingResponse.body.version;
     }
-    return response;
+    store.dispatch(REGISTER({ value: '', isRegister: true }));
   } catch (error) {
-    throw new Error(`${error}`);
+    if (error instanceof Error) {
+      let errorMessage = '';
+      switch (error.message) {
+        case 'There is already an existing customer with the provided email.':
+          errorMessage =
+            'A user with this email already exists. Please log in or use another email address.';
+          break;
+        default:
+          errorMessage =
+            'Something went wrong during the registration process. Please should try again later.';
+      }
+      store.dispatch(
+        ERROR_REGISTER({
+          value: errorMessage,
+          isRegister: false,
+        }),
+      );
+    }
   }
 }

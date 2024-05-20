@@ -1,9 +1,9 @@
 export function generateErrorMessageEmail(element: HTMLInputElement) {
   let errorMessage = '';
 
-  // if (element.validity.valueMissing) {
-  //   errorMessage += 'Required field. ';
-  // }
+  if (element.validity.valueMissing) {
+    errorMessage += 'Required field. ';
+  }
   if (element.validity.patternMismatch) {
     if (!/[a-z]+\.([a-z]{2,4})$/.test(element.value)) {
       errorMessage +=
