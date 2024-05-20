@@ -12,7 +12,11 @@ import getRegistrationData, {
 
 import validateRegistrForm from './validate-registr-form';
 
-export function createAndShowPopup(title: string, message: string, success?: boolean) {
+export function createAndShowPopup(
+  title: string,
+  message: string,
+  success?: boolean,
+) {
   const popup = createPopUp(title, message, success);
   document.body.append(popup);
   (popup as HTMLDialogElement).showModal();
@@ -25,9 +29,9 @@ export async function handlerSubmit(
   event?.preventDefault();
   if (!validateRegistrForm()) {
     createAndShowPopup(
-        'Authorisation Error',
-        'One or more fields do not match the input data format. Refresh the page and try again',
-        false
+      'Authorisation Error',
+      'One or more fields do not match the input data format. Refresh the page and try again',
+      false,
     );
   } else {
     const newCustomer: CustomerData = getRegistrationData();
@@ -41,16 +45,16 @@ export async function handlerSubmit(
         createAndShowPopup('Registration was successful', message, true);
       } else {
         createAndShowPopup(
-            'Registration Error',
-            store.getState().login.value || 'Something went wrong',
-            false,
+          'Registration Error',
+          store.getState().login.value || 'Something went wrong',
+          false,
         );
       }
     } else {
       createAndShowPopup(
-          'Registration Error',
-          store.getState().register.value || 'Something went wrong',
-          false,
+        'Registration Error',
+        store.getState().register.value || 'Something went wrong',
+        false,
       );
     }
   }

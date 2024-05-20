@@ -188,7 +188,6 @@ select:disabled {
 input[type='checkbox'] {
   accent-color: var(--color-primary);
 }
-
 .second-column {
   display: flex;
   flex-direction: column;
@@ -201,4 +200,67 @@ input[type='checkbox'] {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+@media (max-width: 710px) {
+  .registr-page {
+    align-items: normal;
+  }
+
+  .registr-form {
+    width: auto;
+    box-sizing: border-box;
+    margin: 0 20px;
+  }
+
+  .address-box,
+  .main-data-box {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .email-error,
+  .password-error,
+  .name-error,
+  .lastname-error,
+  .date-birth-error,
+  .street-error,
+  .city-error,
+  .postalCode-error,
+  .country-error {
+    width: 100%;
+    max-width: none;
+  }
+
+  .second-column {
+    width: 100%;
+  }
+
+  .email,
+  .password,
+  .name,
+  .lastname,
+  .date-birth,
+  .street,
+  .city,
+  .postalCode,
+  .country {
+    max-width: none;
+    width: 100%;
+  }
+
+  .customer-box,
+  .email-password-box,
+  .name-birth-box,
+  .shipping-address-box,
+  .billing-address-box {
+    max-width: none;
+    width: 100%;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .checkbox:hover {
+    cursor: pointer;
+  }
 }
