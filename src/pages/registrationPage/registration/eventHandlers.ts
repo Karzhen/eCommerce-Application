@@ -9,6 +9,19 @@ import getRegistrationData, {
 } from '@utils/getRegistrationData.ts';
 import validateRegistrForm from './validate-registr-form';
 
+function createAndShowPopup(title: string, message: string, success?: boolean) {
+  const popup = createPopUp(title, message, success);
+  document.body.append(popup);
+  (popup as HTMLDialogElement).showModal();
+}
+
+function handleSuccess(newCustomer: CustomerData) {
+  store.dispatch(REGISTER({ value: 'token', isRegister: true }));
+  store.dispatch(LOGIN({ value: 'token', isLogin: true }));
+  const message = `User ${newCustomer.firstName} ${newCustomer.lastName} has been successfully registered`;
+  createAndShowPopup('Registration was successful', message, true);
+}
+
 export async function handlerSubmit(
   event: Event,
   goPage: (page: Page) => void,
@@ -22,13 +35,7 @@ export async function handlerSubmit(
         store.dispatch(REGISTER({ value: 'token', isRegister: true }));
         store.dispatch(LOGIN({ value: 'token', isLogin: true }));
         goPage(Page.MAIN);
-        const popup = createPopUp(
-          'Registration was successful',
-          `User ${newCustomer.firstName} ${newCustomer.lastName} has been successfully registered`,
-          true,
-        );
-        document.body.append(popup);
-        (popup as HTMLDialogElement).showModal();
+        handleSuccess(newCustomer);
       }
     })
     .catch((error) => {
