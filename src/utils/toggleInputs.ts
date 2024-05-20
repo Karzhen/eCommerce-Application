@@ -8,6 +8,14 @@ export default function toggleShippingInputs(
   inputs.forEach((input) => {
     const item = input;
     item.disabled = disable;
+    item.required = !disable;
+    if (disable) {
+      item.value = '';
+      const errorLabel = document.getElementById(`${item.id}Error`);
+      if (errorLabel) {
+        errorLabel.textContent = '';
+      }
+    }
   });
 
   const selects = container.querySelectorAll<HTMLSelectElement>(

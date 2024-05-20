@@ -188,3 +188,17 @@ select:disabled {
 input[type='checkbox'] {
   accent-color: var(--color-primary);
 }
+
+.second-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  margin-top: 10px;
+}
+
+.billing-address-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

@@ -13,7 +13,7 @@ export default function validateDateOfBirth(input: HTMLInputElement): string {
     const maxDate = new Date(
       currentDate.getFullYear() - 18,
       currentDate.getMonth(),
-      currentDate.getDate(),
+      currentDate.getDate() + 1,
     );
 
     const inputDate = new Date(input.value);

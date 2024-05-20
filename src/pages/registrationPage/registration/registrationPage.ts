@@ -95,6 +95,7 @@ function createAddresses(title: string, prefix: string, isShipping?: boolean) {
 
   const ADDRESS_WRAPPER = createElement(Tag.DIV, {
     id: 'billing-address-box',
+    className: styles.billingAddressBox,
   });
 
   ADDRESS_WRAPPER.append(
@@ -120,9 +121,15 @@ function createAddressBox() {
   );
   const BILLING_ADDRESS_BOX = createAddresses('Billing Address', 'billing');
 
-  BILLING_ADDRESS_BOX.append(createShippingCheckbox(), createBillingCheckbox());
+  BILLING_ADDRESS_BOX.append(createBillingCheckbox());
 
-  ADDRESS_BOX.append(BILLING_ADDRESS_BOX, SHIPPING_ADDRESS_BOX);
+  const BOX_SECOND_COLUMN = createElement(Tag.DIV, {
+    className: styles.secondColumn,
+  });
+
+  BOX_SECOND_COLUMN.append(SHIPPING_ADDRESS_BOX, createShippingCheckbox());
+
+  ADDRESS_BOX.append(BILLING_ADDRESS_BOX, BOX_SECOND_COLUMN);
 
   return ADDRESS_BOX;
 }

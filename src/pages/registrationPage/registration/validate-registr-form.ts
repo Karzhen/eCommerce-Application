@@ -7,7 +7,7 @@ import validateName from '@/utils/validateName';
 import validatePostalCode from '@/utils/validatePostalCode';
 import validateStreet from '@/utils/validateStreet';
 
-function getAllInputs(): HTMLInputElement[] {
+function getAllInputs(sameAddressChecked: boolean): HTMLInputElement[] {
   const inputEmail = document.getElementById('email') as HTMLInputElement;
   const inputPassword = document.getElementById('password') as HTMLInputElement;
   const inputName = document.getElementById('name') as HTMLInputElement;
@@ -25,7 +25,7 @@ function getAllInputs(): HTMLInputElement[] {
     'billingPostalCode',
   ) as HTMLInputElement;
 
-  return [
+  const inputs = [
     inputEmail,
     inputPassword,
     inputName,
@@ -35,10 +35,30 @@ function getAllInputs(): HTMLInputElement[] {
     inputBillingCity,
     inputBillingPostalCode,
   ];
+
+  if (!sameAddressChecked) {
+    const inputShippingStreet = document.getElementById(
+      'shippingStreet',
+    ) as HTMLInputElement;
+    const inputShippingCity = document.getElementById(
+      'shippingCity',
+    ) as HTMLInputElement;
+    const inputShippingPostalCode = document.getElementById(
+      'shippingPostalCode',
+    ) as HTMLInputElement;
+    inputs.push(
+      inputShippingStreet,
+      inputShippingCity,
+      inputShippingPostalCode,
+    );
+  }
+
+  return inputs;
 }
 
 export default function validateRegistrForm(): boolean {
-  const inputs = getAllInputs();
+  const sameAddressChecked = localStorage.getItem('sameAddress') === 'true';
+  const inputs = getAllInputs(sameAddressChecked);
   const labels = [
     'emailError',
     'passwordError',
@@ -49,6 +69,15 @@ export default function validateRegistrForm(): boolean {
     'billingCityError',
     'billingPostalCodeError',
   ];
+
+  if (!sameAddressChecked) {
+    labels.push(
+      'shippingStreetError',
+      'shippingCityError',
+      'shippingPostalCodeError',
+    );
+  }
+
   const errors = [
     validateEmail(inputs[0]),
     validatePassword(inputs[1]),
@@ -59,6 +88,14 @@ export default function validateRegistrForm(): boolean {
     validateName(inputs[6]),
     validatePostalCode(inputs[7]),
   ];
+
+  if (!sameAddressChecked) {
+    errors.push(
+      validateStreet(inputs[8]),
+      validateName(inputs[9]),
+      validatePostalCode(inputs[10]),
+    );
+  }
 
   const allInputsValid = inputs.every((input) => input.checkValidity());
 

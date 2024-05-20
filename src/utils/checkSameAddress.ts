@@ -1,4 +1,7 @@
 import copyBillingToShipping from '@utils/registrationSameInputs';
+import validateRegistrForm from '@/pages/registrationPage/registration/validate-registr-form';
+import { getCountryCode } from '@/api/apiRegister';
+import { getPostalCodePattern } from '@/pages/registrationPage/registration/eventHandlers';
 import toggleShippingInputs from './toggleInputs';
 
 export function applyStylesToContainer(element: HTMLElement | Element) {
@@ -41,4 +44,10 @@ export default function checkSameAddress(event: Event) {
   } else {
     removeStylesToContainer(wrapper);
   }
+  const selectedCountry = document.getElementById(
+    'shippingCountry',
+  ) as HTMLSelectElement;
+  getPostalCodePattern(selectedCountry?.value);
+  getCountryCode(selectedCountry?.value);
+  validateRegistrForm();
 }

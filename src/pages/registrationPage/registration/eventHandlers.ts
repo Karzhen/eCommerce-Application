@@ -96,13 +96,13 @@ export function getPostalCodePattern(country: string): RegExp | null {
   }
 }
 
-export function handlerCountry(event: Event) {
+export function handlerCountry(event: Event, prefix: string) {
   if (event.target instanceof HTMLSelectElement) {
     const selectedCountry = event.target.value;
     const postalCodePattern = getPostalCodePattern(selectedCountry);
 
     const INPUT_POSTAL_CODE = document.getElementById(
-      'billingPostalCode',
+      `${prefix}PostalCode`,
     ) as HTMLInputElement;
     if (postalCodePattern instanceof RegExp) {
       INPUT_POSTAL_CODE?.setAttribute('pattern', postalCodePattern.source);
