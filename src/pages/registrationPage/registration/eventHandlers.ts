@@ -1,25 +1,21 @@
+import store from '@redux/store/configureStore';
+
 import { Page } from '@/interface';
-import { REGISTER } from '@/redux/actions/register';
-import { LOGIN } from '@/redux/actions/login';
-import store from '@/redux/store/configureStore';
+
+import loginUser from '@/utils/login';
+
 import createCustomer from '@api/apiRegister';
 import createPopUp from '@/components/popUp/popUp';
 import getRegistrationData, {
   CustomerData,
 } from '@utils/getRegistrationData.ts';
+
 import validateRegistrForm from './validate-registr-form';
 
 function createAndShowPopup(title: string, message: string, success?: boolean) {
   const popup = createPopUp(title, message, success);
   document.body.append(popup);
   (popup as HTMLDialogElement).showModal();
-}
-
-function handleSuccess(newCustomer: CustomerData) {
-  store.dispatch(REGISTER({ value: 'token', isRegister: true }));
-  store.dispatch(LOGIN({ value: 'token', isLogin: true }));
-  const message = `User ${newCustomer.firstName} ${newCustomer.lastName} has been successfully registered`;
-  createAndShowPopup('Registration was successful', message, true);
 }
 
 export async function handlerSubmit(
@@ -29,23 +25,27 @@ export async function handlerSubmit(
   event?.preventDefault();
   const newCustomer: CustomerData = getRegistrationData();
 
-  await createCustomer(newCustomer)
-    .then((response) => {
-      if (response.statusCode === 201) {
-        store.dispatch(REGISTER({ value: 'token', isRegister: true }));
-        store.dispatch(LOGIN({ value: 'token', isLogin: true }));
-        goPage(Page.MAIN);
-        handleSuccess(newCustomer);
-      }
-    })
-    .catch((error) => {
-      const popup = createPopUp(
-        'Registration Error',
-        error || 'Something went wrong',
+  await createCustomer(newCustomer);
+  if (store.getState().register.isRegister) {
+    await loginUser(newCustomer.email, newCustomer.password);
+    if (store.getState().login.isLogin) {
+      goPage(Page.MAIN);
+      const message = `User ${newCustomer.firstName} ${newCustomer.lastName} has been successfully registered`;
+      createAndShowPopup('Registration was successful', message, true);
+    } else {
+      createAndShowPopup(
+        'Authorisation Error',
+        store.getState().login.value || 'Something went wrong',
+        false,
       );
-      document.body.append(popup);
-      (popup as HTMLDialogElement).showModal();
-    });
+    }
+  } else {
+    createAndShowPopup(
+      'Registration Error',
+      store.getState().register.value || 'Something went wrong',
+      false,
+    );
+  }
 }
 
 export function handlerForm() {
