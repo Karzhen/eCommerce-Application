@@ -1,7 +1,7 @@
 import { Tag, Page } from '@/interface';
 import createElement from '@utils/create-element';
 import createLinkWithIcon from '@/components/baseComponents/linkWithIcon/linkWithIcon';
-import iconLogo from '@assets/images/logo.jpg';
+import iconLogo from '@assets/images/logo.png';
 import styles from './headerLogin.module.css';
 
 function handlerMainClick(goPage: (page: Page) => void) {

@@ -14,19 +14,11 @@ export default async function apiReloginWithToken() {
   const apiRoot = createApiBuilderFromCtpClient(ctpClient);
 
   try {
-    await apiRoot
-      .withProjectKey({ projectKey })
-      .me()
-      .get()
-      .execute()
-      .then(() => {
-        store.dispatch(
-          LOGIN({ value: tokenCache.get().refreshToken || '', isLogin: true }),
-        );
-      })
-      .catch((error) => {
-        console.log('ERROR --->', error);
-      });
+    await apiRoot.withProjectKey({ projectKey }).me().get().execute();
+
+    store.dispatch(
+      LOGIN({ value: tokenCache.get().refreshToken || '', isLogin: true }),
+    );
   } catch (error) {
     console.log('ERROR --->', error);
   }

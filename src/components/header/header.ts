@@ -5,7 +5,7 @@ import createInputWithIcon from '@baseComponents/inputWithIcon/inputWithIcon';
 
 import { Tag, Page, TypeButton, TypeInput } from '@/interface';
 
-import iconLogo from '@assets/images/logo.jpg';
+import iconLogo from '@assets/images/logo.png';
 
 import iconCatalog from '@assets/images/align-justify.png';
 import iconSearch from '@assets/images/search.png';
