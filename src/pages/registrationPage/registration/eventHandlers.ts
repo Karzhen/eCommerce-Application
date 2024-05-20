@@ -12,7 +12,7 @@ import getRegistrationData, {
 
 import validateRegistrForm from './validate-registr-form';
 
-function createAndShowPopup(title: string, message: string, success?: boolean) {
+export function createAndShowPopup(title: string, message: string, success?: boolean) {
   const popup = createPopUp(title, message, success);
   document.body.append(popup);
   (popup as HTMLDialogElement).showModal();
@@ -23,28 +23,36 @@ export async function handlerSubmit(
   goPage: (page: Page) => void,
 ) {
   event?.preventDefault();
-  const newCustomer: CustomerData = getRegistrationData();
+  if (!validateRegistrForm()) {
+    createAndShowPopup(
+        'Authorisation Error',
+        'One or more fields do not match the input data format. Refresh the page and try again',
+        false
+    );
+  } else {
+    const newCustomer: CustomerData = getRegistrationData();
 
-  await createCustomer(newCustomer);
-  if (store.getState().register.isRegister) {
-    await loginUser(newCustomer.email, newCustomer.password);
-    if (store.getState().login.isLogin) {
-      goPage(Page.MAIN);
-      const message = `User ${newCustomer.firstName} ${newCustomer.lastName} has been successfully registered`;
-      createAndShowPopup('Registration was successful', message, true);
+    await createCustomer(newCustomer);
+    if (store.getState().register.isRegister) {
+      await loginUser(newCustomer.email, newCustomer.password);
+      if (store.getState().login.isLogin) {
+        goPage(Page.MAIN);
+        const message = `User ${newCustomer.firstName} ${newCustomer.lastName} has been successfully registered`;
+        createAndShowPopup('Registration was successful', message, true);
+      } else {
+        createAndShowPopup(
+            'Registration Error',
+            store.getState().login.value || 'Something went wrong',
+            false,
+        );
+      }
     } else {
       createAndShowPopup(
-        'Authorisation Error',
-        store.getState().login.value || 'Something went wrong',
-        false,
+          'Registration Error',
+          store.getState().register.value || 'Something went wrong',
+          false,
       );
     }
-  } else {
-    createAndShowPopup(
-      'Registration Error',
-      store.getState().register.value || 'Something went wrong',
-      false,
-    );
   }
 }
 

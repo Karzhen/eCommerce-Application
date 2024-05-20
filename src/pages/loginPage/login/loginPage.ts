@@ -7,6 +7,7 @@ import createButton from '@baseComponents/button/button';
 import createPopUp from '@components/popUp/popUp';
 
 import loginUser from '@utils/login';
+import { createAndShowPopup } from "@pages/registrationPage/registration/eventHandlers";
 import validateLoginForm from './validate-login-form';
 
 import styles from './loginPage.module.css';
@@ -27,15 +28,23 @@ async function handlerSubmit(event: Event, goPage: (page: Page) => void) {
     const login = INPUT_EMAIL.value;
     const password = INPUT_PASSWORD.value;
 
-    await loginUser(login, password);
-    if (store.getState().login.isLogin) goPage(Page.MAIN);
-    else {
-      const popup = createPopUp(
-        'Authorisation Error',
-        store.getState().login.value || 'Something went wrong',
+    if (!validateLoginForm()) {
+      createAndShowPopup(
+          'Authorisation Error',
+          'One or more fields do not match the input data format. Refresh the page and try again',
+          false
       );
-      document.body.append(popup);
-      (popup as HTMLDialogElement).showModal();
+    } else {
+      await loginUser(login, password);
+      if (store.getState().login.isLogin) goPage(Page.MAIN);
+      else {
+        const popup = createPopUp(
+            'Authorisation Error',
+            store.getState().login.value || 'Something went wrong',
+        );
+        document.body.append(popup);
+        (popup as HTMLDialogElement).showModal();
+      }
     }
   }
   (event.target as HTMLButtonElement).removeAttribute('disabled');
