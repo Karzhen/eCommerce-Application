@@ -149,7 +149,8 @@ select:disabled {
   height: 25px;
   position: absolute;
   right: 5px;
-  top: 10px;
+  top: 50%;
+  transform: translate(0, -50%);
   cursor: pointer;
 }
 
