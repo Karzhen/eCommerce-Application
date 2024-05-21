@@ -1,0 +1,70 @@
+.login-page {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  max-width: 1440px;
+  align-items: center;
+  flex-direction: column;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 300px;
+  margin: 20px;
+}
+
+.title {
+  color: var(--color-surface-text);
+  font: var(--text-header-s);
+  align-self: center;
+}
+
+.email-field,
+.password-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.email,
+.password {
+  color: var(--color-surface-text);
+  font: var(--text-l);
+  width: 100%;
+}
+
+.email-label,
+.password-label {
+  color: var(--color-hard);
+  font: var(--text-l);
+}
+
+.email-error,
+.password-error {
+  color: var(--color-error);
+  font: var(--text-s);
+}
+
+.wrapper-password {
+  position: relative;
+}
+
+.eye {
+  background: url('@assets/images/eye-off.png') no-repeat center / contain;
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translate(0, -50%);
+  cursor: pointer;
+}
+
+.eye[type='on'] {
+  background: url('@assets/images/eye.png') no-repeat center / contain;
+}
+
+.register {
+  width: 50%;
+}

@@ -1,0 +1,19 @@
+.header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  padding: 10px 20px;
+}
+
+.logo {
+  width: auto;
+  height: 50px;
+}
+
+.button-main {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 5px;
+}

@@ -5,7 +5,8 @@ import viteConfig from './vite.config'
 export default mergeConfig(viteConfig, defineConfig({
   test: {
     coverage: {
-      reportsDirectory: './tests/coverage'
+      reportsDirectory: './tests/coverage',
+      include: ['src/utils/**'],
     },
     watch: false
   },

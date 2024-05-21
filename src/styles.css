@@ -1,0 +1,107 @@
+:root {
+  /* main color */
+  --color-background: #f4f4f2;
+  --color-background-text: #291e0f;
+  --color-surface: #ffffff;
+  --color-surface-text: #414141;
+  --color-primary: #ff6633;
+  --color-primary-text: #ffffff;
+  --color-secondary: #70c05b;
+  --color-secondary-text: #ffffff;
+
+  /* gray scale */
+  --color-lightest: #f3f2f1;
+  --color-light: #bfbfbf;
+  --color-hard: #8f8f8f;
+  --color-hardest: #606060;
+
+  /* palette */
+  --color-success: #008c49;
+  --color-info: #1cb9fc;
+  --color-warning: #fca21c;
+  --color-error: #d80000;
+
+  /* button primary */
+  --color-primary-muted: #fcd5ba;
+
+  /* button secondary */
+  --color-secondary-muted: #e5ffde;
+
+  /* text */
+  --text-xs: 12px /1.5 'Rubic Regular', sans-serif;
+  --text-s: 16px /1.5 'Rubic Regular', sans-serif;
+  --text-m: 18px /1.5 'Rubic Regular', sans-serif;
+  --text-l: 24px /1.5 'Rubic Regular', sans-serif;
+  --text-xl: 36px /1.5 'Rubic Regular', sans-serif;
+
+  /* text bold */
+  --text-bold-xs: 12px /1.5 'Rubic Bold', sans-serif;
+  --text-bold-s: 16px /1.5 'Rubic Bold', sans-serif;
+  --text-bold-m: 18px /1.5 'Rubic Bold', sans-serif;
+  --text-bold-l: 24px /1.5 'Rubic Bold', sans-serif;
+  --text-bold-xl: 36px /1.5 'Rubic Bold', sans-serif;
+
+  /* header text */
+  --text-header-xs: 18px /1.5 'Rubic Bold', sans-serif;
+  --text-header-s: 24px /1.5 'Rubic Bold', sans-serif;
+  --text-header-m: 36px /1.5 'Rubic Bold', sans-serif;
+  --text-header-l: 48px /1.5 'Rubic Bold', sans-serif;
+  --text-header-xl: 64px /1.5 'Rubic Bold', sans-serif;
+}
+
+@media (max-width: 400px) {
+  :root {
+    /* text */
+    --text-xs: 8px /1.5 'Rubic Regular', sans-serif;
+    --text-s: 12px /1.5 'Rubic Regular', sans-serif;
+    --text-m: 14px /1.5 'Rubic Regular', sans-serif;
+    --text-l: 20px /1.5 'Rubic Regular', sans-serif;
+    --text-xl: 32px /1.5 'Rubic Regular', sans-serif;
+
+    /* text bold */
+    --text-bold-xs: 8px /1.5 'Rubic Bold', sans-serif;
+    --text-bold-s: 12px /1.5 'Rubic Bold', sans-serif;
+    --text-bold-m: 14px /1.5 'Rubic Bold', sans-serif;
+    --text-bold-l: 20px /1.5 'Rubic Bold', sans-serif;
+    --text-bold-xl: 32px /1.5 'Rubic Bold', sans-serif;
+
+    /* header text */
+    --text-header-xs: 16px /1.5 'Rubic Bold', sans-serif;
+    --text-header-s: 20px /1.5 'Rubic Bold', sans-serif;
+    --text-header-m: 24px /1.5 'Rubic Bold', sans-serif;
+    --text-header-l: 36px /1.5 'Rubic Bold', sans-serif;
+    --text-header-xl: 48px /1.5 'Rubic Bold', sans-serif;
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+@font-face {
+  font-family: 'Rubic Regular';
+  src:
+    local('Rubic Regular'),
+    local('Rubic-Regular'),
+    url('@assets/fonts/Rubik-Regular.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Rubic Bold';
+  src:
+    local('Rubic Bold'),
+    local('Rubic-Bold'),
+    url('@assets/fonts/Rubik-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}

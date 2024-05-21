@@ -1,0 +1,48 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px 20px;
+}
+
+.logo {
+  width: auto;
+  height: 50px;
+}
+
+.button-catalog {
+  font: var(--text-s);
+}
+
+.input-search {
+  font: var(--text-s);
+}
+
+.wrapper-auth-burger {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.burger {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .button-catalog,
+  .input-search,
+  .nav {
+    display: none;
+  }
+
+  .burger {
+    display: block;
+  }
+}
+
+@media (max-width: 350px) {
+  .auth-block {
+    display: none;
+  }
+}

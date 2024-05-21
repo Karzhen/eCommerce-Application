@@ -24,6 +24,7 @@ export default defineConfig({
       '@reducers': path.resolve(__dirname, './src/redux/reducers'),
       '@store': path.resolve(__dirname, './src/redux/store'),
       '@utils': path.resolve(__dirname, './src/utils'),
+      'node-fetch': 'isomorphic-fetch',
     },
   },
 });

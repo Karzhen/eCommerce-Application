@@ -1,0 +1,17 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.icon {
+  width: 25px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .wrapper:hover a {
+    color: var(--color-primary);
+  }
+}
