@@ -1,5 +1,5 @@
 import copyBillingToShipping from '@utils/registrationSameInputs';
-import validateRegistrForm from '@/pages/registrationPage/registration/validate-registr-form';
+import { handlerForm } from '@/pages/registrationPage/registration/eventHandlers';
 import toggleShippingInputs from './toggleInputs';
 import updatePostalCodePattern from './updatePostalCodePattern';
 
@@ -44,5 +44,5 @@ export default function checkSameAddress(event: Event) {
     removeStylesToContainer(wrapper);
   }
   updatePostalCodePattern('shipping');
-  validateRegistrForm();
+  handlerForm();
 }

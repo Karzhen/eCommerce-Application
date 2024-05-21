@@ -1,7 +1,5 @@
 import { TokenCache, TokenStore } from '@commercetools/sdk-client-v2';
 
-import { setRefreshToken } from '@utils/refreshToken';
-
 class MyTokenCache implements TokenCache {
   myCache: TokenStore;
 
@@ -17,9 +15,6 @@ class MyTokenCache implements TokenCache {
 
   set(newCache: TokenStore): void {
     this.myCache = newCache;
-    if (newCache.refreshToken) {
-      setRefreshToken(newCache.refreshToken);
-    }
   }
 
   get(): TokenStore {
