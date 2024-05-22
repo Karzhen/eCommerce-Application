@@ -105,10 +105,16 @@ class Router {
           this.currentPage = Page.MAIN;
           break;
         case Page.LOGIN:
-          this.currentPage = Page.LOGIN;
+          if (state.getState().login.isLogin) {
+            this.currentPage = Page.MAIN;
+            window.history.replaceState({ page: Page.MAIN }, '', Page.MAIN);
+          } else this.currentPage = Page.LOGIN;
           break;
         case Page.REGISTR:
-          this.currentPage = Page.REGISTR;
+          if (state.getState().login.isLogin) {
+            this.currentPage = Page.MAIN;
+            window.history.replaceState({ page: Page.MAIN }, '', Page.MAIN);
+          } else this.currentPage = Page.REGISTR;
           break;
         case Page.CATALOG:
           this.currentPage = Page.CATALOG;
