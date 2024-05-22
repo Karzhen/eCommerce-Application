@@ -3,8 +3,9 @@ export default function validateStreet(input: HTMLInputElement): string {
 
   if (input.validity.valueMissing) {
     errorMessage += 'Required field. ';
-  } else if (!/[A-Za-z]/.test(input.value)) {
-    errorMessage += 'Must contain at least one English alphabet character. ';
+  } else if (!/^[a-zA-Z0-9 ,\\.]*$/.test(input.value)) {
+    errorMessage +=
+      'One or more characters from the English alphabet, special characters(comma, dot, spase) or numbers';
   }
 
   return errorMessage;

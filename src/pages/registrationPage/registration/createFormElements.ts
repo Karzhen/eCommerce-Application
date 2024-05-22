@@ -195,7 +195,7 @@ export function createStreetField(prefix: string) {
     handler: { handlerInput: handlerForm },
   }) as HTMLInputElement;
   INPUT_STREET.setAttribute('required', 'required');
-  INPUT_STREET.setAttribute('pattern', '^[a-zA-Z0-9 ,]+$');
+  INPUT_STREET.setAttribute('pattern', '^[a-zA-Z0-9 ,\\.]*$');
   if (INPUT_STREET.id === 'billingStreet') {
     INPUT_STREET.addEventListener('input', () => {
       if (localStorage.getItem('sameAddress') === 'true') {
