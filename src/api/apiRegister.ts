@@ -149,7 +149,7 @@ export default async function createCustomer(newCustomer: CustomerData) {
     } else {
       BILLING_ADDRESS_ID = response.body.customer.addresses[0].id;
     }
-    // ADDRESS_ID = response.body.customer.addresses[0].id;
+
     CUSTOMER_ID = response.body.customer.id;
     let { version } = response.body.customer;
     if (BILLING_ADDRESS_ID && CUSTOMER_ID) {

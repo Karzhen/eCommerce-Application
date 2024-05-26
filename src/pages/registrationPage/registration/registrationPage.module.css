@@ -70,9 +70,14 @@
 .customer-box,
 .email-password-box,
 .name-birth-box,
-.shipping-address-box,
-.billing-address-box {
+.shipping-address-box {
   padding: 5px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.billing-address-box {
   height: auto;
   display: flex;
   flex-direction: column;
@@ -193,7 +198,6 @@ input[type='checkbox'] {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
   margin-top: 10px;
 }
 

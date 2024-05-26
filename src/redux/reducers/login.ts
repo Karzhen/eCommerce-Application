@@ -12,16 +12,19 @@ const login = createReducer(
         const STATE = state;
         STATE.value = action.payload.value;
         STATE.isLogin = true;
+        STATE.user = action.payload.user;
       })
       .addCase(ERROR_LOGIN, (state, action) => {
         const STATE = state;
         STATE.value = action.payload.value;
         STATE.isLogin = false;
+        STATE.user = null;
       })
       .addCase(LOGOUT, (state) => {
         const STATE = state;
         STATE.value = '';
         STATE.isLogin = false;
+        STATE.user = null;
       });
   },
 );

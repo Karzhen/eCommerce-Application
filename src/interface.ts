@@ -73,6 +73,7 @@ export interface ParametersBaseComponent {
 export type StateLogin = {
   value: string | null;
   isLogin: boolean;
+  user: Customer | null;
 };
 
 export type StateRegister = {
@@ -83,4 +84,27 @@ export type StateRegister = {
 export enum LoginError {
   ERROR_EMAIL = 'This user does not exist',
   ERROR_PASSWORD = 'Wrong data',
+}
+
+export interface Customer {
+  id: string;
+  dateOfBirth: string | undefined;
+  defaultBillingAddressId: string | undefined;
+  defaultShippingAddressId: string | undefined;
+  email: string;
+  firstName: string | undefined;
+  lastName: string | undefined;
+  password: string | undefined;
+  authenticationMode: string;
+  billingAddressIds: string[] | undefined;
+  shippingAddressIds: string[] | undefined;
+  addresses: AddressData[];
+}
+
+export interface AddressData {
+  streetNumber: string | undefined;
+  streetName: string | undefined;
+  postalCode: string | undefined;
+  city: string | undefined;
+  country: string | undefined;
 }

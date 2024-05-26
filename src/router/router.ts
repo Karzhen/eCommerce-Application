@@ -4,14 +4,15 @@ import createLoginPage from '@/pages/loginPage/login/loginPage';
 import createErrorPage from '@pages/errorPage/errorPage';
 import createRegistrationPage from '@/pages/registrationPage/registration/registrationPage';
 import createMainPage from '@pages/mainPage/mainPage';
-import createProfilePage from '@/pages/profilePage/profile/profilePage';
+import createProfilePage from '@/pages/profilePage/profilePage';
 import createCatalogPage from '@/pages/catalogPage/catalog/catalogPage';
 import createBasketPage from '@/pages/basketPage/basket/basketPage';
 import createAboutPage from '@/pages/aboutPage/about/aboutPage';
 
 import { Page } from '@/interface';
+import fillProfileFields from '@/pages/profilePage/fillProfile';
 
-class Router {
+export class Router {
   readonly BASE_URL = '/';
 
   currentPage: Page | null = null;
@@ -86,6 +87,7 @@ class Router {
         break;
       case Page.PROFILE:
         document.body.append(createProfilePage(bindGoPage));
+        fillProfileFields();
         break;
       case Page.BASKET:
         document.body.append(createBasketPage(bindGoPage));

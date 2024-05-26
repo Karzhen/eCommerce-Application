@@ -1,0 +1,29 @@
+.profile-data {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  margin: 20px;
+  box-sizing: border-box;
+  background: var(--color-lightest);
+}
+
+.name,
+.last-name,
+.date-birth {
+  width: 100%;
+}
+
+.profile-name,
+.profile-last-name,
+.profile-date-birth {
+  width: 100%;
+  color: var(--color-surface-text);
+  font: var(--text-header-xs);
+}
+
+.edit {
+  width: 80px;
+  height: 40px;
+  margin: 10px;
+  align-self: flex-end;
+}

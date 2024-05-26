@@ -66,6 +66,7 @@ function createAddresses(title: string, prefix: string, isShipping?: boolean) {
     const TITLE_BOX = createElement(Tag.DIV, {});
     const TITLE = createElement(Tag.H2, {
       className: styles.shippingTitle,
+      id: 'shippingTitle',
       textContent: title,
     });
 
@@ -109,7 +110,7 @@ function createAddresses(title: string, prefix: string, isShipping?: boolean) {
   return ADDRESS_WRAPPER;
 }
 
-function createAddressBox() {
+export function createAddressBox() {
   const ADDRESS_BOX = createElement(Tag.DIV, {
     className: styles.addressBox,
   });
