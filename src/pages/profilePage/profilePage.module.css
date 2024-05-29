@@ -1,8 +1,23 @@
-.profile-page,
-.profile-wrapper {
-  display: flex;
-  flex-direction: column;
+.profile-page {
   min-height: 100vh;
   width: 100%;
   max-width: 1440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-wrapper {
+  width: 100%;
+  max-width: 1440px;
+  border: 1px solid var(--color-primary);
+  display: flex;
+  flex-direction: column;
+}
+
+.changePassword {
+  box-sizing: border-box;
+  max-width: 600px;
+  width: 100%;
+  margin: 20px;
 }

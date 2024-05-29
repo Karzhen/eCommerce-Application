@@ -99,7 +99,7 @@
 input:disabled,
 select:disabled {
   cursor: default;
-  background: var(--color-lightest);
+  background: var(--color-disable);
 }
 
 .email,

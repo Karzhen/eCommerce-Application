@@ -138,6 +138,7 @@ export function createDateBirthField() {
 export function createPasswordField() {
   const PASSWORD_FIELD = createElement(Tag.DIV, {
     className: styles.passwordField,
+    id: 'passwordField',
   });
 
   const LABEL_PASSWORD = createElement(Tag.LABEL, {

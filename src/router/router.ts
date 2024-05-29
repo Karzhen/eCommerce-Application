@@ -10,8 +10,6 @@ import createBasketPage from '@pages/basketPage/basket/basketPage';
 import createAboutPage from '@pages/aboutPage/about/aboutPage';
 import createProductPage from '@pages/productPage/productPage';
 
-import fillProfileFields from '@pages/profilePage/fillProfile';
-
 import { Page } from '@/interface';
 
 export class Router {
@@ -124,7 +122,6 @@ export class Router {
         break;
       case Page.PROFILE:
         document.body.append(createProfilePage(bindGoPage));
-        fillProfileFields();
         break;
       case Page.BASKET:
         document.body.append(createBasketPage(bindGoPage));
@@ -134,7 +131,7 @@ export class Router {
         break;
       case Page.PRODUCT:
         document.body.append(
-          createProductPage(bindGoPage, this.currentProductId),
+          createProductPage(bindGoPage, this.currentProductId || ''),
         );
         break;
       default:

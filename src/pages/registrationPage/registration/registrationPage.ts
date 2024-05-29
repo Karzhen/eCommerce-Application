@@ -24,32 +24,37 @@ import { handlerClickLogin, handlerSubmit } from './eventHandlers';
 import createHeader from '../header/headerRegistr';
 import createFooter from '../footer/footerRegistr';
 
-function createCustomerBox() {
+export function createCustomerBox(isRegistrationPage: boolean) {
   const CUSTOMER_BOX = createElement(Tag.DIV, {
     className: styles.customerBox,
   });
 
   const MAIN_DATA_BOX = createElement(Tag.DIV, {
     className: styles.mainDataBox,
+    id: 'mainDataBox',
   });
 
   const EMAIL_PASSWORD_BOX = createElement(Tag.DIV, {
     className: styles.emailPasswordBox,
   });
 
-  EMAIL_PASSWORD_BOX.append(createEmailField(), createPasswordField());
-
   const NAME_BIRTH_BOX = createElement(Tag.DIV, {
     className: styles.nameBirthBox,
   });
 
-  NAME_BIRTH_BOX.append(
-    createNameField(),
-    createLastNameField(),
-    createDateBirthField(),
-  );
-
-  MAIN_DATA_BOX.append(EMAIL_PASSWORD_BOX, NAME_BIRTH_BOX);
+  if (isRegistrationPage) {
+    EMAIL_PASSWORD_BOX.append(createEmailField(), createPasswordField());
+    NAME_BIRTH_BOX.append(
+      createNameField(),
+      createLastNameField(),
+      createDateBirthField(),
+    );
+    MAIN_DATA_BOX.append(EMAIL_PASSWORD_BOX, NAME_BIRTH_BOX);
+  } else {
+    EMAIL_PASSWORD_BOX.append(createEmailField(), createDateBirthField());
+    NAME_BIRTH_BOX.append(createNameField(), createLastNameField());
+    MAIN_DATA_BOX.append(NAME_BIRTH_BOX, EMAIL_PASSWORD_BOX);
+  }
 
   const TITLE_CUSTOMER = createElement(Tag.H2, {
     className: styles.titleCustomer,
@@ -140,7 +145,7 @@ function createRegistrBox() {
     className: styles.registrBox,
   });
 
-  REGISTR_BOX.append(createCustomerBox(), createAddressBox());
+  REGISTR_BOX.append(createCustomerBox(true), createAddressBox());
 
   return REGISTR_BOX;
 }
@@ -201,6 +206,7 @@ export default function createRegistrationPage(goPage: (page: Page) => void) {
   REGISTR_PAGE.append(createHeader(goPage), createForm(goPage), createFooter());
 
   clearDefaultAddresses();
+  localStorage.setItem('sameAddress', 'true');
 
   return REGISTR_PAGE;
 }

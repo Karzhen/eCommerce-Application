@@ -1,87 +1,109 @@
+import { AddressData, Customer } from '@/interface';
 import { removeStylesToContainer } from '@/utils/checkSameAddress';
 import getCountryName from '@/utils/getCountryName';
 import copyBillingToShipping from '@/utils/registrationSameInputs';
 import store from '@redux/store/configureStore';
 
-export default function fillProfileFields() {
+function setUserFields(data: Customer, element: HTMLElement) {
+  const inputName = element.querySelector('#name') as HTMLInputElement;
+  const inputLastName = element.querySelector('#lastname') as HTMLInputElement;
+  const inputDateBirth = element.querySelector(
+    '#dateBirth',
+  ) as HTMLInputElement;
+  const inputEmail = element.querySelector('#email') as HTMLInputElement;
+
+  inputName.value = data?.firstName || '';
+  inputLastName.value = data?.lastName || '';
+  inputDateBirth.value = data?.dateOfBirth || '';
+  inputEmail.value = data?.email || '';
+}
+
+function setAddressFields(address: AddressData, element: HTMLElement) {
+  const billingStreetInput = element.querySelector(
+    '#billingStreet',
+  ) as HTMLInputElement;
+  const billingCityInput = element.querySelector(
+    '#billingCity',
+  ) as HTMLInputElement;
+  const billingPostalCodeInput = element.querySelector(
+    '#billingPostalCode',
+  ) as HTMLInputElement;
+  const billingCountrySelect = element.querySelector(
+    '#billingCountry',
+  ) as HTMLSelectElement;
+
+  const shippingStreetInput = element.querySelector(
+    '#shippingStreet',
+  ) as HTMLInputElement;
+  const shippingCityInput = element.querySelector(
+    '#shippingCity',
+  ) as HTMLInputElement;
+  const shippingPostalCodeInput = element.querySelector(
+    '#shippingPostalCode',
+  ) as HTMLInputElement;
+  const shippingCountrySelect = element.querySelector(
+    '#shippingCountry',
+  ) as HTMLSelectElement;
+
+  billingStreetInput.value =
+    `${address?.streetName} ${address?.streetNumber}` ?? '';
+  billingCityInput.value = address?.city ?? '';
+  billingPostalCodeInput.value = address?.postalCode ?? '';
+  billingCountrySelect.value = getCountryName(address?.country) ?? '';
+
+  shippingStreetInput.value =
+    `${address?.streetName} ${address?.streetNumber}` ?? '';
+  shippingCityInput.value = address?.city ?? '';
+  shippingPostalCodeInput.value = address?.postalCode ?? '';
+  shippingCountrySelect.value = getCountryName(address?.country) ?? '';
+}
+
+export default function fillProfileFields(element: HTMLElement) {
   try {
     const data = store.getState().login.user;
 
-    if (data !== null) {
-      const inputName = document.getElementById(
-        'profileName',
-      ) as HTMLInputElement;
-      const inputLastName = document.getElementById(
-        'profileLastName',
-      ) as HTMLInputElement;
-      const inputDateBirth = document.getElementById(
-        'dateBirth',
-      ) as HTMLInputElement;
-      const shippingCheck = document.getElementById(
-        'shippingCheck',
-      ) as HTMLInputElement;
-      const billingCheck = document.getElementById(
-        'billingCheck',
-      ) as HTMLInputElement;
-      const sameAddressCheckbox = document.getElementById(
-        'sameAddressCheck',
-      ) as HTMLInputElement;
+    console.log(data);
 
-      inputName.value = data?.firstName || '';
-      inputLastName.value = data?.lastName || '';
-      inputDateBirth.value = data?.dateOfBirth || '';
+    if (data !== null) {
+      setUserFields(data, element);
 
       const { addresses, defaultShippingAddressId, defaultBillingAddressId } =
         data;
 
-      const setBillingCheckbox = () => {
-        if (defaultBillingAddressId) {
-          billingCheck.checked = true;
-        } else {
-          billingCheck.checked = false;
-        }
-      };
+      const shippingCheck = element.querySelector(
+        '#shippingCheck',
+      ) as HTMLInputElement;
+      const billingCheck = element.querySelector(
+        '#billingCheck',
+      ) as HTMLInputElement;
 
-      const setShippingCheckbox = () => {
-        if (defaultShippingAddressId) {
-          shippingCheck.checked = true;
-        } else {
-          shippingCheck.checked = false;
-        }
-      };
-
-      setBillingCheckbox();
-      setShippingCheckbox();
+      billingCheck.checked = !!defaultBillingAddressId;
+      shippingCheck.checked = !!defaultShippingAddressId;
 
       const addressCount = addresses.length;
 
+      if (addressCount === 0) {
+        const sameAddressCheckbox = element.querySelector(
+          '#sameAddressCheck',
+        ) as HTMLInputElement;
+        sameAddressCheckbox.checked = true;
+        localStorage.setItem('sameAddress', 'true');
+      }
+
       if (addressCount > 0) {
         const address = addresses[0];
-        const inputStreet = document.getElementById(
-          'billingStreet',
-        ) as HTMLInputElement;
-        const inputCity = document.getElementById(
-          'billingCity',
-        ) as HTMLInputElement;
-        const inputPostalCode = document.getElementById(
-          'billingPostalCode',
-        ) as HTMLInputElement;
-        const selectedCountry = document.getElementById(
-          'billingCountry',
-        ) as HTMLSelectElement;
-        const wrapper = document.getElementById(
-          'shipping-address-box',
-        ) as HTMLElement;
+        setAddressFields(address, element);
 
-        inputStreet.value =
-          `${address?.streetName} ${address?.streetNumber}` ?? '';
-        inputCity.value = address?.city ?? '';
-        inputPostalCode.value = address?.postalCode ?? '';
-        selectedCountry.value = getCountryName(address?.country) ?? '';
+        const wrapper = element.querySelector(
+          '#shipping-address-box',
+        ) as HTMLElement;
+        const sameAddressCheckbox = element.querySelector(
+          '#sameAddressCheck',
+        ) as HTMLInputElement;
 
         if (addressCount === 1) {
           sameAddressCheckbox.checked = true;
-          copyBillingToShipping();
+          localStorage.setItem('sameAddress', 'true');
         } else {
           sameAddressCheckbox.checked = false;
           removeStylesToContainer(wrapper);
@@ -89,17 +111,17 @@ export default function fillProfileFields() {
 
         if (addressCount > 1) {
           const secondAddress = addresses[1];
-          const inputStreetShipping = document.getElementById(
-            'shippingStreet',
+          const inputStreetShipping = element.querySelector(
+            '#shippingStreet',
           ) as HTMLInputElement;
-          const inputCityShipping = document.getElementById(
-            'shippingCity',
+          const inputCityShipping = element.querySelector(
+            '#shippingCity',
           ) as HTMLInputElement;
-          const inputPostalCodeShipping = document.getElementById(
-            'shippingPostalCode',
+          const inputPostalCodeShipping = element.querySelector(
+            '#shippingPostalCode',
           ) as HTMLInputElement;
-          const selectedCountryShipping = document.getElementById(
-            'shippingCountry',
+          const selectedCountryShipping = element.querySelector(
+            '#shippingCountry',
           ) as HTMLSelectElement;
 
           inputStreetShipping.value =
@@ -110,6 +132,8 @@ export default function fillProfileFields() {
             getCountryName(secondAddress?.country) ?? '';
         }
       }
+
+      copyBillingToShipping();
     }
   } catch (error) {
     console.error('Error fetching user data:', error);

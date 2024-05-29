@@ -4,21 +4,29 @@
   max-width: 600px;
   margin: 20px;
   box-sizing: border-box;
-  background: var(--color-lightest);
 }
 
 .name,
 .last-name,
-.date-birth {
+.date-birth,
+.email,
+.password {
   width: 100%;
 }
 
 .profile-name,
 .profile-last-name,
-.profile-date-birth {
+.profile-date-birth,
+.profile-email,
+.profile-password {
   width: 100%;
   color: var(--color-surface-text);
   font: var(--text-header-xs);
+}
+
+.customer-box {
+  display: flex;
+  flex-direction: column;
 }
 
 .edit {

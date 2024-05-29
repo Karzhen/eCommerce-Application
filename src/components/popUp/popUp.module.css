@@ -45,6 +45,11 @@
   text-align: center;
 }
 
-.buttonClose {
+.buttonCloseSuccess {
   outline: none;
+  background: var(--color-secondary);
+}
+
+.buttonCloseFail {
+  background: var(--color-error);
 }

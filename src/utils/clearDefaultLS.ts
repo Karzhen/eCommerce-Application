@@ -1,5 +1,5 @@
 export default function clearDefaultAddresses() {
-  localStorage.removeItem('sameAddressCheck');
+  localStorage.removeItem('sameAddress');
   localStorage.removeItem('defaultBilling');
   localStorage.removeItem('defaultShipping');
 }
