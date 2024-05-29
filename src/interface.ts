@@ -1,12 +1,13 @@
 export enum Page {
-  LOGIN = 'login',
-  ERROR = 'error',
-  REGISTR = 'registration',
-  MAIN = 'main',
-  ABOUT = 'about',
-  BASKET = 'basket',
-  CATALOG = 'catalog',
-  PROFILE = 'profile',
+  LOGIN = '/login',
+  ERROR = '/error',
+  REGISTR = '/registration',
+  MAIN = '/main',
+  ABOUT = '/about',
+  BASKET = '/basket',
+  CATALOG = '/catalog',
+  PROFILE = '/profile',
+  PRODUCT = '/product',
 }
 
 export enum Tag {
@@ -29,6 +30,8 @@ export enum Tag {
   IMG = 'img',
   DIALOG = 'dialog',
   SPAN = 'span',
+  FIELDSET = 'fieldset',
+  LEGEND = 'legend',
 }
 
 export enum TypeInput {
@@ -81,6 +84,38 @@ export type StateRegister = {
   isRegister: boolean;
 };
 
+export interface ProductM {
+  id: string;
+  name: string;
+  price: number;
+  discount: number | null;
+  img: string[];
+  description: string;
+}
+
+export type StateProducts = {
+  value: ProductM[];
+  error: string;
+};
+
+export interface CategoryM {
+  id: string;
+  name: string;
+  parent: string | null;
+}
+
+export interface AttributeM {
+  name: string;
+  label: string;
+  value: { key: string; label: string }[];
+}
+
+export type StateParameters = {
+  categories: CategoryM[];
+  attributes: { [id: string]: AttributeM };
+  error: string;
+};
+
 export enum LoginError {
   ERROR_EMAIL = 'This user does not exist',
   ERROR_PASSWORD = 'Wrong data',
@@ -107,4 +142,30 @@ export interface AddressData {
   postalCode: string | undefined;
   city: string | undefined;
   country: string | undefined;
+}
+
+export enum CurrencyCode {
+  RU = 'RUB',
+  EN = 'USD',
+  DE = 'EUR',
+}
+
+export enum Language {
+  RU = 'ru',
+  EN = 'en',
+  DE = 'de',
+}
+
+export type StateLocal = {
+  language: Language;
+  currencyCode: CurrencyCode;
+};
+
+export interface Filter {
+  category?: string;
+  priceStart?: number;
+  priceEnd?: number;
+  brand?: string;
+  color?: string;
+  size?: string[];
 }

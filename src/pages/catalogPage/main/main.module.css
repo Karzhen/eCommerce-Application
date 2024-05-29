@@ -1,0 +1,19 @@
+.main {
+  background-color: var(--color-background);
+  flex: 1;
+  padding: 0 20px 20px 20px;
+}
+
+.content {
+  display: flex;
+  gap: 20px;
+  padding: 10px;
+}
+
+.menu {
+  width: 30%;
+}
+
+.field {
+  width: 70%;
+}

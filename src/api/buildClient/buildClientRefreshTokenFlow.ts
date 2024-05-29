@@ -15,6 +15,8 @@ export default function createCtpClientRefresh() {
   const hostAuth = import.meta.env.VITE_CTP_AUTH_URL;
   const hostApi = import.meta.env.VITE_CTP_API_URL;
 
+  const refreshToken = getRefreshToken() || '';
+
   const refreshAuthMiddlewareOptions: RefreshAuthMiddlewareOptions = {
     host: hostAuth,
     projectKey,
@@ -22,7 +24,7 @@ export default function createCtpClientRefresh() {
       clientId,
       clientSecret,
     },
-    refreshToken: getRefreshToken() || '',
+    refreshToken,
     tokenCache,
     fetch,
   };
