@@ -2,7 +2,7 @@ import store from '@redux/store/configureStore';
 
 import { Filter, ProductM } from '@/interface';
 
-import { GET_PRODUCTS, ERROR_GET_PRODUCTS } from '@/redux/actions/products';
+import { GET_PRODUCTS, ERROR_GET_PRODUCTS } from '@redux/actions/products';
 
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 
@@ -16,7 +16,7 @@ const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 function createQueryString(filter: Filter) {
   let where = '';
   if (filter.category) {
-    where = `categories(id="${filter.category}")`;
+    where = `(categories(id="${filter.category}"))`;
   }
 
   if (filter.priceStart) {
@@ -40,24 +40,27 @@ function createQueryString(filter: Filter) {
   }
 
   if (filter.size) {
+    const filterSizes = filter.size.map((el) => `key="${el}"`).join(' OR ');
+
     if (where) {
       where += ' AND ';
     }
-    where += `masterVariant(attributes(name="size" AND value(key="${filter.size}")))`;
+    where += `(masterVariant(attributes(name="size" AND value(${filterSizes}))) 
+    OR variants(attributes(name="size" AND value(${filterSizes}))))`;
   }
 
   if (filter.brand) {
     if (where) {
       where += ' AND ';
     }
-    where += `masterVariant(attributes(name="brand" AND value(key="${filter.brand}")))`;
+    where += `(masterVariant(attributes(name="brand" AND value(key="${filter.brand}"))))`;
   }
 
   if (filter.color) {
     if (where) {
       where += ' AND ';
     }
-    where += `masterVariant(attributes(name="color" AND value(key="${filter.color}")))`;
+    where += `(masterVariant(attributes(name="color" AND value(key="${filter.color}"))))`;
   }
 
   return where;

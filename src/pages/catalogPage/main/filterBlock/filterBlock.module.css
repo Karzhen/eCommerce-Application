@@ -1,0 +1,40 @@
+.filter-block {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+  font: var(--text-s);
+}
+
+.title-filter {
+  font: var(--text-bold-m);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wrapper-size1,
+.wrapper-size2,
+.wrapper-size3 {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.wrapper-price-start,
+.wrapper-price-end {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.price-end-input,
+.price-start-input {
+  font: var(--text-s);
+}
+
+.submit {
+  align-self: center;
+}

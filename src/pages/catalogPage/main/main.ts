@@ -7,7 +7,11 @@ import { Tag, Page, CategoryM } from '@/interface';
 
 import apiGetProducts from '@api/apiGetProducts';
 
+import apiGetAttributes from '@api/apiGetAttributes';
+import apiGetCategories from '@api/apiGetCategories';
+
 import createGridBlock from './gridBlock/gridBlock';
+import createFilterBlock from './filterBlock/filterBlock';
 
 import styles from './main.module.css';
 
@@ -35,12 +39,15 @@ function createErrorCategoryPage(goPage: (path: string) => void) {
   return WRAPPER;
 }
 
-function createContent(goPage: (path: string) => void) {
+function createContent(goPage: (path: string) => void, categoriesId: string[]) {
   const CONTENT = createElement(Tag.DIV, {
     className: styles.content,
   });
 
   const MENU = createElement(Tag.DIV, { className: styles.menu });
+
+  const FILTER_BLOCK = createFilterBlock(categoriesId);
+  MENU.append(FILTER_BLOCK);
 
   const FIELD = createElement(Tag.DIV, {
     className: styles.field,
@@ -90,10 +97,13 @@ export default async function createCatalogPage(
     className: styles.main,
   });
 
+  await apiGetCategories();
+  await apiGetAttributes();
+
   let CONTENT_PAGE;
   if (categoriesId.length === 0) {
     await apiGetProducts();
-    CONTENT_PAGE = createContent(goPage);
+    CONTENT_PAGE = createContent(goPage, categoriesId);
   } else {
     const isCategoriesExist = isExistChain(categoriesId);
 
@@ -110,7 +120,7 @@ export default async function createCatalogPage(
 
       filter.category = category;
       await apiGetProducts(filter);
-      CONTENT_PAGE = createContent(goPage);
+      CONTENT_PAGE = createContent(goPage, categoriesId);
     } else {
       CONTENT_PAGE = createErrorCategoryPage(goPage);
     }

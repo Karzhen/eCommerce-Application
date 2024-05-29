@@ -42,6 +42,20 @@
   overflow: hidden;
 }
 
+.product-price {
+  font: var(--text-bold-m);
+}
+
+.product-discount {
+  font: var(--text-bold-m);
+}
+
+.product-info:has(.product-discount) .product-price {
+  font: var(--text-bold-s);
+  color: var(--color-hard);
+  text-decoration: line-through;
+}
+
 .product-title {
   font: var(--text-m);
   color: var(--color-secondary);
