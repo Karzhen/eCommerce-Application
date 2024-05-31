@@ -40,10 +40,6 @@
   display: block;
 }
 
-.dropdown-menu div:first-child {
-  color: var(--color-hard);
-}
-
 .item:hover {
   background-color: var(--color-light);
 }

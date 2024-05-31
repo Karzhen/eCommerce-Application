@@ -27,6 +27,7 @@ function handleWithoutDropdownClick(event: Event, WRAPPER: HTMLElement) {
 export default function createSelect(
   { option }: ParametersBaseComponent,
   children: { label: string; key: string }[],
+  defaultValue?: { key: string; label: string },
 ) {
   const WRAPPER = createElement(Tag.DIV, {
     id: option?.id,
@@ -35,25 +36,25 @@ export default function createSelect(
 
   const SELECT = createElement(Tag.DIV, {
     className: styles.select,
-    textContent: 'Choose',
   });
-
-  const IMG = createElement(Tag.IMG, {
-    className: styles.img,
-  });
-  IMG.setAttribute('src', urlDropdown);
-  SELECT.append(IMG);
+  if (!defaultValue) {
+    SELECT.textContent = 'Choose';
+  } else {
+    SELECT.textContent = defaultValue.label;
+  }
 
   const DROPDOWN_MENU = createElement(Tag.DIV, {
     className: styles.dropdownMenu,
   });
 
-  const FIRST_ITEM = createElement(Tag.DIV, {
-    className: styles.item,
-    textContent: 'Choose',
-  });
-  FIRST_ITEM.setAttribute('value', '');
-  DROPDOWN_MENU.append(FIRST_ITEM);
+  if (!defaultValue) {
+    const FIRST_ITEM = createElement(Tag.DIV, {
+      className: styles.item,
+      textContent: 'Choose',
+    });
+    FIRST_ITEM.setAttribute('value', '');
+    DROPDOWN_MENU.append(FIRST_ITEM);
+  }
   children.forEach((child) => {
     const ITEM = createElement(Tag.DIV, {
       className: styles.item,
@@ -62,6 +63,11 @@ export default function createSelect(
     ITEM.setAttribute('value', child.key);
     DROPDOWN_MENU.append(ITEM);
   });
+
+  const IMG = createElement(Tag.IMG, {
+    className: styles.img,
+  });
+  IMG.setAttribute('src', urlDropdown);
 
   DROPDOWN_MENU.addEventListener('click', (event: Event) => {
     const element = event.target as HTMLElement;
@@ -80,7 +86,7 @@ export default function createSelect(
     }
   });
 
-  WRAPPER.append(SELECT, DROPDOWN_MENU);
+  WRAPPER.append(SELECT, DROPDOWN_MENU, IMG);
 
   document.body.addEventListener('click', (event: Event) =>
     handleWithoutDropdownClick(event, WRAPPER),

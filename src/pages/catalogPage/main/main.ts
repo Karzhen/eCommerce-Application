@@ -3,15 +3,15 @@ import store from '@redux/store/configureStore';
 import createElement from '@utils/create-element';
 import createButton from '@baseComponents/button/button';
 
-import { Tag, Page, CategoryM } from '@/interface';
+import { Tag, Page, CategoryM, Filter } from '@/interface';
 
 import apiGetProducts from '@api/apiGetProducts';
 
 import apiGetAttributes from '@api/apiGetAttributes';
 import apiGetCategories from '@api/apiGetCategories';
 
-import createGridBlock from './gridBlock/gridBlock';
 import createFilterBlock from './filterBlock/filterBlock';
+import createGridBlock from './gridBlock/gridBlock';
 
 import styles from './main.module.css';
 
@@ -39,27 +39,10 @@ function createErrorCategoryPage(goPage: (path: string) => void) {
   return WRAPPER;
 }
 
-function createContent(goPage: (path: string) => void, categoriesId: string[]) {
-  const CONTENT = createElement(Tag.DIV, {
-    className: styles.content,
-  });
+// function createContent(goPage: (path: string) => void, categoriesId: string[]) {
 
-  const MENU = createElement(Tag.DIV, { className: styles.menu });
-
-  const FILTER_BLOCK = createFilterBlock(categoriesId);
-  MENU.append(FILTER_BLOCK);
-
-  const FIELD = createElement(Tag.DIV, {
-    className: styles.field,
-  });
-
-  const GRID = createGridBlock(goPage);
-  FIELD.append(GRID);
-
-  CONTENT.append(MENU, FIELD);
-
-  return CONTENT;
-}
+//   return CONTENT;
+// }
 
 function isExistChain(categoryIds: string[]) {
   const allCategories = store.getState().parameters.categories;
@@ -100,33 +83,36 @@ export default async function createCatalogPage(
   await apiGetCategories();
   await apiGetAttributes();
 
-  let CONTENT_PAGE;
+  const MENU = createElement(Tag.DIV, { className: styles.menu });
+  const FILTER_BLOCK = createFilterBlock(categoriesId);
+  MENU.append(FILTER_BLOCK);
+  const CONTENT = createElement(Tag.DIV, {
+    className: styles.content,
+  });
+  MAIN.append(MENU, CONTENT);
+
   if (categoriesId.length === 0) {
     await apiGetProducts();
-    CONTENT_PAGE = createContent(goPage, categoriesId);
+
+    const GRID = createGridBlock(goPage);
+    CONTENT.append(GRID);
   } else {
     const isCategoriesExist = isExistChain(categoriesId);
 
     if (isCategoriesExist) {
       const category = categoriesId[categoriesId.length - 1];
 
-      const filter: {
-        category?: string;
-        priceStart?: number;
-        priceEnd?: number;
-        brand?: string;
-        size?: string[];
-      } = {};
-
+      const filter: Filter = {};
       filter.category = category;
       await apiGetProducts(filter);
-      CONTENT_PAGE = createContent(goPage, categoriesId);
+
+      const GRID = createGridBlock(goPage);
+      CONTENT.append(GRID);
     } else {
-      CONTENT_PAGE = createErrorCategoryPage(goPage);
+      const ERROR_PAGE = createErrorCategoryPage(goPage);
+      CONTENT.append(ERROR_PAGE);
     }
   }
-
-  MAIN.append(CONTENT_PAGE);
 
   return MAIN;
 }

@@ -15,6 +15,9 @@ function getFilterParam(FILTER_BLOCK: HTMLElement, categoriesId: string[]) {
   const filter: Filter = {};
 
   const category = categoriesId[categoriesId.length - 1];
+  const sort = (
+    FILTER_BLOCK.querySelector('#sort') as HTMLElement
+  ).children[0].getAttribute('value');
   const priceStart = (
     FILTER_BLOCK.querySelector('#priceStartInput') as HTMLInputElement
   ).value;
@@ -37,6 +40,10 @@ function getFilterParam(FILTER_BLOCK: HTMLElement, categoriesId: string[]) {
     '#checkboxSize3',
   ) as HTMLInputElement;
 
+  if (sort) {
+    const [order, name] = sort.split('.');
+    filter.sort = { name, order };
+  }
   if (category) {
     filter.category = category;
   }
@@ -189,6 +196,31 @@ function createFilterBrand() {
   return WRAPPER;
 }
 
+function createSortBlock() {
+  const WRAPPER = createElement(Tag.DIV, {});
+
+  const SECTION_SORT = createElement(Tag.FIELDSET, {});
+  const LEGEND = createElement(Tag.LEGEND, { textContent: 'Sort' });
+
+  const SORT = createSelect(
+    {
+      option: { id: 'sort' },
+      handler: {},
+    },
+    [
+      { label: 'price ASC', key: 'ASC.price' },
+      { label: 'price DESC', key: 'DESC.price' },
+      { label: 'name ASC', key: 'ASC.name' },
+      { label: 'name DESC', key: 'DESC.name' },
+    ],
+    { label: 'price ASC', key: 'ASC.price' },
+  );
+
+  SECTION_SORT.append(LEGEND, SORT);
+  WRAPPER.append(SECTION_SORT);
+  return WRAPPER;
+}
+
 function createFilterColor() {
   const WRAPPER = createElement(Tag.DIV, {
     className: styles.wrapperFilterColor,
@@ -224,6 +256,8 @@ export default function createFilterBlock(categoriesId: string[]) {
     className: styles.form,
   });
 
+  const SORT = createSortBlock();
+
   const FILTER_SIZE = createFilterSize();
 
   const FILTER_PRICE = createFilterPrice();
@@ -232,7 +266,7 @@ export default function createFilterBlock(categoriesId: string[]) {
 
   const FILTER_COLOR = createFilterColor();
 
-  FORM.append(FILTER_SIZE, FILTER_PRICE, FILTER_BRAND, FILTER_COLOR);
+  FORM.append(SORT, FILTER_SIZE, FILTER_PRICE, FILTER_BRAND, FILTER_COLOR);
 
   const BUTTON_SUBMIT = createButton({
     type: TypeButton.PRIMARY,

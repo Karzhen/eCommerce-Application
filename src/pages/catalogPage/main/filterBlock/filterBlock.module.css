@@ -33,6 +33,7 @@
 .price-end-input,
 .price-start-input {
   font: var(--text-s);
+  width: 100%;
 }
 
 .submit {

@@ -168,4 +168,5 @@ export interface Filter {
   brand?: string;
   color?: string;
   size?: string[];
+  sort?: { name: string; order: string };
 }

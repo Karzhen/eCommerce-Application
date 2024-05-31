@@ -14,56 +14,49 @@ import generateProduct from '@utils/generateProduct';
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
 function createQueryString(filter: Filter) {
-  let where = '';
+  const where: string[] = [];
   if (filter.category) {
-    where = `(categories(id="${filter.category}"))`;
+    where.push(`categories.id:"${filter.category}"`);
   }
 
-  if (filter.priceStart) {
-    if (where) {
-      where += ' AND ';
-    }
-    where += `(masterVariant(prices(discounted is defined)) 
-    AND masterVariant(prices(discounted(value(centAmount >= ${filter.priceStart}))))) 
-    OR (masterVariant(prices(discounted is not defined))  
-    AND masterVariant(prices(value(centAmount >= ${filter.priceStart}))))`;
-  }
-
-  if (filter.priceEnd) {
-    if (where) {
-      where += ' AND ';
-    }
-    where += `(masterVariant(prices(discounted is defined)) 
-    AND masterVariant(prices(discounted(value(centAmount <= ${filter.priceEnd}))))))) 
-    OR (masterVariant(prices(discounted is not defined))  
-    AND masterVariant(prices(value(centAmount <= ${filter.priceEnd}))))))`;
-  }
-
-  if (filter.size) {
-    const filterSizes = filter.size.map((el) => `key="${el}"`).join(' OR ');
-
-    if (where) {
-      where += ' AND ';
-    }
-    where += `(masterVariant(attributes(name="size" AND value(${filterSizes}))) 
-    OR variants(attributes(name="size" AND value(${filterSizes}))))`;
+  if (filter.priceStart || filter.priceEnd) {
+    where.push(
+      `variants.price.centAmount:range(${filter.priceStart ? filter.priceStart : '*'} to ${filter.priceEnd ? filter.priceEnd : '*'})`,
+    );
   }
 
   if (filter.brand) {
-    if (where) {
-      where += ' AND ';
-    }
-    where += `(masterVariant(attributes(name="brand" AND value(key="${filter.brand}"))))`;
+    where.push(`variants.attributes.brand.key:"${filter.brand}"`);
   }
 
   if (filter.color) {
-    if (where) {
-      where += ' AND ';
-    }
-    where += `(masterVariant(attributes(name="color" AND value(key="${filter.color}"))))`;
+    where.push(`variants.attributes.color.key:"${filter.color}"`);
+  }
+
+  if (filter.size && filter.size.length > 0) {
+    // where.push(`variants.attributes.size.key:"${el}"`)
+    where.push(
+      `variants.attributes.size.key:${filter.size.map((el) => `"${el}"`).join(',')}`,
+    );
   }
 
   return where;
+}
+
+function createSortString(filter: Filter) {
+  let sort = '';
+  if (filter.sort) {
+    const { name, order } = filter.sort;
+    if (name === 'price') {
+      sort = `price ${order}`;
+    } else {
+      sort = `${name}.${store.getState().local.language} ${order}`;
+    }
+  } else {
+    sort = 'price asc';
+  }
+
+  return sort;
 }
 
 export default async function apiGetProducts(filter: Filter = {}) {
@@ -87,10 +80,13 @@ export default async function apiGetProducts(filter: Filter = {}) {
       result = await apiRoot
         .withProjectKey({ projectKey })
         .productProjections()
+        .search()
         .get({
           queryArgs: {
             localeProjection: `${store.getState().local.language}`,
             priceCurrency: `${store.getState().local.currencyCode}`,
+            sort: createSortString(filter),
+            markMatchingVariants: true,
           },
         })
         .execute();
@@ -98,11 +94,14 @@ export default async function apiGetProducts(filter: Filter = {}) {
       result = await apiRoot
         .withProjectKey({ projectKey })
         .productProjections()
+        .search()
         .get({
           queryArgs: {
-            where,
+            filter: where,
             localeProjection: `${store.getState().local.language}`,
             priceCurrency: `${store.getState().local.currencyCode}`,
+            sort: createSortString(filter),
+            markMatchingVariants: true,
           },
         })
         .execute();
