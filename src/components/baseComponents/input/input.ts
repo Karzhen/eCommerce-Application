@@ -6,7 +6,7 @@ import styles from './input.module.css';
 export default function createInput({
   type,
   option,
-  handler: { handlerClick, handlerInput },
+  handler: { handlerClick, handlerInput, handlerKeyClick },
 }: ParametersBaseComponent) {
   const OPTION = option;
   switch (type) {
@@ -28,6 +28,7 @@ export default function createInput({
 
   if (handlerClick) INPUT.addEventListener('click', handlerClick);
   if (handlerInput) INPUT.addEventListener('input', handlerInput);
+  if (handlerKeyClick) INPUT.addEventListener('keydown', handlerKeyClick);
 
   return INPUT;
 }

@@ -34,7 +34,6 @@ function createQueryString(filter: Filter) {
   }
 
   if (filter.size && filter.size.length > 0) {
-    // where.push(`variants.attributes.size.key:"${el}"`)
     where.push(
       `variants.attributes.size.key:${filter.size.map((el) => `"${el}"`).join(',')}`,
     );
@@ -59,7 +58,10 @@ function createSortString(filter: Filter) {
   return sort;
 }
 
-export default async function apiGetProducts(filter: Filter = {}) {
+export default async function apiGetProducts(
+  filter: Filter = {},
+  search?: string,
+) {
   let ctpClient;
   if (store.getState().login.isLogin) {
     ctpClient = createCtpClientRefresh();
@@ -75,37 +77,38 @@ export default async function apiGetProducts(filter: Filter = {}) {
   }
 
   try {
-    let result;
-    if (!where) {
-      result = await apiRoot
-        .withProjectKey({ projectKey })
-        .productProjections()
-        .search()
-        .get({
-          queryArgs: {
-            localeProjection: `${store.getState().local.language}`,
-            priceCurrency: `${store.getState().local.currencyCode}`,
-            sort: createSortString(filter),
-            markMatchingVariants: true,
-          },
-        })
-        .execute();
-    } else {
-      result = await apiRoot
-        .withProjectKey({ projectKey })
-        .productProjections()
-        .search()
-        .get({
-          queryArgs: {
-            filter: where,
-            localeProjection: `${store.getState().local.language}`,
-            priceCurrency: `${store.getState().local.currencyCode}`,
-            sort: createSortString(filter),
-            markMatchingVariants: true,
-          },
-        })
-        .execute();
+    const queryArgs: {
+      localeProjection: string;
+      priceCurrency: string;
+      sort: string;
+      markMatchingVariants: boolean;
+      filter?: string[];
+      ['text.en']?: string;
+      ['text.ru']?: string;
+      ['text.de']?: string;
+      fuzzy?: boolean;
+    } = {
+      localeProjection: `${store.getState().local.language}`,
+      priceCurrency: `${store.getState().local.currencyCode}`,
+      sort: createSortString(filter),
+      markMatchingVariants: true,
+    };
+
+    if (where) {
+      queryArgs.filter = where;
     }
+
+    if (search) {
+      queryArgs['text.en'] = `${search}`;
+      queryArgs.fuzzy = true;
+    }
+
+    const result = await apiRoot
+      .withProjectKey({ projectKey })
+      .productProjections()
+      .search()
+      .get({ queryArgs })
+      .execute();
 
     const products: ProductM[] = [];
     result.body.results.forEach((element) => {

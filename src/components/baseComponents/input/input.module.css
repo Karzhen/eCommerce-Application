@@ -7,6 +7,7 @@ input[type='date'] {
   filter: drop-shadow(0 4px 4px rgb(0, 0, 0, 0.25));
   font: var(--text-l);
   caret-color: var(--color-secondary);
+  width: 100%;
   cursor: pointer;
 }
 

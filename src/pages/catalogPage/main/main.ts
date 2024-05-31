@@ -12,6 +12,7 @@ import apiGetCategories from '@api/apiGetCategories';
 
 import createFilterBlock from './filterBlock/filterBlock';
 import createGridBlock from './gridBlock/gridBlock';
+import createSearchBlock from './searchBlock/searchBlock';
 
 import styles from './main.module.css';
 
@@ -38,11 +39,6 @@ function createErrorCategoryPage(goPage: (path: string) => void) {
   WRAPPER.append(TITLE, BUTTON_BACR_TO_CATALOG);
   return WRAPPER;
 }
-
-// function createContent(goPage: (path: string) => void, categoriesId: string[]) {
-
-//   return CONTENT;
-// }
 
 function isExistChain(categoryIds: string[]) {
   const allCategories = store.getState().parameters.categories;
@@ -84,8 +80,11 @@ export default async function createCatalogPage(
   await apiGetAttributes();
 
   const MENU = createElement(Tag.DIV, { className: styles.menu });
+
+  const SEARCH_BLOCK = createSearchBlock();
+
   const FILTER_BLOCK = createFilterBlock(categoriesId);
-  MENU.append(FILTER_BLOCK);
+  MENU.append(SEARCH_BLOCK, FILTER_BLOCK);
   const CONTENT = createElement(Tag.DIV, {
     className: styles.content,
   });
@@ -103,6 +102,7 @@ export default async function createCatalogPage(
       const category = categoriesId[categoriesId.length - 1];
 
       const filter: Filter = {};
+
       filter.category = category;
       await apiGetProducts(filter);
 

@@ -58,6 +58,7 @@ export type TypeHandler = {
   handlerInput?: HandlerComponent;
   handlerChange?: HandlerComponent;
   handlerClickIcon?: HandlerComponent;
+  handlerKeyClick?: HandlerComponent;
 };
 
 export type HandlerComponent = (event: Event) => void;
