@@ -14,5 +14,6 @@ export default function createUser(customer: Customer): Customer {
     billingAddressIds: customer.billingAddressIds,
     shippingAddressIds: customer.shippingAddressIds,
     addresses: customer.addresses as AddressData[],
+    version: customer.version,
   };
 }

@@ -78,6 +78,8 @@ export type StateLogin = {
   value: string | null;
   isLogin: boolean;
   user: Customer | null;
+  version: number | null;
+  errorUpdate: string | null;
 };
 
 export type StateRegister = {
@@ -136,6 +138,7 @@ export interface Customer {
   billingAddressIds: string[] | undefined;
   shippingAddressIds: string[] | undefined;
   addresses: AddressData[];
+  version: number;
 }
 
 export interface AddressData {

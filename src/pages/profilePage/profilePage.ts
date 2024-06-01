@@ -23,7 +23,7 @@ export default function createProfilePage(goPage: (page: Page) => void) {
   clearDefaultAddresses();
   fillProfileFields(PROFILE_PAGE);
   addInputEventListeners(PROFILE_PAGE);
-  changeBox('mainDataBox');
+  changeBox('mainDataBox', PROFILE_PAGE);
 
   return PROFILE_PAGE;
 }

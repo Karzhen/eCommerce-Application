@@ -1,11 +1,17 @@
 import { createReducer } from '@reduxjs/toolkit';
 
-import { LOGIN, ERROR_LOGIN, LOGOUT } from '@actions/login';
+import {
+  LOGIN,
+  ERROR_LOGIN,
+  LOGOUT,
+  UPDATE_USER,
+  ERROR_UPDATE_PERSONAL_DATA,
+} from '@actions/login';
 
 import { StateLogin } from '@/interface';
 
 const login = createReducer(
-  { value: null, isLogin: false } as StateLogin,
+  { value: null, isLogin: false, user: null, version: 0 } as StateLogin,
   (builder) => {
     builder
       .addCase(LOGIN, (state, action) => {
@@ -13,18 +19,34 @@ const login = createReducer(
         STATE.value = action.payload.value;
         STATE.isLogin = true;
         STATE.user = action.payload.user;
+        STATE.version = action.payload.version;
       })
       .addCase(ERROR_LOGIN, (state, action) => {
         const STATE = state;
         STATE.value = action.payload.value;
         STATE.isLogin = false;
         STATE.user = null;
+        STATE.version = null;
       })
       .addCase(LOGOUT, (state) => {
         const STATE = state;
         STATE.value = '';
         STATE.isLogin = false;
         STATE.user = null;
+        STATE.version = null;
+      })
+      .addCase(UPDATE_USER, (state, action) => {
+        const { user } = action.payload;
+        if (user) {
+          const STATE = state;
+          STATE.user = user;
+          STATE.errorUpdate = null;
+          STATE.version = user.version;
+        }
+      })
+      .addCase(ERROR_UPDATE_PERSONAL_DATA, (state, action) => {
+        const STATE = state;
+        STATE.errorUpdate = action.payload.errorUpdate;
       });
   },
 );

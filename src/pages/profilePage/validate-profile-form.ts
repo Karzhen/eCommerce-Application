@@ -4,13 +4,18 @@ import validateName from '@/utils/validateName';
 import validatePostalCode from '@/utils/validatePostalCode';
 import validateStreet from '@/utils/validateStreet';
 
-function getAllInputsProfile(sameAddressChecked: boolean): HTMLInputElement[] {
+function getPersonalInputs(): HTMLInputElement[] {
   const inputEmail = document.getElementById('email') as HTMLInputElement;
   const inputName = document.getElementById('name') as HTMLInputElement;
   const inputLastname = document.getElementById('lastname') as HTMLInputElement;
   const inputDateBirth = document.getElementById(
     'dateBirth',
   ) as HTMLInputElement;
+
+  return [inputEmail, inputName, inputLastname, inputDateBirth];
+}
+
+function getAddressInputs(): HTMLInputElement[] {
   const inputBillingStreet = document.getElementById(
     'billingStreet',
   ) as HTMLInputElement;
@@ -21,15 +26,8 @@ function getAllInputsProfile(sameAddressChecked: boolean): HTMLInputElement[] {
     'billingPostalCode',
   ) as HTMLInputElement;
 
-  const inputs = [
-    inputEmail,
-    inputName,
-    inputLastname,
-    inputDateBirth,
-    inputBillingStreet,
-    inputBillingCity,
-    inputBillingPostalCode,
-  ];
+  const sameAddressChecked = localStorage.getItem('sameAddress') === 'true';
+  const inputs = [inputBillingStreet, inputBillingCity, inputBillingPostalCode];
 
   if (!sameAddressChecked) {
     const inputShippingStreet = document.getElementById(
@@ -51,51 +49,74 @@ function getAllInputsProfile(sameAddressChecked: boolean): HTMLInputElement[] {
   return inputs;
 }
 
-export default function validateProfileForm(): boolean {
-  const sameAddressChecked = localStorage.getItem('sameAddress') === 'true';
-  const inputs = getAllInputsProfile(sameAddressChecked);
-
-  const labels = [
-    'emailError',
-    'nameError',
-    'lastnameError',
-    'dateBirthError',
-    'billingStreetError',
-    'billingCityError',
-    'billingPostalCodeError',
-  ];
-
+export function validatePersonalData(inputs: HTMLInputElement[]): string[] {
   const errors = [
     validateEmail(inputs[0]),
     validateName(inputs[1]),
     validateName(inputs[2]),
     validateDateOfBirth(inputs[3]),
-    validateStreet(inputs[4]),
-    validateName(inputs[5]),
-    validatePostalCode(inputs[6]),
   ];
 
-  if (!sameAddressChecked) {
-    labels.push(
-      'shippingStreetError',
-      'shippingCityError',
-      'shippingPostalCodeError',
-    );
+  return errors;
+}
+
+export function validateAddress(inputs: HTMLInputElement[]): string[] {
+  const errors = [
+    validateStreet(inputs[0]),
+    validateName(inputs[1]),
+    validatePostalCode(inputs[2]),
+  ];
+
+  if (inputs.length > 3) {
+    // If shipping address exists
     errors.push(
-      validateStreet(inputs[7]),
-      validateName(inputs[8]),
-      validatePostalCode(inputs[9]),
+      validateStreet(inputs[3]),
+      validateName(inputs[4]),
+      validatePostalCode(inputs[5]),
     );
   }
 
-  const allInputsValid = inputs.every((input) => input.checkValidity());
+  return errors;
+}
 
-  labels.forEach((label, index) => {
+export function validatePersonalDataForm(): boolean {
+  const personalInputs = getPersonalInputs();
+  const personalErrors = validatePersonalData(personalInputs);
+
+  const personalLabels = [
+    'emailError',
+    'nameError',
+    'lastnameError',
+    'dateBirthError',
+  ];
+  personalLabels.forEach((label, index) => {
     const errorLabel = document.getElementById(label);
     if (errorLabel) {
-      errorLabel.textContent = errors[index];
+      errorLabel.textContent = personalErrors[index];
     }
   });
 
-  return allInputsValid;
+  return personalInputs.every((input) => input.checkValidity());
+}
+
+export function validateAddressForm(): boolean {
+  const addressInputs = getAddressInputs();
+  const addressErrors = validateAddress(addressInputs);
+
+  const addressLabels = [
+    'billingStreetError',
+    'billingCityError',
+    'billingPostalCodeError',
+    'shippingStreetError',
+    'shippingCityError',
+    'shippingPostalCodeError',
+  ];
+  addressLabels.forEach((label, index) => {
+    const errorLabel = document.getElementById(label);
+    if (errorLabel) {
+      errorLabel.textContent = addressErrors[index];
+    }
+  });
+
+  return addressInputs.every((input) => input.checkValidity());
 }

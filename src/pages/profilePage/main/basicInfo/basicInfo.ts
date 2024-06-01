@@ -1,7 +1,10 @@
 import createButton from '@/components/baseComponents/button/button';
 import { Tag, TypeButton } from '@/interface';
 import createElement from '@/utils/create-element';
-import toggleAllFields, { handlerClickEditMode } from '@/utils/editProfile';
+import toggleAllFields, {
+  handlerClickPersonalEditMode,
+  handlerClickCancelEditMode,
+} from '@/utils/editProfile';
 import styles from '@/pages/profilePage/main/basicInfo/basicInfo.module.css';
 import { createCustomerBox } from '@/pages/registrationPage/registration/registrationPage';
 
@@ -18,14 +21,33 @@ export default function createBasicInfoBox() {
       className: styles.edit,
       textContent: 'Edit',
     },
-    handler: { handlerClick: handlerClickEditMode },
+    handler: { handlerClick: handlerClickPersonalEditMode },
+  });
+
+  const CANCEL_BUTTON = createButton({
+    type: TypeButton.PRIMARY,
+    option: {
+      id: 'cancelProfile',
+      className: styles.cancel,
+      textContent: 'Cancel',
+    },
+    handler: { handlerClick: handlerClickCancelEditMode },
+  });
+
+  CANCEL_BUTTON.setAttribute('disabled', 'true');
+
+  const BUTTONS = createElement(Tag.FORM, {
+    className: styles.profileButtons,
+    id: 'profileButtons',
   });
 
   const CUSTOMER_BOX = createCustomerBox(false);
 
   CUSTOMER_BOX.className = styles.customerBox;
 
-  PROFILE_DATA.append(EDIT_BUTTON, CUSTOMER_BOX);
+  BUTTONS.append(EDIT_BUTTON, CANCEL_BUTTON);
+
+  PROFILE_DATA.append(BUTTONS, CUSTOMER_BOX);
 
   toggleAllFields(PROFILE_DATA, true);
 

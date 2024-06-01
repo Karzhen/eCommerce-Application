@@ -9,7 +9,7 @@ export default function formatPrice(
   switch (currency) {
     case CurrencyCode.RU:
       return `${(price / CENT_IN_DOLLAR).toFixed(2).replace('.', ',')} ₽`;
-    case CurrencyCode.GE:
+    case CurrencyCode.DE:
       return `${(price / CENT_IN_DOLLAR).toFixed(2).replace('.', ',')} €`;
     case CurrencyCode.EN:
     default:

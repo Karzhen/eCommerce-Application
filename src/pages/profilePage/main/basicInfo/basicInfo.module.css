@@ -29,9 +29,16 @@
   flex-direction: column;
 }
 
-.edit {
-  width: 80px;
+.edit,
+.cancel {
+  width: 100px;
   height: 40px;
   margin: 10px;
+  align-self: flex-end;
+}
+
+.profile-buttons {
+  display: flex;
+  gap: 5px;
   align-self: flex-end;
 }

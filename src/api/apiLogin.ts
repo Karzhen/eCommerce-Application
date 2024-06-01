@@ -28,11 +28,14 @@ export default async function apiLogin(login: string, password: string) {
 
     const user = createUser(customer as Customer);
 
+    const currentVersion = customer.version;
+
     store.dispatch(
       LOGIN({
         value: tokenCache.get().refreshToken || '',
         isLogin: true,
         user,
+        version: currentVersion,
       }),
     );
   } catch (error) {
@@ -42,6 +45,7 @@ export default async function apiLogin(login: string, password: string) {
           value: 'Something went wrong. Please should try again later.',
           isLogin: false,
           user: null,
+          version: null,
         }),
       );
     }

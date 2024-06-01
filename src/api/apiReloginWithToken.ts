@@ -22,12 +22,14 @@ export default async function apiReloginWithToken() {
     const customer = result.body;
 
     const user = createUser(customer as Customer);
+    const currentVersion = customer.version;
 
     store.dispatch(
       LOGIN({
         value: tokenCache.get().refreshToken || '',
         isLogin: true,
         user,
+        version: currentVersion,
       }),
     );
   } catch (error) {

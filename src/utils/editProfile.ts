@@ -1,8 +1,14 @@
 import { createAndShowPopup } from '@/pages/registrationPage/registration/eventHandlers';
-import validateProfileForm from '@/pages/profilePage/validate-profile-form';
+import {
+  validateAddressForm,
+  validatePersonalDataForm,
+} from '@/pages/profilePage/validate-profile-form';
+import { setUserFields } from '@/pages/profilePage/fillProfile';
+import store from '@/redux/store/configureStore';
+import apiUpdatePersonalData from '@/api/apiUpdatePersonalData';
 import copyBillingToShipping from './registrationSameInputs';
-import toggleShippingInputs from './toggleInputs';
 import updatePostalCodePattern from './updatePostalCodePattern';
+import samePersonalData from './samePersonalData';
 
 export default function toggleAllFields(
   container: HTMLElement,
@@ -22,8 +28,8 @@ export default function toggleAllFields(
   });
 }
 
-export function changeBox(id: string) {
-  const mainDataBox = document.getElementById(id) as HTMLElement;
+export function changeBox(id: string, container: HTMLElement) {
+  const mainDataBox = container.querySelector(`#${id}`) as HTMLElement;
   if (!mainDataBox) {
     return;
   }
@@ -40,58 +46,100 @@ export function addInputEventListeners(element: HTMLElement) {
   const inputs = element.querySelectorAll('input');
   inputs.forEach((input) => {
     input.addEventListener('input', () => {
-      validateProfileForm();
+      validatePersonalDataForm();
     });
   });
 
   const selects = element.querySelectorAll<HTMLSelectElement>('select');
   selects.forEach((select) => {
     select.addEventListener('change', () => {
-      validateProfileForm();
+      validateAddressForm();
     });
   });
 }
 
-export function handlerClickEditMode(event: Event) {
+export async function handlerClickPersonalEditMode(event: Event) {
   event.preventDefault();
   updatePostalCodePattern('shipping');
   const button = event.target as HTMLButtonElement;
-  const ADDRESS_BOX = document.getElementById('profileAddress') as HTMLElement;
   const PROFILE_DATA = document.getElementById('profileData') as HTMLElement;
   const sameAddress = localStorage.getItem('sameAddress');
-  const wrapper = document.getElementById(
-    'shipping-address-box',
-  ) as HTMLElement;
+  const cancelButton = document.getElementById(
+    'cancelProfile',
+  ) as HTMLButtonElement;
+
   if (button) {
     if (button.textContent === 'Edit') {
       button.textContent = 'Save';
+      cancelButton.removeAttribute('disabled');
       toggleAllFields(PROFILE_DATA, false);
-      toggleAllFields(ADDRESS_BOX, false);
-      changeBox('mainDataBox');
+      changeBox('mainDataBox', PROFILE_DATA);
       if (sameAddress === 'true') {
-        toggleShippingInputs(wrapper, true);
         copyBillingToShipping();
-      } else {
-        toggleShippingInputs(wrapper, false);
       }
     } else if (button.textContent === 'Save') {
-      if (validateProfileForm()) {
-        createAndShowPopup(
-          'Success of the update operation',
-          'The data is valid. The user has been updated',
-          true,
-        );
+      if (samePersonalData(PROFILE_DATA) === true) {
+        toggleAllFields(PROFILE_DATA, true);
+        button.textContent = 'Edit';
+        changeBox('mainDataBox', PROFILE_DATA);
+        cancelButton.setAttribute('disabled', 'true');
+      } else if (validatePersonalDataForm()) {
+        const firstName = (
+          PROFILE_DATA.querySelector('#name') as HTMLInputElement
+        )?.value;
+        const lastName = (
+          PROFILE_DATA.querySelector('#lastname') as HTMLInputElement
+        )?.value;
+        const email = (PROFILE_DATA.querySelector('#email') as HTMLInputElement)
+          ?.value;
+        const dateOfBirth = (
+          PROFILE_DATA.querySelector('#dateBirth') as HTMLInputElement
+        )?.value;
+
+        await apiUpdatePersonalData(firstName, lastName, email, dateOfBirth);
+
+        const { errorUpdate } = store.getState().login;
+        if (errorUpdate) {
+          createAndShowPopup(
+            'Failure of the update operation',
+            `Error: ${errorUpdate}`,
+            false,
+          );
+        } else {
+          createAndShowPopup(
+            'Success of the update operation',
+            'The data is valid. The user has been updated',
+            true,
+          );
+        }
+
         button.textContent = 'Edit';
         toggleAllFields(PROFILE_DATA, true);
-        toggleAllFields(ADDRESS_BOX, true);
-        changeBox('mainDataBox');
+        changeBox('mainDataBox', PROFILE_DATA);
+        cancelButton.setAttribute('disabled', 'true');
       } else {
         createAndShowPopup(
           'Failure of the update operation',
-          'The data is invalid. The user has not been updated',
+          'The data is invalid. User is not updated',
           false,
         );
       }
     }
+  }
+}
+
+export function handlerClickCancelEditMode(event: Event) {
+  event.preventDefault();
+  const button = document.getElementById('editProfile') as HTMLButtonElement;
+  button.textContent = 'Edit';
+  const CANCEL = document.getElementById('cancelProfile') as HTMLButtonElement;
+  const PROFILE_DATA = document.getElementById('profileData') as HTMLElement;
+  const data = store.getState().login.user;
+  CANCEL.setAttribute('disabled', 'true');
+  toggleAllFields(PROFILE_DATA, true);
+  changeBox('mainDataBox', PROFILE_DATA);
+  if (data) {
+    setUserFields(data, PROFILE_DATA);
+    validatePersonalDataForm();
   }
 }

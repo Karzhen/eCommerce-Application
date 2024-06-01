@@ -41,7 +41,7 @@ export default async function apiGetAttributes() {
       .execute();
 
     const attributes: { [id: string]: AttributeM } = {};
-    result.body.results[0].attributes.forEach((element) => {
+    result.body.results[0].attributes?.forEach((element) => {
       attributes[element.name] = generateAttribute(element);
     });
     store.dispatch(GET_ATTRIBUTES(attributes));

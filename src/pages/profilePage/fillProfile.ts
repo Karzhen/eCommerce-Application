@@ -4,7 +4,7 @@ import getCountryName from '@/utils/getCountryName';
 import copyBillingToShipping from '@/utils/registrationSameInputs';
 import store from '@redux/store/configureStore';
 
-function setUserFields(data: Customer, element: HTMLElement) {
+export function setUserFields(data: Customer, element: HTMLElement) {
   const inputName = element.querySelector('#name') as HTMLInputElement;
   const inputLastName = element.querySelector('#lastname') as HTMLInputElement;
   const inputDateBirth = element.querySelector(
@@ -61,8 +61,6 @@ function setAddressFields(address: AddressData, element: HTMLElement) {
 export default function fillProfileFields(element: HTMLElement) {
   try {
     const data = store.getState().login.user;
-
-    console.log(data);
 
     if (data !== null) {
       setUserFields(data, element);
