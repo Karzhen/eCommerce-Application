@@ -102,7 +102,6 @@ export default async function createCatalogPage(
       const category = categoriesId[categoriesId.length - 1];
 
       const filter: Filter = {};
-
       filter.category = category;
       await apiGetProducts(filter);
 
