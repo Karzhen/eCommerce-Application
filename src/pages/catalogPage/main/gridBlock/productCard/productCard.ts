@@ -44,7 +44,7 @@ export default function createProductCard(
       handlerClick: (event: Event) => handlerTitleClick(event, goPage),
     },
   });
-  TITLE.setAttribute('href', `/product/${product.id}`);
+  TITLE.setAttribute('href', `/product/${product.id}:${product.variantId}`);
 
   const DESCRIPTION = createElement(Tag.DIV, {
     className: styles.productDescription,

@@ -64,5 +64,6 @@ export default function generateProduct(element: ProductProjection) {
     img: grabImage(elementVariant),
     price: grabPrice(elementVariant),
     discount: grabDiscount(elementVariant),
+    variantId: elementVariant.id,
   };
 }

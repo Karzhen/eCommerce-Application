@@ -92,6 +92,7 @@ export interface ProductM {
   discount: number | null;
   img: string[];
   description: string;
+  variantId: string;
 }
 
 export type StateProducts = {
