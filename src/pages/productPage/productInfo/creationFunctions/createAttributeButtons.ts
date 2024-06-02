@@ -71,22 +71,6 @@ export default function createAttributeButtons(attributeArray: Attribute[]) {
     (attr) => attr.name === 'color',
   );
 
-  const sizeButtons = createElement(Tag.DIV, {
-    textContent: 'Size',
-    className: styles.attributeGroup,
-  });
-  sizeAttributes.forEach((attr) => {
-    sizeButtons.append(createButtons(attr));
-  });
-
-  const colorButtons = createElement(Tag.DIV, {
-    textContent: 'Color',
-    className: styles.attributeGroup,
-  });
-  colorAttributes.forEach((attr) => {
-    colorButtons.append(createButtons(attr));
-  });
-
   const sizeFieldset = createFieldset(sizeAttributes, 'Size');
   const colorFieldset = createFieldset(colorAttributes, 'Color');
 
