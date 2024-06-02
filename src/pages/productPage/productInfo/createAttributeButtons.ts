@@ -21,6 +21,7 @@ function createButtons(attribute: Attribute): HTMLElement {
   return button;
 }
 
+
 const createFieldset = (attributes: Attribute[], legendText: string) => {
   const fieldset = createElement(Tag.FIELDSET, {
     className: styles.attributeFieldset,
