@@ -1,3 +1,6 @@
+import store from '@redux/store/configureStore';
+import { SET_SEARCH } from '@/redux/actions/filter';
+
 import apiGetProducts from '@api/apiGetProducts';
 
 import createElement from '@utils/create-element';
@@ -8,20 +11,16 @@ import { Tag, TypeInput } from '@/interface';
 import iconSearch from '@assets/images/search.png';
 
 import styles from './searchBlock.module.css';
-import getFilterParam from '../getFilterParam';
 
-async function handlerSearchClick(SEARCH_BLOCK: HTMLElement) {
-  const filter = getFilterParam(document.body, []);
-  const search = SEARCH_BLOCK.querySelector('#inputSearch');
-  if (search instanceof HTMLInputElement) {
-    await apiGetProducts(filter, search.value);
-  }
+async function handlerSearchClick() {
+  const { filter } = store.getState();
+  await apiGetProducts(filter);
 }
 
-function handlerKeySearchClick(event: Event, SEARCH_BLOCK: HTMLElement) {
+function handlerKeySearchClick(event: Event) {
   if (event instanceof KeyboardEvent) {
     if (event.key === 'Enter') {
-      handlerSearchClick(SEARCH_BLOCK);
+      handlerSearchClick();
     }
   }
 }
@@ -44,9 +43,12 @@ export default function createSearchBlock() {
     },
     iconUrl: iconSearch,
     handler: {
-      handlerClickIcon: () => handlerSearchClick(SEARCH_BLOCK),
-      handlerKeyClick: (event: Event) =>
-        handlerKeySearchClick(event, SEARCH_BLOCK),
+      handlerInput: (event: Event) => {
+        const el = event.target as HTMLInputElement;
+        store.dispatch(SET_SEARCH(el.value));
+      },
+      handlerClickIcon: () => handlerSearchClick(),
+      handlerKeyClick: (event: Event) => handlerKeySearchClick(event),
     },
   });
   INPUT_SEARCH.setAttribute('placeholder', 'Search');

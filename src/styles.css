@@ -23,7 +23,8 @@
   --color-error: #d80000;
 
   /* button primary */
-  --color-primary-muted: #fcd5ba;
+  /* --color-primary-muted: #fcd5ba; */
+  --color-primary-muted: var(--color-lightest);
 
   /* button secondary */
   --color-secondary-muted: #e5ffde;

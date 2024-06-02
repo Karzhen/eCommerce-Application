@@ -25,7 +25,7 @@ function handleWithoutDropdownClick(event: Event, WRAPPER: HTMLElement) {
 }
 
 export default function createSelect(
-  { option }: ParametersBaseComponent,
+  { option, handler: { handlerChange } }: ParametersBaseComponent,
   children: { label: string; key: string }[],
   defaultValue?: { key: string; label: string },
 ) {
@@ -52,7 +52,7 @@ export default function createSelect(
       className: styles.item,
       textContent: 'Choose',
     });
-    FIRST_ITEM.setAttribute('value', '');
+    FIRST_ITEM.setAttribute('value', 'Choose');
     DROPDOWN_MENU.append(FIRST_ITEM);
   }
   children.forEach((child) => {
@@ -68,13 +68,21 @@ export default function createSelect(
     className: styles.img,
   });
   IMG.setAttribute('src', urlDropdown);
+  IMG.addEventListener('click', () => {
+    if (DROPDOWN_MENU.getAttribute('open') === 'true') {
+      DROPDOWN_MENU.removeAttribute('open');
+    } else {
+      DROPDOWN_MENU.setAttribute('open', 'true');
+    }
+  });
 
   DROPDOWN_MENU.addEventListener('click', (event: Event) => {
     const element = event.target as HTMLElement;
-    if (element) {
+    if (element && !element.className.includes('dropdown-menu')) {
       SELECT.textContent = element.textContent;
       SELECT.setAttribute('value', String(element.getAttribute('value')));
       DROPDOWN_MENU.removeAttribute('open');
+      if (handlerChange) handlerChange(event);
     }
   });
 

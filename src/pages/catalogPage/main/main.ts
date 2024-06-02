@@ -1,9 +1,11 @@
 import store from '@redux/store/configureStore';
 
+import { SET_CATEGORIES } from '@actions/filter';
+
 import createElement from '@utils/create-element';
 import createButton from '@baseComponents/button/button';
 
-import { Tag, Page, CategoryM, Filter } from '@/interface';
+import { Tag, Page, CategoryM } from '@/interface';
 
 import apiGetProducts from '@api/apiGetProducts';
 
@@ -33,18 +35,18 @@ function createErrorCategoryPage(goPage: (path: string) => void) {
     textContent: 'Error: Category not found',
   });
 
-  const BUTTON_BACR_TO_CATALOG = createButton({
+  const BUTTON_BACK_TO_CATALOG = createButton({
     option: {
       textContent: 'Back to catalog',
     },
     handler: { handlerClick: () => handlerClickButtonCatalog(goPage) },
   });
 
-  WRAPPER.append(TITLE, BUTTON_BACR_TO_CATALOG);
+  WRAPPER.append(TITLE, BUTTON_BACK_TO_CATALOG);
   return WRAPPER;
 }
 
-function isExistChain(categoryIds: string[]) {
+function isExistChain(categoriesId: string[]) {
   const allCategories = store.getState().parameters.categories;
 
   const categoryMap = allCategories.reduce<Record<string, CategoryM>>(
@@ -55,12 +57,12 @@ function isExistChain(categoryIds: string[]) {
     {},
   );
 
-  const firstCategory = categoryMap[categoryIds[0]];
+  const firstCategory = categoryMap[categoriesId[0]];
   if (!firstCategory) {
     return false;
   }
 
-  return categoryIds.every((id, index, ids) => {
+  return categoriesId.every((id, index, ids) => {
     if (index === 0) return true;
     const currentCategory = categoryMap[id];
     const previousCategory = categoryMap[ids[index - 1]];
@@ -75,9 +77,10 @@ function isExistChain(categoryIds: string[]) {
 function handlerIconFilterClick() {
   const MENU = document.getElementById('menuCatalogPage');
   const CONTENT = document.getElementById('contentCatalogPage');
-  console.log(MENU, CONTENT);
-  if (MENU && CONTENT) {
+  if (MENU && CONTENT && !MENU.getAttribute('open')) {
     MENU.setAttribute('open', 'true');
+  } else if (MENU && CONTENT && MENU.getAttribute('open')) {
+    MENU?.removeAttribute('open');
   }
 }
 
@@ -85,33 +88,26 @@ export async function createContentCatalogPage(
   goPage: (path: string) => void,
   categoriesId: string[],
 ) {
+  store.dispatch(SET_CATEGORIES(categoriesId));
+
   const CONTENT = createElement(Tag.DIV, {
     className: styles.content,
     id: 'contentCatalogPage',
   });
-  const BREADCRUMB_BLOCK = createBreadcrumbBlock(goPage, categoriesId);
+  const BREADCRUMB_BLOCK = createBreadcrumbBlock(goPage);
 
-  const IMG_FILTER = createElement(Tag.IMG, {
-    className: styles.imgFilter,
-  });
-  IMG_FILTER.setAttribute('src', urlFilter);
-  IMG_FILTER.addEventListener('click', handlerIconFilterClick);
+  CONTENT.append(BREADCRUMB_BLOCK);
 
-  CONTENT.append(IMG_FILTER, BREADCRUMB_BLOCK);
-
-  if (categoriesId.length === 0) {
+  if (categoriesId && categoriesId.length === 0) {
     await apiGetProducts();
 
     const GRID = createGridBlock(goPage);
     CONTENT.append(GRID);
-  } else {
+  } else if (categoriesId) {
     const isCategoriesExist = isExistChain(categoriesId);
 
     if (isCategoriesExist) {
-      const category = categoriesId[categoriesId.length - 1];
-
-      const filter: Filter = {};
-      filter.category = category;
+      const { filter } = store.getState();
       await apiGetProducts(filter);
 
       const GRID = createGridBlock(goPage);
@@ -125,10 +121,7 @@ export async function createContentCatalogPage(
   return CONTENT;
 }
 
-async function createMenuCatalogPage(
-  goPage: (path: string) => void,
-  categoriesId: string[],
-) {
+async function createMenuCatalogPage(goPage: (path: string) => void) {
   await apiGetCategories();
   await apiGetAttributes();
 
@@ -139,7 +132,7 @@ async function createMenuCatalogPage(
 
   const CATEGORIES_BLOCK = createCategoriesBlock(goPage);
   const SEARCH_BLOCK = createSearchBlock();
-  const FILTER_BLOCK = createFilterBlock(categoriesId);
+  const FILTER_BLOCK = createFilterBlock();
   MENU.append(CATEGORIES_BLOCK, SEARCH_BLOCK, FILTER_BLOCK);
 
   return MENU;
@@ -153,11 +146,21 @@ export default async function createMainCatalogPage(
     className: styles.main,
     id: 'mainCatalogPage',
   });
+  const IMG_FILTER = createElement(Tag.IMG, {
+    className: styles.imgFilter,
+  });
+  IMG_FILTER.setAttribute('src', urlFilter);
+  IMG_FILTER.addEventListener('click', handlerIconFilterClick);
 
-  const MENU = await createMenuCatalogPage(goPage, categoriesId);
+  const WRAPPER = createElement(Tag.DIV, {
+    className: styles.wrapper,
+  });
+
+  const MENU = await createMenuCatalogPage(goPage);
   const CONTENT = await createContentCatalogPage(goPage, categoriesId);
 
-  MAIN.append(MENU, CONTENT);
+  WRAPPER.append(MENU, CONTENT);
+  MAIN.append(IMG_FILTER, WRAPPER);
 
   return MAIN;
 }

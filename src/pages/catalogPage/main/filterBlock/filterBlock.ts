@@ -1,4 +1,14 @@
 import store from '@redux/store/configureStore';
+import {
+  SET_SORT,
+  SET_BRAND,
+  SET_COLOR,
+  SET_START_PRICE,
+  SET_END_PRICE,
+  SET_SIZE1,
+  SET_SIZE2,
+  SET_SIZE3,
+} from '@/redux/actions/filter';
 
 import apiGetProducts from '@api/apiGetProducts';
 
@@ -9,17 +19,11 @@ import createSelect from '@baseComponents/selectV2/select';
 
 import { Tag, TypeInput, TypeButton } from '@/interface';
 
-import getFilterParam from '../getFilterParam';
 import styles from './filterBlock.module.css';
 
-async function handlerClickSubmit(FILTER_BLOCK: HTMLElement) {
-  const categoriesId = window.location.href.split('/');
-
-  const filter = getFilterParam(FILTER_BLOCK, categoriesId);
-  const search = document.body.querySelector('#inputSearch');
-  if (search instanceof HTMLInputElement) {
-    await apiGetProducts(filter, search.value || '');
-  }
+async function handlerClickSubmit() {
+  const { filter } = store.getState();
+  await apiGetProducts(filter);
 
   const MENU = document.getElementById('menuCatalogPage');
   if (MENU && MENU.getAttribute('open') === 'true') {
@@ -48,7 +52,24 @@ function createFilterSize() {
       const CHECKBOX_SIZE = createInput({
         type: TypeInput.CHECKBOX,
         option: { id: `checkboxSize${ind + 1}` },
-        handler: {},
+        handler: {
+          handlerInput: (event: Event) => {
+            const el = event.target as HTMLInputElement;
+            switch (ind) {
+              case 0:
+                store.dispatch(SET_SIZE1(el.checked));
+                break;
+              case 1:
+                store.dispatch(SET_SIZE2(el.checked));
+                break;
+              case 2:
+                store.dispatch(SET_SIZE3(el.checked));
+                break;
+              default:
+                break;
+            }
+          },
+        },
       });
       CHECKBOX_SIZE.setAttribute('value', attribute.key);
       WRAPPER_CHECKBOX.append(LABEL_SIZE, CHECKBOX_SIZE);
@@ -84,7 +105,12 @@ function createFilterPrice() {
       className: styles.priceStartInput,
       placeholder: 'Start price',
     },
-    handler: {},
+    handler: {
+      handlerInput: (event: Event) => {
+        const el = event.target as HTMLInputElement;
+        store.dispatch(SET_START_PRICE(Number(el.value)));
+      },
+    },
   });
 
   WRAPPER_PRICE_START.append(LABEL_PRICE_START, FILTER_START_PRICE);
@@ -102,7 +128,12 @@ function createFilterPrice() {
       className: styles.priceEndInput,
       placeholder: 'End price',
     },
-    handler: {},
+    handler: {
+      handlerInput: (event: Event) => {
+        const el = event.target as HTMLInputElement;
+        store.dispatch(SET_END_PRICE(Number(el.value)));
+      },
+    },
   });
 
   WRAPPER_PRICE_END.append(LABEL_PRICE_END, FILTER_END_PRICE);
@@ -123,7 +154,13 @@ function createFilterBrand() {
   const BRAND = createSelect(
     {
       option: { id: 'filterBrand' },
-      handler: {},
+      handler: {
+        handlerChange: (event: Event) => {
+          const el = event.target as HTMLElement;
+          const brand = el.getAttribute('value');
+          if (brand) store.dispatch(SET_BRAND(brand));
+        },
+      },
     },
     store.getState().parameters.attributes.brand.value,
   );
@@ -142,7 +179,16 @@ function createSortBlock() {
   const SORT = createSelect(
     {
       option: { id: 'sort' },
-      handler: {},
+      handler: {
+        handlerChange: (event: Event) => {
+          const el = event.target as HTMLInputElement;
+          const sort = el.getAttribute('value');
+          if (sort) {
+            const [order, name] = sort.split('.');
+            store.dispatch(SET_SORT({ name, order }));
+          }
+        },
+      },
     },
     [
       { label: 'price ASC', key: 'ASC.price' },
@@ -169,7 +215,13 @@ function createFilterColor() {
   const COLOR = createSelect(
     {
       option: { id: 'filterColor' },
-      handler: {},
+      handler: {
+        handlerChange: (event: Event) => {
+          const el = event.target as HTMLInputElement;
+          const color = el.getAttribute('value');
+          if (color) store.dispatch(SET_COLOR(color));
+        },
+      },
     },
     store.getState().parameters.attributes.color.value,
   );
@@ -209,7 +261,7 @@ export default function createFilterBlock() {
     type: TypeButton.PRIMARY,
     option: { textContent: 'Submit', className: styles.submit },
     handler: {
-      handlerClick: () => handlerClickSubmit(FILTER_BLOCK),
+      handlerClick: () => handlerClickSubmit(),
     },
   });
 
@@ -217,5 +269,22 @@ export default function createFilterBlock() {
 
   FILTER_BLOCK.append(TITLE, FORM);
 
+  // addHandlerForChangeFilter(FILTER_BLOCK);
+
   return FILTER_BLOCK;
 }
+
+// function addHandlerForChangeFilter(
+//   wrapper: HTMLElement,
+//   goPage: (path: string) => void,
+// ) {
+//   let previousProductsState = store.getState().filter;
+//   store.subscribe(() => {
+//     const currentProductsState = store.getState().filter;
+//     if (previousProductsState !== currentProductsState) {
+//       wrapper.replaceChildren();
+//       wrapper.append(createProducts(goPage));
+//       previousProductsState = currentProductsState;
+//     }
+//   });
+// }

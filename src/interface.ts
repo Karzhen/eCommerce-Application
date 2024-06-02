@@ -97,7 +97,7 @@ export interface ProductM {
   discount: number | null;
   img: string[];
   description: string;
-  variantId: string;
+  variantId: number;
 }
 
 export type StateProducts = {
@@ -170,11 +170,12 @@ export type StateLocal = {
 };
 
 export interface Filter {
-  category?: string;
+  category?: string[];
   priceStart?: number;
   priceEnd?: number;
   brand?: string;
   color?: string;
-  size?: string[];
+  size?: { size1?: string; size2?: string; size3?: string };
   sort?: { name: string; order: string };
+  search?: string;
 }

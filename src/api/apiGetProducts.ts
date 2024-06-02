@@ -15,8 +15,10 @@ const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
 function createQueryString(filter: Filter) {
   const where: string[] = [];
-  if (filter.category) {
-    where.push(`categories.id:"${filter.category}"`);
+  if (filter.category && filter.category.length > 0) {
+    where.push(
+      `categories.id:"${filter.category[filter.category.length - 1]}"`,
+    );
   }
 
   if (filter.priceStart || filter.priceEnd) {
@@ -33,9 +35,12 @@ function createQueryString(filter: Filter) {
     where.push(`variants.attributes.color.key:"${filter.color}"`);
   }
 
-  if (filter.size && filter.size.length > 0) {
+  if (filter.size && Object.keys(filter.size).length > 0) {
+    const sizes = filter.size;
     where.push(
-      `variants.attributes.size.key:${filter.size.map((el) => `"${el}"`).join(',')}`,
+      `variants.attributes.size.key:${Object.values(sizes)
+        .map((value) => `"${value}"`)
+        .join(',')}`,
     );
   }
 
@@ -58,10 +63,7 @@ function createSortString(filter: Filter) {
   return sort;
 }
 
-export default async function apiGetProducts(
-  filter: Filter = {},
-  search?: string,
-) {
+export default async function apiGetProducts(filter: Filter = {}) {
   let ctpClient;
   if (store.getState().login.isLogin) {
     ctpClient = createCtpClientRefresh();
@@ -98,8 +100,8 @@ export default async function apiGetProducts(
       queryArgs.filter = where;
     }
 
-    if (search) {
-      queryArgs['text.en'] = `${search}`;
+    if (filter.search) {
+      queryArgs['text.en'] = `${filter.search}`;
       queryArgs.fuzzy = true;
     }
 

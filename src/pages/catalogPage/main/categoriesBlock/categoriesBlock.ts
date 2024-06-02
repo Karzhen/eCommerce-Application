@@ -29,6 +29,8 @@ function clearFilter() {
   size2.checked = false;
   const size3 = document.querySelector('#checkboxSize3') as HTMLInputElement;
   size3.checked = false;
+  const search = document.querySelector('#inputSearch') as HTMLInputElement;
+  search.value = '';
 }
 
 function handlerLinkClick(event: Event, goPage: (path: string) => void) {
@@ -37,14 +39,13 @@ function handlerLinkClick(event: Event, goPage: (path: string) => void) {
   const element = event.target as HTMLAnchorElement;
   const path = element.getAttribute('href');
 
-  clearFilter();
-
   const MENU = document.getElementById('menuCatalogPage');
   if (MENU && MENU.getAttribute('open') === 'true') {
     MENU.removeAttribute('open');
   }
 
   if (path) {
+    clearFilter();
     goPage(path);
   }
 }

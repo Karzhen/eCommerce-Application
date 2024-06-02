@@ -15,10 +15,7 @@ function handlerLinkClick(event: Event, goPage: (path: string) => void) {
   goPage(path);
 }
 
-export default function createBreadcrumbBlock(
-  goPage: (path: string) => void,
-  categoriesId: string[],
-) {
+export default function createBreadcrumbBlock(goPage: (path: string) => void) {
   const BREADCRUMB_BLOCK = createElement(Tag.DIV, {
     className: styles.breadcrumbBlock,
   });
@@ -35,6 +32,7 @@ export default function createBreadcrumbBlock(
   LINK_ROOT.setAttribute('href', '/catalog');
   BREADCRUMB_BLOCK.append(LINK_ROOT);
 
+  const categoriesId = store.getState().filter.category;
   if (categoriesId && categoriesId.length > 0) {
     let url = '';
     categoriesId.forEach((category) => {
