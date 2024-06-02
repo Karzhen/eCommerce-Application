@@ -12,14 +12,18 @@ import { Tag, TypeInput, TypeButton } from '@/interface';
 import getFilterParam from '../getFilterParam';
 import styles from './filterBlock.module.css';
 
-async function handlerClickSubmit(
-  FILTER_BLOCK: HTMLElement,
-  categoriesId: string[],
-) {
+async function handlerClickSubmit(FILTER_BLOCK: HTMLElement) {
+  const categoriesId = window.location.href.split('/');
+
   const filter = getFilterParam(FILTER_BLOCK, categoriesId);
   const search = document.body.querySelector('#inputSearch');
   if (search instanceof HTMLInputElement) {
     await apiGetProducts(filter, search.value || '');
+  }
+
+  const MENU = document.getElementById('menuCatalogPage');
+  if (MENU && MENU.getAttribute('open') === 'true') {
+    MENU.removeAttribute('open');
   }
 }
 
@@ -175,7 +179,7 @@ function createFilterColor() {
   return WRAPPER;
 }
 
-export default function createFilterBlock(categoriesId: string[]) {
+export default function createFilterBlock() {
   const FILTER_BLOCK = createElement(Tag.DIV, {
     className: styles.filterBlock,
   });
@@ -205,7 +209,7 @@ export default function createFilterBlock(categoriesId: string[]) {
     type: TypeButton.PRIMARY,
     option: { textContent: 'Submit', className: styles.submit },
     handler: {
-      handlerClick: () => handlerClickSubmit(FILTER_BLOCK, categoriesId),
+      handlerClick: () => handlerClickSubmit(FILTER_BLOCK),
     },
   });
 

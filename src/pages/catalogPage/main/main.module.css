@@ -18,3 +18,34 @@
   flex-direction: column;
   gap: 10px;
 }
+
+.img-filter {
+  display: none;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .menu {
+    display: none;
+  }
+
+  .content {
+    width: 100%;
+  }
+
+  .img-filter {
+    display: block;
+    margin-left: auto;
+  }
+
+  .menu[open='true'] {
+    display: flex;
+    width: 100%;
+  }
+
+  .menu[open='true'] ~ .content {
+    display: none;
+  }
+}

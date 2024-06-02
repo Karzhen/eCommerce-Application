@@ -10,6 +10,8 @@ import apiGetProducts from '@api/apiGetProducts';
 import apiGetAttributes from '@api/apiGetAttributes';
 import apiGetCategories from '@api/apiGetCategories';
 
+import urlFilter from '@assets/images/filter.png';
+
 import createFilterBlock from './filterBlock/filterBlock';
 import createGridBlock from './gridBlock/gridBlock';
 import createSearchBlock from './searchBlock/searchBlock';
@@ -70,6 +72,15 @@ function isExistChain(categoryIds: string[]) {
   });
 }
 
+function handlerIconFilterClick() {
+  const MENU = document.getElementById('menuCatalogPage');
+  const CONTENT = document.getElementById('contentCatalogPage');
+  console.log(MENU, CONTENT);
+  if (MENU && CONTENT) {
+    MENU.setAttribute('open', 'true');
+  }
+}
+
 export async function createContentCatalogPage(
   goPage: (path: string) => void,
   categoriesId: string[],
@@ -79,7 +90,14 @@ export async function createContentCatalogPage(
     id: 'contentCatalogPage',
   });
   const BREADCRUMB_BLOCK = createBreadcrumbBlock(goPage, categoriesId);
-  CONTENT.append(BREADCRUMB_BLOCK);
+
+  const IMG_FILTER = createElement(Tag.IMG, {
+    className: styles.imgFilter,
+  });
+  IMG_FILTER.setAttribute('src', urlFilter);
+  IMG_FILTER.addEventListener('click', handlerIconFilterClick);
+
+  CONTENT.append(IMG_FILTER, BREADCRUMB_BLOCK);
 
   if (categoriesId.length === 0) {
     await apiGetProducts();
@@ -114,7 +132,10 @@ async function createMenuCatalogPage(
   await apiGetCategories();
   await apiGetAttributes();
 
-  const MENU = createElement(Tag.DIV, { className: styles.menu });
+  const MENU = createElement(Tag.DIV, {
+    className: styles.menu,
+    id: 'menuCatalogPage',
+  });
 
   const CATEGORIES_BLOCK = createCategoriesBlock(goPage);
   const SEARCH_BLOCK = createSearchBlock();

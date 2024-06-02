@@ -39,6 +39,11 @@ function handlerLinkClick(event: Event, goPage: (path: string) => void) {
 
   clearFilter();
 
+  const MENU = document.getElementById('menuCatalogPage');
+  if (MENU && MENU.getAttribute('open') === 'true') {
+    MENU.removeAttribute('open');
+  }
+
   if (path) {
     goPage(path);
   }
