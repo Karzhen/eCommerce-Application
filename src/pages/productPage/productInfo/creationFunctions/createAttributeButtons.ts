@@ -13,8 +13,10 @@ function createButtons(attribute: Attribute): HTMLElement {
     textContent: attribute.value.label,
     className: styles.attributeButton,
     onclick: () => {
-      const siblings = document.querySelectorAll(`input[name='${attribute.name}']`);
-      siblings.forEach(sibling => {
+      const siblings = document.querySelectorAll(
+        `input[name='${attribute.name}']`,
+      );
+      siblings.forEach((sibling) => {
         sibling.parentElement?.classList.remove(styles.attributeActive);
         sibling.parentElement?.classList.add(styles.attributeInactive);
       });
@@ -24,7 +26,7 @@ function createButtons(attribute: Attribute): HTMLElement {
     },
   });
 
-  if (attribute.name === "color") {
+  if (attribute.name === 'color') {
     label.style.setProperty('--button-background-color', attribute.value.label);
     label.style.setProperty('--button-color', attribute.value.label);
   }
@@ -39,7 +41,6 @@ function createButtons(attribute: Attribute): HTMLElement {
 
   return label;
 }
-
 
 const createFieldset = (attributes: Attribute[], legendText: string) => {
   const fieldset = createElement(Tag.FIELDSET, {
