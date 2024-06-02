@@ -7,6 +7,9 @@ export const LOGOUT = createAction('LOGOUT');
 
 export const UPDATE_VERSION = createAction<number>('UPDATE_VERSION');
 export const UPDATE_USER = createAction<{ user: Customer }>('UPDATE_USER');
-export const ERROR_UPDATE_PERSONAL_DATA = createAction<StateLogin>(
+export const ERROR_UPDATE_PERSONAL_DATA = createAction<string | null>(
   'ERROR_UPDATE_PERSONAL_DATA',
+);
+export const ERROR_UPDATE_PASSWORD = createAction<string | null>(
+  'ERROR_UPDATE_PASSWORD',
 );

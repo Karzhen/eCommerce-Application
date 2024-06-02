@@ -35,6 +35,9 @@
   height: 40px;
   margin: 10px;
   align-self: flex-end;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .profile-buttons {

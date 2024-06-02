@@ -1,5 +1,8 @@
 import validateDateOfBirth from '@/utils/validateDateOfBirth';
-import { generateErrorMessageEmail as validateEmail } from '@/utils/validateEmailAndPassword';
+import {
+  generateErrorMessagePassword,
+  generateErrorMessageEmail as validateEmail,
+} from '@/utils/validateEmailAndPassword';
 import validateName from '@/utils/validateName';
 import validatePostalCode from '@/utils/validatePostalCode';
 import validateStreet from '@/utils/validateStreet';
@@ -68,7 +71,6 @@ export function validateAddress(inputs: HTMLInputElement[]): string[] {
   ];
 
   if (inputs.length > 3) {
-    // If shipping address exists
     errors.push(
       validateStreet(inputs[3]),
       validateName(inputs[4]),
@@ -82,7 +84,6 @@ export function validateAddress(inputs: HTMLInputElement[]): string[] {
 export function validatePersonalDataForm(): boolean {
   const personalInputs = getPersonalInputs();
   const personalErrors = validatePersonalData(personalInputs);
-
   const personalLabels = [
     'emailError',
     'nameError',
@@ -119,4 +120,35 @@ export function validateAddressForm(): boolean {
   });
 
   return addressInputs.every((input) => input.checkValidity());
+}
+
+export function validatePasswordForm(): boolean {
+  const currentPasswordField = document.getElementById(
+    'currentPassword',
+  ) as HTMLInputElement;
+  const newPasswordField = document.getElementById(
+    'newPassword',
+  ) as HTMLInputElement;
+
+  const currentPasswordErrorLabel = document.getElementById(
+    'currentPasswordError',
+  );
+  const newPasswordErrorLabel = document.getElementById('newPasswordError');
+
+  const currentPasswordErrorMessage =
+    generateErrorMessagePassword(currentPasswordField);
+  const newPasswordErrorMessage =
+    generateErrorMessagePassword(newPasswordField);
+
+  if (currentPasswordErrorLabel) {
+    currentPasswordErrorLabel.textContent = currentPasswordErrorMessage;
+  }
+
+  if (newPasswordErrorLabel) {
+    newPasswordErrorLabel.textContent = newPasswordErrorMessage;
+  }
+
+  return (
+    currentPasswordField.checkValidity() && newPasswordField.checkValidity()
+  );
 }

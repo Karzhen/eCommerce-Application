@@ -32,6 +32,8 @@ export enum Tag {
   SPAN = 'span',
   FIELDSET = 'fieldset',
   LEGEND = 'legend',
+  UL = 'ul',
+  LI = 'li',
 }
 
 export enum TypeInput {
@@ -77,9 +79,10 @@ export interface ParametersBaseComponent {
 export type StateLogin = {
   value: string | null;
   isLogin: boolean;
-  user: Customer | null;
-  version: number | null;
-  errorUpdate: string | null;
+  user?: Customer | null;
+  version?: number | null;
+  errorUpdate?: string | null;
+  errorChangePassword?: string | null;
 };
 
 export type StateRegister = {

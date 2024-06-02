@@ -37,13 +37,13 @@ export default async function apiUpdatePersonalData(
 
     const customer = result.body;
     const user = createUser(customer as Customer);
-
-    store.dispatch(UPDATE_USER({ user }));
+    if (result.statusCode === 200) {
+      store.dispatch(UPDATE_USER({ user }));
+    }
   } catch (error) {
     if (error instanceof Error) {
-      store.dispatch(
-        ERROR_UPDATE_PERSONAL_DATA({ errorUpdate: error.message }),
-      );
+      store.dispatch(ERROR_UPDATE_PERSONAL_DATA(error.message));
+
       const PROFILE_DATA = document.getElementById(
         'profileData',
       ) as HTMLElement;
