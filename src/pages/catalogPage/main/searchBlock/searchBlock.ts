@@ -31,6 +31,11 @@ export default function createSearchBlock() {
     className: styles.searchBlock,
   });
 
+  const TITLE = createElement(Tag.DIV, {
+    className: styles.titleSearch,
+    textContent: 'Search',
+  });
+
   const INPUT_SEARCH = createInputWithIcon({
     type: TypeInput.TEXT,
     option: {
@@ -46,7 +51,7 @@ export default function createSearchBlock() {
   });
   INPUT_SEARCH.setAttribute('placeholder', 'Search');
 
-  SEARCH_BLOCK.append(INPUT_SEARCH);
+  SEARCH_BLOCK.append(TITLE, INPUT_SEARCH);
 
   return SEARCH_BLOCK;
 }

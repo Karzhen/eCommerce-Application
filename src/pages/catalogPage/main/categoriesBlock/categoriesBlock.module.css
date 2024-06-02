@@ -1,0 +1,25 @@
+.wrapper {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+categories-block {
+  padding: 10px 0;
+}
+
+.title-categories {
+  font: var(--text-bold-m);
+}
+
+.category {
+  margin-left: 5px;
+}
+
+.category div {
+  margin-left: 5px;
+}
+
+.wrapper > div > a {
+  font: var(--text-bold-s);
+  color: var(--color-secondary);
+}

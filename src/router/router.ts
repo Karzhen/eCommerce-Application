@@ -6,6 +6,7 @@ import createRegistrationPage from '@pages/registrationPage/registration/registr
 import createMainPage from '@pages/mainPage/mainPage';
 import createProfilePage from '@pages/profilePage/profilePage';
 import createCatalogPage from '@pages/catalogPage/catalogPage';
+import { createContentCatalogPage } from '@/pages/catalogPage/main/main';
 import createBasketPage from '@pages/basketPage/basket/basketPage';
 import createAboutPage from '@pages/aboutPage/about/aboutPage';
 import createProductPage from '@pages/productPage/productPage';
@@ -103,33 +104,47 @@ export class Router {
   }
 
   async renderPage() {
-    document.body.replaceChildren();
     const bindGoPage = this.goPage.bind(this);
+    const CATALOG_PAGE = document.getElementById('contentCatalogPage');
     switch (this.currentPage) {
       case Page.MAIN:
+        document.body.replaceChildren();
         document.body.append(await createMainPage(bindGoPage));
         break;
       case Page.LOGIN:
+        document.body.replaceChildren();
         document.body.append(createLoginPage(bindGoPage));
         break;
       case Page.REGISTR:
+        document.body.replaceChildren();
         document.body.append(createRegistrationPage(bindGoPage));
         break;
       case Page.CATALOG:
-        document.body.append(
-          await createCatalogPage(bindGoPage, this.currentCategories),
-        );
+        if (CATALOG_PAGE === null) {
+          document.body.replaceChildren();
+          document.body.append(
+            await createCatalogPage(bindGoPage, this.currentCategories),
+          );
+        } else {
+          CATALOG_PAGE.replaceWith(
+            await createContentCatalogPage(bindGoPage, this.currentCategories),
+          );
+        }
         break;
       case Page.PROFILE:
+        document.body.replaceChildren();
         document.body.append(createProfilePage(bindGoPage));
         break;
       case Page.BASKET:
+        document.body.replaceChildren();
         document.body.append(createBasketPage(bindGoPage));
         break;
       case Page.ABOUT:
+        document.body.replaceChildren();
         document.body.append(createAboutPage(bindGoPage));
         break;
       case Page.PRODUCT:
+        document.body.replaceChildren();
         document.body.append(
           createProductPage(bindGoPage, this.currentProductId || ''),
         );

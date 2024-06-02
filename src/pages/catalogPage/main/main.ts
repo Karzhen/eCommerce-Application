@@ -13,6 +13,8 @@ import apiGetCategories from '@api/apiGetCategories';
 import createFilterBlock from './filterBlock/filterBlock';
 import createGridBlock from './gridBlock/gridBlock';
 import createSearchBlock from './searchBlock/searchBlock';
+import createBreadcrumbBlock from './breadcrumbBlock/breadcrumbBlock';
+import createCategoriesBlock from './categoriesBlock/categoriesBlock';
 
 import styles from './main.module.css';
 
@@ -68,27 +70,16 @@ function isExistChain(categoryIds: string[]) {
   });
 }
 
-export default async function createCatalogPage(
+export async function createContentCatalogPage(
   goPage: (path: string) => void,
   categoriesId: string[],
 ) {
-  const MAIN = createElement(Tag.MAIN, {
-    className: styles.main,
-  });
-
-  await apiGetCategories();
-  await apiGetAttributes();
-
-  const MENU = createElement(Tag.DIV, { className: styles.menu });
-
-  const SEARCH_BLOCK = createSearchBlock();
-
-  const FILTER_BLOCK = createFilterBlock(categoriesId);
-  MENU.append(SEARCH_BLOCK, FILTER_BLOCK);
   const CONTENT = createElement(Tag.DIV, {
     className: styles.content,
+    id: 'contentCatalogPage',
   });
-  MAIN.append(MENU, CONTENT);
+  const BREADCRUMB_BLOCK = createBreadcrumbBlock(goPage, categoriesId);
+  CONTENT.append(BREADCRUMB_BLOCK);
 
   if (categoriesId.length === 0) {
     await apiGetProducts();
@@ -112,6 +103,40 @@ export default async function createCatalogPage(
       CONTENT.append(ERROR_PAGE);
     }
   }
+
+  return CONTENT;
+}
+
+async function createMenuCatalogPage(
+  goPage: (path: string) => void,
+  categoriesId: string[],
+) {
+  await apiGetCategories();
+  await apiGetAttributes();
+
+  const MENU = createElement(Tag.DIV, { className: styles.menu });
+
+  const CATEGORIES_BLOCK = createCategoriesBlock(goPage);
+  const SEARCH_BLOCK = createSearchBlock();
+  const FILTER_BLOCK = createFilterBlock(categoriesId);
+  MENU.append(CATEGORIES_BLOCK, SEARCH_BLOCK, FILTER_BLOCK);
+
+  return MENU;
+}
+
+export default async function createMainCatalogPage(
+  goPage: (path: string) => void,
+  categoriesId: string[],
+) {
+  const MAIN = createElement(Tag.MAIN, {
+    className: styles.main,
+    id: 'mainCatalogPage',
+  });
+
+  const MENU = await createMenuCatalogPage(goPage, categoriesId);
+  const CONTENT = await createContentCatalogPage(goPage, categoriesId);
+
+  MAIN.append(MENU, CONTENT);
 
   return MAIN;
 }
