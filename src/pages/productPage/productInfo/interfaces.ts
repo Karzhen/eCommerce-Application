@@ -22,6 +22,7 @@ export interface Attribute {
     key: string;
     label: string;
   };
+  master?: boolean;
 }
 
 export interface Variant {

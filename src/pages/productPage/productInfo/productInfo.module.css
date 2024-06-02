@@ -35,7 +35,7 @@
 
 .main-image {
   width: 100%;
-  height: 500px;
+  max-height: 500px;
   /*height: auto;*/
   border: 1px solid var(--color-hardest);
   border-radius: 10px;
@@ -99,7 +99,7 @@
 }
 
 .product-description {
-  height: 150px;
+  max-height: 150px;
   overflow-y: auto;
   font: var(--text-m);
   border: 1px solid #ccc;
@@ -134,18 +134,45 @@
 
 .attribute-button {
   height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   flex: 1;
   background-color: var(--button-background-color);
   color: var(--button-color);
-  padding: 5px 10px;
+  /*padding: 5px 10px;*/
   border: 1px solid #ccc;
   border-radius: 5px;
   cursor: pointer;
-  transition: transform 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  user-select: none;
 }
 
-.attribute-button:hover {
-  transform: scale(1.1);
+.attribute-button input {
+  display: none;
+}
+
+.attribute-active {
+  border: 1px solid var(--color-hardest);
+  transition: all 0.3s ease-in-out;
+}
+
+.attribute-active:hover {
+  cursor: not-allowed;
+}
+
+.attribute-inactive {
+  --blur-value: 1px;
+  --brightness-value: 70%;
+
+  filter: blur(var(--blur-value)) brightness(var(--brightness-value));
+  transform: scale(0.9);
+  transition: all 0.3s ease-in-out;
+}
+
+.attribute-inactive:hover {
+  transform: scale(1);
+  filter: none;
 }
 
 .original-price {
