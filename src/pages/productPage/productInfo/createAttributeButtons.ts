@@ -1,5 +1,5 @@
 import { Attribute } from '@pages/productPage/productInfo/interfaces';
-import createElement from '@utils/create-element.ts';
+import createElement from '@utils/create-element';
 import { Tag } from '@/interface';
 import styles from '@pages/productPage/productInfo/productInfo.module.css';
 
@@ -20,7 +20,6 @@ function createButtons(attribute: Attribute): HTMLElement {
   button.style.setProperty('--button-color', attribute.value.label);
   return button;
 }
-
 
 const createFieldset = (attributes: Attribute[], legendText: string) => {
   const fieldset = createElement(Tag.FIELDSET, {
