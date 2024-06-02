@@ -3,6 +3,33 @@ import createElement from '@utils/create-element';
 import { Tag } from '@/interface';
 import styles from '@pages/productPage/productInfo/productInfo.module.css';
 
+function logActiveAttributes() {
+  const activeLabels = document.querySelectorAll(`.${styles.attributeActive}`);
+  const activeAttributes: { [key: string]: string } = {};
+
+  activeLabels.forEach((label) => {
+    const input = label.querySelector('input') as HTMLInputElement;
+    if (input) {
+      activeAttributes[input.name] = input.value;
+    }
+  });
+
+  console.log('Active Attributes:', activeAttributes);
+}
+
+function handleButtonClick(attributeName: string, label: HTMLElement) {
+  const siblings = document.querySelectorAll(`input[name='${attributeName}']`);
+  siblings.forEach((sibling) => {
+    sibling.parentElement?.classList.remove(styles.attributeActive);
+    sibling.parentElement?.classList.add(styles.attributeInactive);
+  });
+
+  label.classList.add(styles.attributeActive);
+  label.classList.remove(styles.attributeInactive);
+
+  logActiveAttributes();
+}
+
 function createButtons(attribute: Attribute): HTMLElement {
   const radio = createElement(Tag.INPUT, {}) as HTMLInputElement;
   radio.type = 'radio';
@@ -13,17 +40,10 @@ function createButtons(attribute: Attribute): HTMLElement {
     textContent: attribute.value.label,
     className: styles.attributeButton,
     onclick: () => {
-      const siblings = document.querySelectorAll(
-        `input[name='${attribute.name}']`,
-      );
-      siblings.forEach((sibling) => {
-        sibling.parentElement?.classList.remove(styles.attributeActive);
-        sibling.parentElement?.classList.add(styles.attributeInactive);
-      });
-
-      label.classList.add(styles.attributeActive);
-      label.classList.remove(styles.attributeInactive);
-    },
+      if (!label.classList.contains(styles.attributeActive)) {
+        handleButtonClick(attribute.name, label);
+      }
+    }
   });
 
   if (attribute.name === 'color') {
