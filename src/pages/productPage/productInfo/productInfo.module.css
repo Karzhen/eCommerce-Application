@@ -64,6 +64,7 @@
   border: 1px solid var(--color-hardest);
   border-radius: 10px;
   user-select: none;
+  cursor: pointer;
   transition: opacity 0.3s ease-in-out;
 }
 
@@ -252,10 +253,16 @@
   color: var(--color-primary-text);
   font: var(--text-s);
   border: none;
-  border-radius: 10px;
+  border-radius: 4px;
   cursor: pointer;
   margin-top: 20px;
+  box-shadow: -6px 6px 15px 1px rgba(0, 0, 0, 0.3);
   transition: all 0.3s;
+}
+
+.buy-button:hover  {
+  transform: translate(-2px, 2px);
+  box-shadow: none;
 }
 
 .buy-button:disabled {

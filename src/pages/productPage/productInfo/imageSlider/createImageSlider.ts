@@ -11,6 +11,7 @@ import {
   createThumbnailsContainer,
 } from '@pages/productPage/productInfo/creationFunctions/createImageSliderComponents';
 import addSwipeHandlers from '@pages/productPage/productInfo/imageSlider/addSwipeHandlers';
+import createModal from '@pages/productPage/productInfo/imageModal/imageModal';
 
 function createNavigationButtons(
   prevImage: { (): void; (): void },
@@ -57,6 +58,7 @@ export default function createImageSlider(images: string[] | undefined) {
   });
 
   const mainImage = createMainImage(images[currentIndex]);
+  mainImage.addEventListener('click', () => createModal(images, currentIndex));
 
   mainWrapper.appendChild(mainImage);
 
@@ -115,7 +117,6 @@ export default function createImageSlider(images: string[] | undefined) {
   } else  {
     imageContainer.append(mainWrapper);
   }
-
 
   prevButton.addEventListener('click', prevImage);
   nextButton.addEventListener('click', nextImage);
