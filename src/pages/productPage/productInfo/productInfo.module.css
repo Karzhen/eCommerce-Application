@@ -40,7 +40,9 @@
   padding: 8px 16px;
   font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
 .navigation-button:hover {
@@ -55,7 +57,6 @@
   border: 1px solid var(--color-hardest);
   border-radius: 10px;
   user-select: none;
-  pointer-events: none;
   transition: opacity 0.3s ease-in-out;
 }
 
@@ -112,7 +113,9 @@
   padding: 8px 16px;
   font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
   margin: 0 10px;
 }
 
@@ -120,7 +123,6 @@
   background-color: #eeeeee;
   color: #555555;
 }
-
 
 .right-container {
   display: flex;

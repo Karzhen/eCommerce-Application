@@ -35,7 +35,7 @@ export default function createProductPage(
         PRODUCT_PAGE.append(errorMessage);
       }
     } catch (error) {
-      console.error('Error fetching product data:', error);
+      // console.error('Error fetching product data:', error);
       const errorMessage = createElement(Tag.DIV, {
         className: styles.error,
         textContent: 'Произошла ошибка при загрузке данных о продукте.',
