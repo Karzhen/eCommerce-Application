@@ -13,8 +13,8 @@ import {
 import addSwipeHandlers from '@pages/productPage/productInfo/imageSlider/addSwipeHandlers';
 
 function createNavigationButtons(
-  nextImage: { (): void; (): void },
   prevImage: { (): void; (): void },
+  nextImage: { (): void; (): void },
 ) {
   const prevButton = createPrevButton();
   const nextButton = createNextButton();
@@ -52,7 +52,13 @@ export default function createImageSlider(images: string[] | undefined) {
     return imageContainer;
   }
 
+  const mainWrapper = createElement(Tag.DIV, {
+    className: styles.mainImageWrapper,
+  });
+
   const mainImage = createMainImage(images[currentIndex]);
+
+  mainWrapper.appendChild(mainImage);
 
   function updateMainImage(index: number) {
     currentIndex = index;
@@ -103,9 +109,13 @@ export default function createImageSlider(images: string[] | undefined) {
 
   imageSlider.append(...thumbnails);
   thumbnailsContainer.append(prevButton, nextButton);
-  imageContainer.append(thumbnailsContainer, mainImage, imageSlider);
+  if (images.length  >  1)  {
+    imageContainer.append(thumbnailsContainer, mainWrapper, imageSlider);
+    addSwipeHandlers(imageContainer, nextImage, prevImage);
+  } else  {
+    imageContainer.append(mainWrapper);
+  }
 
-  addSwipeHandlers(imageContainer, nextImage, prevImage);
 
   prevButton.addEventListener('click', prevImage);
   nextButton.addEventListener('click', nextImage);
