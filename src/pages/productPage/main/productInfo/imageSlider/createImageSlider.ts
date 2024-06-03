@@ -1,6 +1,6 @@
 import createElement from '@utils/create-element';
 import { Tag } from '@/interface';
-import styles from '@pages/productPage/productInfo/productInfo.module.css';
+
 import {
   createImageContainer,
   createImageSliderContainer,
@@ -9,9 +9,12 @@ import {
   createNoImageMessage,
   createPrevButton,
   createThumbnailsContainer,
-} from '@pages/productPage/productInfo/creationFunctions/createImageSliderComponents';
-import addSwipeHandlers from '@pages/productPage/productInfo/imageSlider/addSwipeHandlers';
-import createModal from '@pages/productPage/productInfo/imageModal/imageModal';
+} from '@pages/productPage/main/productInfo/creationFunctions/createImageSliderComponents';
+
+import createModal from '@/pages/productPage/main/productInfo/imageModal/imageModal';
+import addSwipeHandlers from '@/pages/productPage/main/productInfo/imageSlider/addSwipeHandlers';
+
+import styles from '@pages/productPage/main/productInfo/productInfo.module.css';
 
 function createNavigationButtons(
   prevImage: { (): void; (): void },
@@ -111,10 +114,10 @@ export default function createImageSlider(images: string[] | undefined) {
 
   imageSlider.append(...thumbnails);
   thumbnailsContainer.append(prevButton, nextButton);
-  if (images.length  >  1)  {
+  if (images.length > 1) {
     imageContainer.append(thumbnailsContainer, mainWrapper, imageSlider);
     addSwipeHandlers(imageContainer, nextImage, prevImage);
-  } else  {
+  } else {
     imageContainer.append(mainWrapper);
   }
 

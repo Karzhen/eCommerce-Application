@@ -10,6 +10,7 @@ import { createContentCatalogPage } from '@/pages/catalogPage/main/main';
 import createBasketPage from '@pages/basketPage/basket/basketPage';
 import createAboutPage from '@pages/aboutPage/about/aboutPage';
 import createProductPage from '@pages/productPage/productPage';
+import createMainProductPage from '@/pages/productPage/main/main';
 
 import { Page } from '@/interface';
 
@@ -106,6 +107,7 @@ export class Router {
   async renderPage() {
     const bindGoPage = this.goPage.bind(this);
     const CATALOG_PAGE = document.getElementById('contentCatalogPage');
+    const PRODUCT_PAGE = document.getElementById('mainProductPage');
     switch (this.currentPage) {
       case Page.MAIN:
         document.body.replaceChildren();
@@ -144,10 +146,19 @@ export class Router {
         document.body.append(createAboutPage(bindGoPage));
         break;
       case Page.PRODUCT:
-        document.body.replaceChildren();
-        document.body.append(
-          createProductPage(bindGoPage, this.currentProductId || ''),
-        );
+        if (PRODUCT_PAGE === null) {
+          document.body.replaceChildren();
+          document.body.append(
+            await createProductPage(bindGoPage, this.currentProductId || ''),
+          );
+        } else {
+          PRODUCT_PAGE.replaceWith(
+            await createMainProductPage(
+              bindGoPage,
+              this.currentProductId || '',
+            ),
+          );
+        }
         break;
       default:
         document.body.append(createErrorPage(bindGoPage));

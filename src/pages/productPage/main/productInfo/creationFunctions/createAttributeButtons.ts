@@ -1,7 +1,7 @@
-import { Attribute } from '@pages/productPage/productInfo/interfaces';
+import { Attribute } from '@/pages/productPage/main/productInfo/interfaces';
 import createElement from '@utils/create-element';
 import { Tag } from '@/interface';
-import styles from '@pages/productPage/productInfo/productInfo.module.css';
+import styles from '@pages/productPage/main/productInfo/productInfo.module.css';
 import { ProductData } from '@commercetools/platform-sdk';
 
 function findProductVariant(

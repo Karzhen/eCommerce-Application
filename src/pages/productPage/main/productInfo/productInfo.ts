@@ -1,11 +1,15 @@
 import createElement from '@utils/create-element';
-import { Tag } from '@/interface';
-import styles from '@pages/productPage/productInfo/productInfo.module.css';
-import createImageSlider from '@pages/productPage/productInfo/imageSlider/createImageSlider';
-import { Attribute } from '@pages/productPage/productInfo/interfaces';
+import createButton from '@baseComponents/button/button';
+import { Tag, TypeButton } from '@/interface';
+
+import createImageSlider from '@/pages/productPage/main/productInfo/imageSlider/createImageSlider';
+import { Attribute } from '@/pages/productPage/main/productInfo/interfaces';
+
 import { ProductData, ProductVariant } from '@commercetools/platform-sdk';
-import createAttributeButtons from '@pages/productPage/productInfo/creationFunctions/createAttributeButtons';
-import createPriceElements from '@pages/productPage/productInfo/creationFunctions/createPriceElements';
+import createAttributeButtons from '@/pages/productPage/main/productInfo/creationFunctions/createAttributeButtons';
+import createPriceElements from '@/pages/productPage/main/productInfo/creationFunctions/createPriceElements';
+
+import styles from './productInfo.module.css';
 
 function extractAttributes(productData: ProductData) {
   const uniqueAttributes = new Map<string, Attribute>();
@@ -96,18 +100,20 @@ export default function createProductInfo(
   rightContainer.append(productDescription);
 
   const attributes = extractAttributes(productData);
+
   const attributeButtons = createAttributeButtons(productData, attributes);
   rightContainer.append(attributeButtons);
 
   const priceElements = createPriceElements(currentVariant);
   priceElements.forEach((element) => rightContainer.appendChild(element));
 
-  const buyButton = createElement(Tag.BUTTON, {
-    textContent: 'Add to Cart',
-    className: styles.buyButton,
-    onclick: () => {
-      // Логика покупки
+  const buyButton = createButton({
+    type: TypeButton.PRIMARY,
+    option: {
+      textContent: 'Add to Cart',
+      className: styles.buyButton,
     },
+    handler: {},
   });
   rightContainer.append(buyButton);
 

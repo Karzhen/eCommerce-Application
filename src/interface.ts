@@ -1,3 +1,5 @@
+import { ProductData } from '@commercetools/platform-sdk';
+
 export enum Page {
   LOGIN = '/login',
   ERROR = '/error',
@@ -102,6 +104,11 @@ export interface ProductM {
 
 export type StateProducts = {
   value: ProductM[];
+  error: string;
+};
+
+export type StateProduct = {
+  value: ProductData;
   error: string;
 };
 

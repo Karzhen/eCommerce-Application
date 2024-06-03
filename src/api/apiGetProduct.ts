@@ -1,4 +1,7 @@
 import store from '@redux/store/configureStore';
+
+import { GET_PRODUCT, ERROR_GET_PRODUCT } from '@redux/actions/product';
+
 import createCtpClientRefresh from '@api/buildClient/buildClientRefreshTokenFlow';
 import createCtpClientAnonymous from '@api/buildClient/buildAnonymousSessionFlow';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
@@ -23,11 +26,14 @@ export default async function apiGetEachProduct(productID: string) {
       .get()
       .execute();
 
-    // if (!response.body) {
-    //     throw new Error('Failed to fetch product info');
-    // }
-    return response.body.masterData.current;
+    store.dispatch(GET_PRODUCT(response.body.masterData.current));
   } catch (error) {
-    return null;
+    if (error instanceof Error) {
+      store.dispatch(
+        ERROR_GET_PRODUCT(
+          'Something went wrong. Please should try again later.',
+        ),
+      );
+    }
   }
 }

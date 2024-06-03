@@ -1,7 +1,7 @@
 import createElement from '@utils/create-element.ts';
 import { ProductVariant } from '@commercetools/platform-sdk';
 import { Tag } from '@/interface';
-import styles from '@pages/productPage/productInfo/productInfo.module.css';
+import styles from '@pages/productPage/main/productInfo/productInfo.module.css';
 
 export default function createPriceElements(
   currentVariant: ProductVariant,

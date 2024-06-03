@@ -1,6 +1,6 @@
 import createElement from '@utils/create-element.ts';
 import { Tag } from '@/interface';
-import styles from '@pages/productPage/productInfo/productInfo.module.css';
+import styles from '@pages/productPage/main/productInfo/productInfo.module.css';
 
 export function createImageContainer() {
   return createElement(Tag.DIV, {
