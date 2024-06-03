@@ -5,6 +5,21 @@ import styles from '@pages/productPage/productInfo/productInfo.module.css';
 export default function createImageSlider(images: string[] | undefined) {
   let currentIndex = 0;
 
+  let thumbnails: HTMLImageElement[] = [];
+
+  function updateThumbnails() {
+    thumbnails.forEach((thumbnailElement: HTMLImageElement, thumbnailIndex: number) => {
+      thumbnailElement.classList.toggle(
+          styles.activeThumbnail,
+          thumbnailIndex === currentIndex,
+      );
+      thumbnailElement.classList.toggle(
+          styles.thumbnail,
+          thumbnailIndex !== currentIndex,
+      );
+    });
+  };
+
   const imageContainer = createElement(Tag.DIV, {
     className: styles.imageContainer,
   });
@@ -23,29 +38,53 @@ export default function createImageSlider(images: string[] | undefined) {
   }) as HTMLImageElement;
   mainImage.src = images[currentIndex];
 
+  const updateMainImage = (index: number) => {
+    currentIndex = index;
+    mainImage.style.opacity = '0';
+    setTimeout(() => {
+      mainImage.src = images[currentIndex];
+      mainImage.style.opacity = '1';
+    }, 300);
+    updateThumbnails();
+  };
+
+  const prevButton = createElement(Tag.BUTTON, {
+    className: styles.navigationButton,
+    innerText: 'Prev',
+    onclick: () => {
+      if (currentIndex > 0) {
+        updateMainImage(currentIndex - 1);
+      } else {
+        updateMainImage(images.length - 1);
+      }
+    },
+  });
+
+  const nextButton = createElement(Tag.BUTTON, {
+    className: styles.navigationButton,
+    innerText: 'Next',
+    onclick: () => {
+      if (currentIndex < images.length - 1) {
+        updateMainImage(currentIndex + 1);
+      } else {
+        updateMainImage(0);
+      }
+    },
+  });
+
   const imageSlider = createElement(Tag.DIV, {
     className: styles.imageSlider,
   });
 
-  const thumbnails = images.map((image: string, index: number) => {
+  const thumbnailsContainer = createElement(Tag.DIV, {
+    className: styles.thumbnailsContainer,
+  });
+
+  thumbnails = images.map((image: string, index: number) => {
     const thumbnail = createElement(Tag.IMG, {
-      className:
-        index === currentIndex ? styles.activeThumbnail : styles.thumbnail,
+      className: index === currentIndex ? styles.activeThumbnail : styles.thumbnail,
       onclick: () => {
-        currentIndex = index;
-        mainImage.src = images[currentIndex];
-        thumbnails.forEach(
-          (thumbnailElement: HTMLImageElement, thumbnailIndex: number) => {
-            thumbnailElement.classList.toggle(
-              styles.activeThumbnail,
-              thumbnailIndex === currentIndex,
-            );
-            thumbnailElement.classList.toggle(
-              styles.thumbnail,
-              thumbnailIndex !== currentIndex,
-            );
-          },
-        );
+        updateMainImage(index);
       },
     }) as HTMLImageElement;
     thumbnail.src = image;
@@ -53,7 +92,8 @@ export default function createImageSlider(images: string[] | undefined) {
   });
 
   imageSlider.append(...thumbnails);
-  imageContainer.append(mainImage, imageSlider);
+  thumbnailsContainer.append(prevButton, nextButton);
+  imageContainer.append(thumbnailsContainer, mainImage, imageSlider);
 
   return imageContainer;
 }
