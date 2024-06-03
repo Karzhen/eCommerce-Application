@@ -2,8 +2,35 @@ import { Attribute } from '@pages/productPage/productInfo/interfaces';
 import createElement from '@utils/create-element';
 import { Tag } from '@/interface';
 import styles from '@pages/productPage/productInfo/productInfo.module.css';
+import { ProductData } from '@commercetools/platform-sdk';
 
-function logActiveAttributes() {
+function findProductVariant(
+  productData: ProductData,
+  color: string,
+  size: string,
+) {
+  const variants = [productData.masterVariant, ...productData.variants];
+  // console.clear();
+  // console.log(variants);
+
+  return variants.find((variant) => {
+    const colorAttribute = variant.attributes?.find(
+      (attr) => attr.name === 'color',
+    );
+    const sizeAttribute = variant.attributes?.find(
+      (attr) => attr.name === 'size',
+    );
+
+    return (
+      colorAttribute &&
+      sizeAttribute &&
+      colorAttribute.value.key === color &&
+      sizeAttribute.value.key === size
+    );
+  });
+}
+
+function logActiveAttributes(productData: ProductData) {
   const activeLabels = document.querySelectorAll(`.${styles.attributeActive}`);
   const activeAttributes: { [key: string]: string } = {};
 
@@ -14,10 +41,24 @@ function logActiveAttributes() {
     }
   });
 
-  console.log('Active Attributes:', activeAttributes);
+  const currentVariant = findProductVariant(
+    productData,
+    activeAttributes.color,
+    activeAttributes.size,
+  );
+  // console.log(currentVariant);
+  // console.log('Active Attributes:', activeAttributes);
+  const buyButton = document.querySelector(
+    `.${styles['buy-button']}`,
+  ) as HTMLButtonElement;
+  buyButton.disabled = !currentVariant;
 }
 
-function handleButtonClick(attributeName: string, label: HTMLElement) {
+function handleButtonClick(
+  productData: ProductData,
+  attributeName: string,
+  label: HTMLElement,
+) {
   const siblings = document.querySelectorAll(`input[name='${attributeName}']`);
   siblings.forEach((sibling) => {
     sibling.parentElement?.classList.remove(styles.attributeActive);
@@ -27,10 +68,13 @@ function handleButtonClick(attributeName: string, label: HTMLElement) {
   label.classList.add(styles.attributeActive);
   label.classList.remove(styles.attributeInactive);
 
-  logActiveAttributes();
+  logActiveAttributes(productData);
 }
 
-function createButtons(attribute: Attribute): HTMLElement {
+function createButtons(
+  productData: ProductData,
+  attribute: Attribute,
+): HTMLElement {
   const radio = createElement(Tag.INPUT, {}) as HTMLInputElement;
   radio.type = 'radio';
   radio.value = attribute.value.key;
@@ -41,9 +85,9 @@ function createButtons(attribute: Attribute): HTMLElement {
     className: styles.attributeButton,
     onclick: () => {
       if (!label.classList.contains(styles.attributeActive)) {
-        handleButtonClick(attribute.name, label);
+        handleButtonClick(productData, attribute.name, label);
       }
-    }
+    },
   });
 
   if (attribute.name === 'color') {
@@ -62,7 +106,11 @@ function createButtons(attribute: Attribute): HTMLElement {
   return label;
 }
 
-const createFieldset = (attributes: Attribute[], legendText: string) => {
+const createFieldset = (
+  productData: ProductData,
+  attributes: Attribute[],
+  legendText: string,
+) => {
   const fieldset = createElement(Tag.FIELDSET, {
     className: styles.attributeFieldset,
   });
@@ -75,13 +123,16 @@ const createFieldset = (attributes: Attribute[], legendText: string) => {
   fieldset.append(legend);
 
   attributes.forEach((attr) => {
-    fieldset.append(createButtons(attr));
+    fieldset.append(createButtons(productData, attr));
   });
 
   return fieldset;
 };
 
-export default function createAttributeButtons(attributeArray: Attribute[]) {
+export default function createAttributeButtons(
+  productData: ProductData,
+  attributeArray: Attribute[],
+) {
   const container = createElement(Tag.DIV, {
     className: styles.attributesContainer,
   });
@@ -91,8 +142,8 @@ export default function createAttributeButtons(attributeArray: Attribute[]) {
     (attr) => attr.name === 'color',
   );
 
-  const sizeFieldset = createFieldset(sizeAttributes, 'Size');
-  const colorFieldset = createFieldset(colorAttributes, 'Color');
+  const sizeFieldset = createFieldset(productData, sizeAttributes, 'Size');
+  const colorFieldset = createFieldset(productData, colorAttributes, 'Color');
 
   container.append(sizeFieldset, colorFieldset);
 

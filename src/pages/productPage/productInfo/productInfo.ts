@@ -96,7 +96,7 @@ export default function createProductInfo(
 
   const attributes = extractAttributes(productData);
   console.log(attributes);
-  const attributeButtons = createAttributeButtons(attributes);
+  const attributeButtons = createAttributeButtons(productData, attributes);
   rightContainer.append(attributeButtons);
 
   const priceElements = createPriceElements(currentVariant);
