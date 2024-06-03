@@ -26,10 +26,8 @@ export default async function apiGetEachProduct(productID: string) {
     // if (!response.body) {
     //     throw new Error('Failed to fetch product info');
     // }
-    console.log(response.body.masterData.current);
     return response.body.masterData.current;
   } catch (error) {
-    console.error('There was a problem with the fetch operation:', error);
     return null;
   }
 }

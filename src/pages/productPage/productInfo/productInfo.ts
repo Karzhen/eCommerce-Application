@@ -1,7 +1,7 @@
 import createElement from '@utils/create-element';
 import { Tag } from '@/interface';
 import styles from '@pages/productPage/productInfo/productInfo.module.css';
-import createImageSlider from '@pages/productPage/productInfo/creationFunctions/createImageSlider';
+import createImageSlider from '@pages/productPage/productInfo/imageSlider/createImageSlider';
 import { Attribute } from '@pages/productPage/productInfo/interfaces';
 import { ProductData, ProductVariant } from '@commercetools/platform-sdk';
 import createAttributeButtons from '@pages/productPage/productInfo/creationFunctions/createAttributeButtons';
@@ -84,6 +84,7 @@ export default function createProductInfo(
   }) as HTMLImageElement;
   brandImage.src = `/src/assets/images/brands/${brandName}.svg`;
   brandImage.alt = `Brand: ${brandName}`;
+  brandImage.draggable = false;
 
   productNameLogo.append(productName, brandImage);
   rightContainer.append(productNameLogo);
@@ -95,7 +96,6 @@ export default function createProductInfo(
   rightContainer.append(productDescription);
 
   const attributes = extractAttributes(productData);
-  console.log(attributes);
   const attributeButtons = createAttributeButtons(productData, attributes);
   rightContainer.append(attributeButtons);
 

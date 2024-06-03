@@ -51,6 +51,7 @@
     "@commercetools/sdk-middleware-http": "^7.0.4",
     "@reduxjs/toolkit": "^2.2.3",
     "node-fetch": "^3.3.2",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "swiper": "^11.1.4"
   }
 }
