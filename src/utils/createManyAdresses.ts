@@ -1,12 +1,91 @@
 import { AddressGet, Tag, TypeButton } from '@/interface';
 import styles from '@/pages/profilePage/main/adresses/addresses.module.css';
 import createButton from '@/components/baseComponents/button/button';
+import apiDeleteAddress from '@/api/apiDeleteAddress';
+import { createAndShowPopup } from '@/pages/registrationPage/registration/eventHandlers';
+import apiUpdateAddress from '@/api/apiUpdateAddress';
 import createElement from './create-element';
-import {
-  handlerClickCancelAddress,
-  handlerClickDeleteAddress,
-  handlerClickEditAddress,
-} from './editAddress';
+import toggleAllFields from './editProfile';
+
+import removeContainer from './removeContainer';
+
+import createModal, { updateAddressBox } from './createModal';
+import checkDefaultShipping, {
+  checkDefaultBilling,
+} from './checkDefaultAddresses';
+import clearDefaultAddresses from './clearDefaultLS';
+
+export async function handlerClickEditAddress(
+  event: Event,
+  addressBox: HTMLElement,
+  addressId: string,
+) {
+  event.preventDefault();
+  const button = event.target as HTMLButtonElement;
+  const cancelButtonId = `cancelAddress_${addressBox.id.split('-').pop()}`;
+  const cancelButton = document.getElementById(
+    cancelButtonId,
+  ) as HTMLButtonElement | null;
+
+  if (button && cancelButton) {
+    if (button.textContent === 'Edit') {
+      button.textContent = 'Save';
+      cancelButton.removeAttribute('disabled');
+      toggleAllFields(addressBox, false);
+    } else if (button.textContent === 'Save') {
+      try {
+        await apiUpdateAddress(addressId);
+        button.textContent = 'Edit';
+        toggleAllFields(addressBox, true);
+        cancelButton.setAttribute('disabled', 'true');
+      } catch (error) {
+        createAndShowPopup(
+          'Failure of the update operation',
+          'The data is invalid. Address is not updated',
+          false,
+        );
+      } finally {
+        updateAddressBox();
+        clearDefaultAddresses();
+      }
+    }
+  }
+}
+
+export function handlerClickCancelAddress(
+  event: Event,
+  addressBox: HTMLElement,
+) {
+  event.preventDefault();
+  const button = event.target as HTMLButtonElement;
+  const editButtonId = `editAddress_${addressBox.id.split('-').pop()}`;
+  const editButton = document.getElementById(
+    editButtonId,
+  ) as HTMLButtonElement | null;
+
+  if (button && editButton) {
+    editButton.textContent = 'Edit';
+    button.setAttribute('disabled', 'true');
+    toggleAllFields(addressBox, true);
+  }
+  clearDefaultAddresses();
+  updateAddressBox();
+}
+
+export async function handlerClickDeleteAddress(
+  event: Event,
+  addressId: string,
+) {
+  event.preventDefault();
+  await apiDeleteAddress(addressId);
+  removeContainer(addressId);
+  clearDefaultAddresses();
+}
+
+export function handlerClickAddAddress(event: Event) {
+  event.preventDefault();
+  createModal();
+}
 
 export function createAddressField(
   label: string,
@@ -63,6 +142,17 @@ function createDefaultCheckbox(
     className: styles.checkbox,
   }) as HTMLInputElement;
 
+  if (label === 'Default Shipping') {
+    CHECKBOX_ELEMENT.addEventListener('click', (event: Event) =>
+      checkDefaultShipping(event),
+    );
+  }
+  if (label === 'Default Billing') {
+    CHECKBOX_ELEMENT.addEventListener('click', (event: Event) =>
+      checkDefaultBilling(event),
+    );
+  }
+
   CHECKBOX_ELEMENT.setAttribute('type', 'checkbox');
   CHECKBOX_ELEMENT.checked = checked;
 
@@ -100,8 +190,9 @@ export function createAddresses(
       textContent: 'Edit',
     },
     handler: {
-      handlerClick: (event: Event) =>
-        handlerClickEditAddress(event, ADDRESS_WRAPPER),
+      handlerClick: (event: Event) => {
+        handlerClickEditAddress(event, ADDRESS_WRAPPER, address.id);
+      },
     },
   });
 

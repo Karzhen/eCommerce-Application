@@ -152,7 +152,6 @@ export interface Customer {
 }
 
 export interface AddressData {
-  streetNumber: string | undefined;
   streetName: string | undefined;
   postalCode: string | undefined;
   city: string | undefined;
@@ -161,7 +160,6 @@ export interface AddressData {
 
 export interface AddressGet {
   id: string;
-  streetNumber: string | undefined;
   streetName: string | undefined;
   postalCode: string | undefined;
   city: string | undefined;

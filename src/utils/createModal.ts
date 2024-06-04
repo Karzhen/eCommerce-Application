@@ -1,10 +1,13 @@
 import createElement from '@utils/create-element';
-import { Tag, TypeButton } from '@/interface';
+import { AddressGet, Tag, TypeButton } from '@/interface';
 
 import styles from '@components/popUp/popUp.module.css';
 import createButton from '@/components/baseComponents/button/button';
 import { createAddressBox } from '@/pages/registrationPage/registration/registrationPage';
+import store from '@/redux/store/configureStore';
 import sendAddress from '@/api/apiAddAddress';
+import createManyAddressBox from './createManyAdresses';
+import toggleAllFields from './editProfile';
 
 export function closeModal(modalElement: HTMLElement) {
   modalElement.remove();
@@ -13,9 +16,33 @@ export function closeModal(modalElement: HTMLElement) {
   localStorage.removeItem('defaultShipping');
 }
 
-function handleClick(modalElement: HTMLElement) {
-  sendAddress();
+export function updateAddressBox() {
+  const data = store.getState().login.user;
+  if (data) {
+    const wrapper = document.getElementById('wrapper');
+    if (wrapper) {
+      if (wrapper.lastChild) {
+        wrapper.removeChild(wrapper.lastChild);
+      }
+
+      wrapper.append(
+        createManyAddressBox(
+          data.addresses as AddressGet[],
+          data.billingAddressIds as string[],
+          data.shippingAddressIds as string[],
+          data.defaultShippingAddressId as string,
+          data.defaultBillingAddressId as string,
+        ),
+      );
+      toggleAllFields(wrapper, true);
+    }
+  }
+}
+
+async function handleClick(modalElement: HTMLElement) {
+  await sendAddress();
   closeModal(modalElement);
+  updateAddressBox();
 }
 
 export default function createModal() {

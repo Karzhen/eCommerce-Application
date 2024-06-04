@@ -1,6 +1,5 @@
 interface AddressData {
   streetName: string;
-  streetNumber: string;
   postalCode: string;
   city: string;
   country: string;
@@ -23,31 +22,48 @@ function getElementValueById(id: string): string {
   return element.value;
 }
 
-export function parseStreet(street: string): {
-  streetName: string;
-  streetNumber: string;
-} {
-  const parts = street.split(' ');
-  return {
-    streetName: parts.slice(0, -1).join(' '),
-    streetNumber: parts.pop() as string,
-  };
-}
-
 export function getAddressData(prefix: string): AddressData {
-  const street = getElementValueById(`${prefix}Street`);
-  const { streetName, streetNumber } = parseStreet(street);
+  const streetName = getElementValueById(`${prefix}Street`);
   const postalCode = getElementValueById(`${prefix}PostalCode`);
   const city = getElementValueById(`${prefix}City`);
   const country = getElementValueById(`${prefix}Country`);
 
   return {
     streetName,
-    streetNumber,
     postalCode,
     city,
     country,
   };
+}
+
+function setAddressField(prefix: string, addressData: AddressData) {
+  const streetInput = document.getElementById(
+    `${prefix}Street`,
+  ) as HTMLInputElement;
+  if (streetInput) {
+    streetInput.value = addressData.streetName.trim();
+  }
+
+  const postalCodeInput = document.getElementById(
+    `${prefix}PostalCode`,
+  ) as HTMLInputElement;
+  if (postalCodeInput) {
+    postalCodeInput.value = addressData.postalCode;
+  }
+
+  const cityInput = document.getElementById(
+    `${prefix}City`,
+  ) as HTMLInputElement;
+  if (cityInput) {
+    cityInput.value = addressData.city;
+  }
+
+  const countryInput = document.getElementById(
+    `${prefix}Country`,
+  ) as HTMLInputElement;
+  if (countryInput) {
+    countryInput.value = addressData.country;
+  }
 }
 
 export default function getRegistrationData(): CustomerData {
@@ -59,6 +75,10 @@ export default function getRegistrationData(): CustomerData {
 
   const shippingAddress = getAddressData('shipping');
   const billingAddress = getAddressData('billing');
+
+  // Set values in corresponding fields
+  setAddressField('shipping', shippingAddress);
+  setAddressField('billing', billingAddress);
 
   const newCustomer: CustomerData = {
     email,

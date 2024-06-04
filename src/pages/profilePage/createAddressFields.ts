@@ -2,10 +2,11 @@ import { AddressGet, Tag, TypeButton } from '@/interface';
 import createElement from '@/utils/create-element';
 import styles from '@/pages/profilePage/profilePage.module.css';
 import store from '@/redux/store/configureStore';
-import createManyAddressBox from '@/utils/createManyAdresses';
+import createManyAddressBox, {
+  handlerClickAddAddress,
+} from '@/utils/createManyAdresses';
 import createButton from '@/components/baseComponents/button/button';
 import toggleAllFields from '@/utils/editProfile';
-import { handlerClickAddAddress } from '@/utils/editAddress';
 
 export default function createAddressFields() {
   const WRAPPER = createElement(Tag.DIV, {

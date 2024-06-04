@@ -96,10 +96,12 @@ const createProfileFields = () => {
 
   PasswordContainer.classList.add(styles.hidden);
 
+  const AddressContainer = createAddressFields();
+
   PROFILE_WRAPPER.append(
     PersonalContainer,
     PasswordContainer,
-    createAddressFields(),
+    AddressContainer,
   );
 
   return PROFILE_WRAPPER;

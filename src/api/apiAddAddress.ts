@@ -1,7 +1,8 @@
 import store from '@redux/store/configureStore';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-import { UPDATE_VERSION } from '@/redux/actions/login';
+import { UPDATE_USER, UPDATE_VERSION } from '@/redux/actions/login';
 import { getAddressData } from '@/utils/getRegistrationData';
+import { Customer } from '@/interface';
 import createCtpClientRefresh from './buildClient/buildClientRefreshTokenFlow';
 import { getCountryCode } from './apiRegister';
 
@@ -19,13 +20,11 @@ export default async function sendAddress() {
     const data = store.getState().login;
 
     const billingAddress = getAddressData('billing');
-    const { streetName, streetNumber, postalCode, city, country } =
-      billingAddress;
+    const { streetName, postalCode, city, country } = billingAddress;
 
     const shippingAddress = getAddressData('shipping');
     const {
       streetName: shippingStreetName,
-      streetNumber: shippingStreetNumber,
       postalCode: shippingPostalCode,
       city: shippingCity,
       country: shippingCountry,
@@ -43,7 +42,6 @@ export default async function sendAddress() {
               action: 'addAddress',
               address: {
                 streetName,
-                streetNumber,
                 postalCode,
                 city,
                 country: getCountryCode(country),
@@ -60,6 +58,7 @@ export default async function sendAddress() {
         updatedCustomer.addresses[updatedCustomer.addresses.length - 1].id;
       newVersion = updatedCustomer.version;
       store.dispatch(UPDATE_VERSION(newVersion));
+      store.dispatch(UPDATE_USER({ user: updatedCustomer as Customer }));
 
       const responseBillingAdd = await apiRoot
         .withProjectKey({ projectKey })
@@ -80,6 +79,9 @@ export default async function sendAddress() {
       if (responseBillingAdd.statusCode === 200) {
         newVersion = responseBillingAdd.body.version;
         store.dispatch(UPDATE_VERSION(newVersion));
+        store.dispatch(
+          UPDATE_USER({ user: responseBillingAdd.body as Customer }),
+        );
 
         if (!sameAddress && defaultBilling) {
           const responseSetDefaultBilling = await apiRoot
@@ -100,6 +102,9 @@ export default async function sendAddress() {
 
           newVersion = responseSetDefaultBilling.body.version;
           store.dispatch(UPDATE_VERSION(newVersion));
+          store.dispatch(
+            UPDATE_USER({ user: responseSetDefaultBilling.body as Customer }),
+          );
         }
 
         if (sameAddress) {
@@ -126,6 +131,9 @@ export default async function sendAddress() {
           if (responseBillingShipping.statusCode === 200) {
             newVersion = responseBillingShipping.body.version; // Обновление значения переменной для версии
             store.dispatch(UPDATE_VERSION(newVersion));
+            store.dispatch(
+              UPDATE_USER({ user: responseBillingShipping.body as Customer }),
+            );
 
             if (defaultBilling) {
               const responseSetDefaultBilling = await apiRoot
@@ -144,11 +152,15 @@ export default async function sendAddress() {
                 })
                 .execute();
 
-              if (responseSetDefaultBilling.statusCode === 200) {
-                newVersion = responseSetDefaultBilling.body.version; // Обновление значения переменной для версии
-                store.dispatch(UPDATE_VERSION(newVersion));
-              }
+              newVersion = responseSetDefaultBilling.body.version;
+              store.dispatch(UPDATE_VERSION(newVersion));
+              store.dispatch(
+                UPDATE_USER({
+                  user: responseSetDefaultBilling.body as Customer,
+                }),
+              );
             }
+
             if (defaultShipping) {
               const responseSetDefaultShipping = await apiRoot
                 .withProjectKey({ projectKey })
@@ -166,100 +178,105 @@ export default async function sendAddress() {
                 })
                 .execute();
 
-              if (responseSetDefaultShipping.statusCode === 200) {
-                newVersion = responseSetDefaultShipping.body.version; // Обновление значения переменной для версии
-                store.dispatch(UPDATE_VERSION(newVersion));
-              }
+              newVersion = responseSetDefaultShipping.body.version;
+              store.dispatch(UPDATE_VERSION(newVersion));
+              store.dispatch(
+                UPDATE_USER({
+                  user: responseSetDefaultShipping.body as Customer,
+                }),
+              );
             }
           }
-        } else {
-          const dataInfo = store.getState().login;
-          const responseAddShippingAddress = await apiRoot
+        }
+      }
+
+      if (!sameAddress) {
+        const responseAddShipping = await apiRoot
+          .withProjectKey({ projectKey })
+          .me()
+          .post({
+            body: {
+              version: newVersion, // Использование одной переменной для версии
+              actions: [
+                {
+                  action: 'addAddress',
+                  address: {
+                    streetName: shippingStreetName,
+                    postalCode: shippingPostalCode,
+                    city: shippingCity,
+                    country: getCountryCode(shippingCountry),
+                  },
+                },
+              ],
+            },
+          })
+          .execute();
+
+        if (responseAddShipping.statusCode === 200) {
+          newVersion = responseAddShipping.body.version; // Обновление значения переменной для версии
+          store.dispatch(UPDATE_VERSION(newVersion));
+          store.dispatch(
+            UPDATE_USER({ user: responseAddShipping.body as Customer }),
+          );
+
+          const newShippingAddressId =
+            responseAddShipping.body.addresses[
+              responseAddShipping.body.addresses.length - 1
+            ].id;
+
+          const responseAddShippingId = await apiRoot
             .withProjectKey({ projectKey })
             .me()
             .post({
               body: {
-                version: dataInfo.version || 0,
+                version: newVersion,
                 actions: [
                   {
-                    action: 'addAddress',
-                    address: {
-                      streetName: shippingStreetName,
-                      streetNumber: shippingStreetNumber,
-                      postalCode: shippingPostalCode,
-                      city: shippingCity,
-                      country: getCountryCode(shippingCountry),
-                    },
+                    action: 'addShippingAddressId',
+                    addressId: newShippingAddressId,
                   },
                 ],
               },
             })
             .execute();
 
-          if (responseAddShippingAddress.statusCode === 200) {
-            const updatedCustomerShipping = responseAddShippingAddress.body;
-            const newAddressIdShipping =
-              updatedCustomerShipping.addresses[
-                updatedCustomerShipping.addresses.length - 1
-              ].id;
-            newVersion = updatedCustomerShipping.version;
+          if (responseAddShippingId.statusCode === 200) {
+            newVersion = responseAddShippingId.body.version;
             store.dispatch(UPDATE_VERSION(newVersion));
+            store.dispatch(
+              UPDATE_USER({ user: responseAddShippingId.body as Customer }),
+            );
 
-            const responseShippingAdd = await apiRoot
-              .withProjectKey({ projectKey })
-              .me()
-              .post({
-                body: {
-                  version: newVersion,
-                  actions: [
-                    {
-                      action: 'addShippingAddressId',
-                      addressId: newAddressIdShipping,
-                    },
-                  ],
-                },
-              })
-              .execute();
+            if (defaultShipping) {
+              const responseSetDefaultShipping = await apiRoot
+                .withProjectKey({ projectKey })
+                .me()
+                .post({
+                  body: {
+                    version: newVersion,
+                    actions: [
+                      {
+                        action: 'setDefaultShippingAddress',
+                        addressId: newShippingAddressId,
+                      },
+                    ],
+                  },
+                })
+                .execute();
 
-            if (responseShippingAdd.statusCode === 200) {
-              const CustomerShipping = responseShippingAdd.body;
-              newVersion = responseShippingAdd.body.version; // Обновление значения переменной для версии
+              newVersion = responseSetDefaultShipping.body.version;
               store.dispatch(UPDATE_VERSION(newVersion));
-              const newIdShipping =
-                CustomerShipping.addresses[
-                  CustomerShipping.addresses.length - 1
-                ].id;
-
-              if (defaultShipping) {
-                const responseSetDefaultShipping = await apiRoot
-                  .withProjectKey({ projectKey })
-                  .me()
-                  .post({
-                    body: {
-                      version: newVersion,
-                      actions: [
-                        {
-                          action: 'setDefaultShippingAddress',
-                          addressId: newIdShipping,
-                        },
-                      ],
-                    },
-                  })
-                  .execute();
-
-                if (responseSetDefaultShipping.statusCode === 200) {
-                  newVersion = responseSetDefaultShipping.body.version; // Обновление значения переменной для версии
-                  store.dispatch(UPDATE_VERSION(newVersion));
-                }
-              }
+              store.dispatch(
+                UPDATE_USER({
+                  user: responseSetDefaultShipping.body as Customer,
+                }),
+              );
             }
           }
         }
       }
     }
   } catch (error) {
-    if (error instanceof Error) {
-      console.log(error.message);
-    }
+    console.error('Error adding address:', error);
   }
 }
