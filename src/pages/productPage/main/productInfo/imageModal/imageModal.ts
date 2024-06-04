@@ -1,74 +1,110 @@
 import createElement from '@utils/create-element';
-import { Tag } from '@/interface';
+import createButton from '@baseComponents/button/button';
+import { Tag, TypeButton } from '@/interface';
 
 import styles from './imageModal.module.css';
 
-export default function createModal(images: string[], currentIndex: number) {
-  let currentIndexInModal = currentIndex;
+export default function createModal(images: string[], startIndex: number) {
+  let currentSlideIndex = startIndex;
 
-  const modalOverlay = createElement(Tag.DIV, {
-    className: styles.modalOverlay,
-    onclick: (event) => {
-      if (event.target === modalOverlay) {
-        document.body.removeChild(modalOverlay);
-      }
-    },
-  });
-
-  const modalContent = createElement(Tag.DIV, {
+  const modalContent = createElement(Tag.DIALOG, {
     className: styles.modalContent,
   });
-  modalOverlay.appendChild(modalContent);
 
-  const closeButton = createElement(Tag.BUTTON, {
-    className: styles.closeButton,
-    onclick: () => document.body.removeChild(modalOverlay),
+  modalContent.addEventListener('keydown', (event: Event) => {
+    if (event instanceof KeyboardEvent && event.code === 'Escape') {
+      event.stopPropagation();
+      modalContent.remove();
+    }
   });
-  closeButton.innerText = 'X';
+
+  const closeButton = createButton({
+    type: TypeButton.PRIMARY,
+    option: {
+      className: styles.closeButton,
+      textContent: 'X',
+    },
+    handler: {
+      handlerClick: () => {
+        modalContent.remove();
+      },
+    },
+  });
   modalContent.appendChild(closeButton);
 
+  const mainWrapper = createElement(Tag.DIV, {
+    className: styles.mainImageWrapper,
+  });
+
   const mainImage = createElement(Tag.IMG, {
-    className: styles.image,
+    className: styles.mainImage,
   }) as HTMLImageElement;
-  mainImage.src = images[currentIndexInModal];
+  mainImage.src  = images[currentSlideIndex];
 
-  modalContent.appendChild(mainImage);
+  mainWrapper.appendChild(mainImage);
+  modalContent.appendChild(mainWrapper);
 
-  function updateModalImage(index: number) {
-    currentIndexInModal = index;
+  function updateMainImage(index: number) {
+    currentSlideIndex = index;
     mainImage.style.opacity = '0';
     setTimeout(() => {
-      mainImage.src = images[currentIndexInModal];
+      if (images) {
+        mainImage.src = images[currentSlideIndex];
+      }
       mainImage.style.opacity = '1';
     }, 300);
   }
 
-  const prevButton = createElement(Tag.BUTTON, {
-    className: styles.prevButton,
-    onclick: () => {
-      if (currentIndexInModal > 0) {
-        updateModalImage(currentIndexInModal - 1);
-      } else {
-        updateModalImage(images.length - 1);
-      }
+  function prevImage() {
+    if (currentSlideIndex > 0) {
+      updateMainImage(currentSlideIndex - 1);
+    } else {
+      updateMainImage(images.length - 1);
+    }
+  }
+
+  function nextImage() {
+    if (currentSlideIndex < images.length - 1) {
+      updateMainImage(currentSlideIndex + 1);
+    } else {
+      updateMainImage(0);
+    }
+  }
+
+  const buttonsContainer = createElement(Tag.DIV, {
+    className: styles.buttonsContainer,
+  });
+
+  const prevButton = createButton({
+    type: TypeButton.SECONDARY,
+    option: {
+      className: styles.navButton,
+      textContent: '<',
+    },
+    handler: {
+      handlerClick: () => {
+        prevImage();
+      },
     },
   });
-  prevButton.innerText = '<';
 
-  const nextButton = createElement(Tag.BUTTON, {
-    className: styles.nextButton,
-    onclick: () => {
-      if (currentIndexInModal < images.length - 1) {
-        updateModalImage(currentIndexInModal + 1);
-      } else {
-        updateModalImage(0);
-      }
+  const nextButton = createButton({
+    type: TypeButton.SECONDARY,
+    option: {
+      className: styles.navButton,
+      textContent: '>',
+    },
+    handler: {
+      handlerClick: () => {
+        nextImage();
+      },
     },
   });
-  nextButton.innerText = '>';
 
-  modalContent.appendChild(prevButton);
-  modalContent.appendChild(nextButton);
+  buttonsContainer.appendChild(prevButton);
+  buttonsContainer.appendChild(nextButton);
+  modalContent.append(buttonsContainer);
 
-  document.body.appendChild(modalOverlay);
+  document.body.append(modalContent);
+  (modalContent as HTMLDialogElement).showModal();
 }
