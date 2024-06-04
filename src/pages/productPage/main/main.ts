@@ -18,10 +18,7 @@ function createErrorProductPage(error: string) {
   return errorMessage;
 }
 
-export default async function createMainProductPage(
-  goPage: (path: string) => void,
-  productVariantId: string,
-) {
+export default async function createMainProductPage(productVariantId: string) {
   const MAIN = createElement(Tag.MAIN, {
     className: styles.main,
     id: 'mainProductPage',

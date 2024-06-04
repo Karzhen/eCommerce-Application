@@ -97,7 +97,13 @@ export default function createImageSlider(images: string[] | undefined) {
     prevImage,
     nextImage,
   );
+
+  const WRAPPER = createElement(Tag.DIV, {
+    className: styles.wrapperImageSlider,
+  });
+
   const imageSlider = createImageSliderContainer();
+  WRAPPER.append(imageSlider);
   const thumbnailsContainer = createThumbnailsContainer();
 
   thumbnails = images.map((image: string, index: number) => {
@@ -116,7 +122,7 @@ export default function createImageSlider(images: string[] | undefined) {
   imageSlider.append(...thumbnails);
   thumbnailsContainer.append(prevButton, nextButton);
   if (images.length > 1) {
-    imageContainer.append(thumbnailsContainer, mainWrapper, imageSlider);
+    imageContainer.append(thumbnailsContainer, mainWrapper, WRAPPER);
     addSwipeHandlers(imageContainer, nextImage, prevImage);
   } else {
     imageContainer.append(mainWrapper);

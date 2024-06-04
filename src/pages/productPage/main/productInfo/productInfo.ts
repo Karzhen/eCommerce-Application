@@ -68,6 +68,7 @@ export default function createProductInfo(
   const images = currentVariant.images?.map(
     (image: { url: string }) => image.url,
   );
+
   const imageSlider = createImageSlider(images);
   leftContainer.append(imageSlider);
 
@@ -86,7 +87,7 @@ export default function createProductInfo(
   const brandImage: HTMLImageElement = createElement(Tag.IMG, {
     className: styles.productLogo,
   }) as HTMLImageElement;
-  brandImage.src = `/src/assets/images/brands/${brandName}.svg`;
+  brandImage.src = `/brands/${brandName.toLowerCase()}.svg`;
   brandImage.alt = `Brand: ${brandName}`;
   brandImage.draggable = false;
 

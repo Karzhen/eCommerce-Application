@@ -15,6 +15,7 @@
   overflow: hidden;
   padding: 20px;
 }
+
 .content-container {
   display: flex;
   width: 100%;
@@ -73,7 +74,16 @@
   width: 100%;
 }
 
+.wrapper-image-slider {
+  position: relative;
+  width: 100%;
+  height: 100px;
+  overflow-x: auto;
+}
+
 .image-slider {
+  position: absolute;
+
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -250,4 +260,15 @@
   align-self: center;
   padding: 10px 20px;
   margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+  .content-container {
+    flex-direction: column;
+  }
+
+  .main-image-wrapper {
+    width: 100%;
+    height: 200px;
+  }
 }

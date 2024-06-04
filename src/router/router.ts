@@ -156,10 +156,7 @@ export class Router {
           );
         } else {
           PRODUCT_PAGE.replaceWith(
-            await createMainProductPage(
-              bindGoPage,
-              this.currentProductId || '',
-            ),
+            await createMainProductPage(this.currentProductId || ''),
           );
         }
         break;
