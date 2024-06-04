@@ -57,7 +57,10 @@ export class Router {
         } else this.currentPage = Page.REGISTR;
         break;
       case Page.PROFILE:
-        this.currentPage = Page.PROFILE;
+        if (!state.getState().login.isLogin) {
+          this.currentPage = Page.LOGIN;
+          window.history.replaceState({}, '', Page.LOGIN);
+        } else this.currentPage = Page.PROFILE;
         break;
       case Page.BASKET:
         this.currentPage = Page.BASKET;
@@ -135,7 +138,7 @@ export class Router {
         break;
       case Page.PROFILE:
         document.body.replaceChildren();
-        document.body.append(createProfilePage(bindGoPage));
+        document.body.append(await createProfilePage(bindGoPage));
         break;
       case Page.BASKET:
         document.body.replaceChildren();

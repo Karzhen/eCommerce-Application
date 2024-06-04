@@ -14,7 +14,7 @@ import {
 import createBasicInfoBox from './main/basicInfo/basicInfo';
 import createAddressFields from './createAddressFields';
 
-const createProfileFields = () => {
+export default async function createProfileFields() {
   const PROFILE_WRAPPER = createElement(Tag.DIV, {
     className: styles.profileWrapper,
     id: 'profileWrapper',
@@ -96,7 +96,7 @@ const createProfileFields = () => {
 
   PasswordContainer.classList.add(styles.hidden);
 
-  const AddressContainer = createAddressFields();
+  const AddressContainer = await createAddressFields();
 
   PROFILE_WRAPPER.append(
     PersonalContainer,
@@ -105,6 +105,4 @@ const createProfileFields = () => {
   );
 
   return PROFILE_WRAPPER;
-};
-
-export default createProfileFields;
+}

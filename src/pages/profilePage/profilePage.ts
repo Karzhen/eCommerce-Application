@@ -9,7 +9,7 @@ import createProfileFields from './createProfileFields';
 import fillProfileFields from './fillProfile';
 import createTabs from './main/tabs';
 
-export default function createProfilePage(goPage: (page: Page) => void) {
+export default async function createProfilePage(goPage: (page: Page) => void) {
   const PROFILE_PAGE = createElement(Tag.DIV, {
     id: 'profilePage',
     className: styles.profilePage,
@@ -26,7 +26,7 @@ export default function createProfilePage(goPage: (page: Page) => void) {
     className: styles.profileMain,
   });
 
-  PROFILE_MAIN.append(tabsContainer, createProfileFields());
+  PROFILE_MAIN.append(tabsContainer, await createProfileFields());
 
   PROFILE_PAGE.append(createHeader(goPage), PROFILE_MAIN, createFooter());
 

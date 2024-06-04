@@ -8,7 +8,7 @@ import createManyAddressBox, {
 import createButton from '@/components/baseComponents/button/button';
 import toggleAllFields from '@/utils/editProfile';
 
-export default function createAddressFields() {
+export default async function createAddressFields() {
   const WRAPPER = createElement(Tag.DIV, {
     className: styles.addressWrapper,
     id: 'wrapper',
@@ -35,7 +35,7 @@ export default function createAddressFields() {
 
   if (data) {
     WRAPPER.append(
-      createManyAddressBox(
+      await createManyAddressBox(
         data.addresses as AddressGet[],
         data.billingAddressIds as string[],
         data.shippingAddressIds as string[],
