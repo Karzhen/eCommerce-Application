@@ -53,3 +53,43 @@
 .buttonCloseFail {
   background: var(--color-error);
 }
+
+/* popUp.module.css */
+
+.modalBackdrop {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.modalCloseButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: var(--color-primary);
+  cursor: pointer;
+  font-size: 20px;
+  color: #333;
+}
+
+.modalCloseButton:hover {
+  color: white;
+}

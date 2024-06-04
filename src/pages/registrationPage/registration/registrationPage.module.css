@@ -56,6 +56,7 @@
   padding: 5px;
   border: 1px var(--color-light) solid;
   border-radius: 4px;
+  gap: 20px;
 }
 
 .main-data-box {

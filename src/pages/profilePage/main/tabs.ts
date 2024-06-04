@@ -33,7 +33,9 @@ const createTabs = () => {
               container.id === tabData.containerId
             ) {
               container.classList.remove(styles.hidden);
+              container.classList.add(styles.container);
             } else if (container instanceof HTMLElement) {
+              container.classList.remove(styles.container);
               container.classList.add(styles.hidden);
             }
           });

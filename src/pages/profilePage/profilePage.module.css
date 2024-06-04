@@ -105,6 +105,7 @@
   flex-direction: column;
   width: 100%;
 }
+
 .password {
   color: var(--color-surface-text);
   font: var(--text-l);
@@ -154,7 +155,8 @@
 }
 
 .edit,
-.cancel {
+.cancel,
+.add {
   width: 100px;
   height: 40px;
   margin: 10px;
@@ -164,8 +166,31 @@
   align-items: center;
 }
 
+.add {
+  width: 300px;
+  justify-self: flex-end;
+}
+
 .profile-buttons {
   display: flex;
   gap: 5px;
   align-self: flex-end;
+}
+
+.address-wrapper {
+  width: 100%;
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 30px;
+}
+
+.container {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
 }

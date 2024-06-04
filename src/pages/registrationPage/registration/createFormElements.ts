@@ -2,6 +2,7 @@ import { Tag, TypeInput } from '@/interface';
 import createElement from '@utils/create-element';
 import createInput from '@baseComponents/input/input';
 import createSelect from '@baseComponents/select/select';
+import handlerAddress from '@/pages/profilePage/eventHandlers';
 import checkDefaultShipping, {
   checkDefaultBilling,
 } from '@/utils/checkDefaultAddresses';
@@ -180,7 +181,7 @@ export function createPasswordField() {
   return PASSWORD_FIELD;
 }
 
-export function createStreetField(prefix: string) {
+export function createStreetField(prefix: string, pageContainer: string) {
   const STREET_FIELD = createElement(Tag.DIV, {
     className: styles.streetField,
   });
@@ -193,7 +194,10 @@ export function createStreetField(prefix: string) {
   const INPUT_STREET: HTMLInputElement = createInput({
     type: TypeInput.TEXT,
     option: { id: `${prefix}Street`, className: styles.street },
-    handler: { handlerInput: handlerForm },
+    handler: {
+      handlerInput:
+        pageContainer === 'profilePage' ? handlerAddress : handlerForm,
+    },
   }) as HTMLInputElement;
   INPUT_STREET.setAttribute('required', 'required');
   INPUT_STREET.setAttribute('pattern', '^[a-zA-Z0-9 ,\\.]*$');
@@ -220,7 +224,7 @@ export function createStreetField(prefix: string) {
   return STREET_FIELD;
 }
 
-export function createCityField(prefix: string) {
+export function createCityField(prefix: string, pageContainer: string) {
   const CITY_FIELD = createElement(Tag.DIV, {
     className: styles.cityField,
   });
@@ -233,7 +237,10 @@ export function createCityField(prefix: string) {
   const INPUT_CITY: HTMLInputElement = createInput({
     type: TypeInput.TEXT,
     option: { id: `${prefix}City`, className: styles.city },
-    handler: { handlerInput: handlerForm },
+    handler: {
+      handlerInput:
+        pageContainer === 'profilePage' ? handlerAddress : handlerForm,
+    },
   }) as HTMLInputElement;
   INPUT_CITY.setAttribute('required', 'required');
   INPUT_CITY.setAttribute('pattern', '^[a-zA-Z]+$');
@@ -260,7 +267,7 @@ export function createCityField(prefix: string) {
   return CITY_FIELD;
 }
 
-export function createPostalCodeField(prefix: string) {
+export function createPostalCodeField(prefix: string, pageContainer: string) {
   const POSTAL_CODE_FIELD = createElement(Tag.DIV, {
     className: styles.postalCodeField,
   });
@@ -273,7 +280,10 @@ export function createPostalCodeField(prefix: string) {
   const INPUT_POSTAL_CODE: HTMLInputElement = createInput({
     type: TypeInput.TEXT,
     option: { id: `${prefix}PostalCode`, className: styles.postalCode },
-    handler: { handlerInput: handlerForm },
+    handler: {
+      handlerInput:
+        pageContainer === 'profilePage' ? handlerAddress : handlerForm,
+    },
   }) as HTMLInputElement;
   INPUT_POSTAL_CODE.setAttribute('required', 'required');
   INPUT_POSTAL_CODE.setAttribute('pattern', '\\d{6}');
@@ -295,55 +305,47 @@ export function createPostalCodeField(prefix: string) {
   });
 
   POSTAL_CODE_FIELD.append(LABEL_POSTAL_CODE, INPUT_POSTAL_CODE, LABEL_ERROR);
+
   return POSTAL_CODE_FIELD;
 }
 
-export function createCountryField(prefix: string) {
+export function createCountryField(prefix: string, pageContainer: string) {
   const COUNTRY_FIELD = createElement(Tag.DIV, {
     className: styles.countryField,
   });
 
   const LABEL_COUNTRY = createElement(Tag.LABEL, {
     className: styles.countryLabel,
-    textContent: `Select Country`,
+    textContent: `Country`,
   });
 
-  const SELECT_COUNTRY: HTMLInputElement = createSelect({
+  const INPUT_COUNTRY: HTMLSelectElement = createSelect({
     option: { id: `${prefix}Country`, className: styles.country },
     handler: {
       handlerChange: (event) => {
-        handlerCountry(event, prefix);
-        handlerForm();
+        handlerCountry(event, prefix, pageContainer);
+        if (pageContainer === 'profilePage') {
+          handlerAddress();
+        } else {
+          handlerForm();
+        }
       },
     },
-  }) as HTMLInputElement;
-  if (SELECT_COUNTRY.id === 'billingCountry') {
-    SELECT_COUNTRY.addEventListener('input', () => {
-      if (localStorage.getItem('sameAddress') === 'true') {
-        const SHIPPING_SELECT_COUNTRY: HTMLInputElement =
-          document.getElementById('shippingCountry') as HTMLInputElement;
-        if (SHIPPING_SELECT_COUNTRY) {
-          SHIPPING_SELECT_COUNTRY.value = SELECT_COUNTRY.value;
-        }
-      }
-    });
-  }
-
-  const countries = ['Russia', 'United States', 'Germany'];
-
-  countries.forEach((country) => {
-    const OPTION = document.createElement('option');
-    OPTION.value = country;
-    OPTION.textContent = country;
-    SELECT_COUNTRY.appendChild(OPTION);
-  });
+  }) as HTMLSelectElement;
+  INPUT_COUNTRY.setAttribute('required', 'required');
+  INPUT_COUNTRY.innerHTML = `
+    <option value="" disabled>Select your country</option>
+    <option value="Russia" selected>Russia</option>
+    <option value="United States">United States</option>
+    <option value="Germany">Germany</option>
+  `;
 
   const LABEL_ERROR = createElement(Tag.LABEL, {
     id: `${prefix}CountryError`,
     className: styles.countryError,
   });
 
-  COUNTRY_FIELD.append(LABEL_COUNTRY, SELECT_COUNTRY, LABEL_ERROR);
+  COUNTRY_FIELD.append(LABEL_COUNTRY, INPUT_COUNTRY, LABEL_ERROR);
 
   return COUNTRY_FIELD;
 }
@@ -390,7 +392,7 @@ export function createBillingCheckbox() {
   return CHECKBOX_WRAPPER;
 }
 
-export function createSameAddressCheckbox() {
+export function createSameAddressCheckbox(pageContainer: string) {
   const CHECKBOX_WRAPPER = createElement(Tag.DIV, {
     className: styles.checkboxWrapper,
   });
@@ -407,7 +409,9 @@ export function createSameAddressCheckbox() {
       className: styles.checkbox,
       checked: true,
     },
-    handler: { handlerInput: checkSameAddress },
+    handler: {
+      handlerInput: (event) => checkSameAddress(event, pageContainer),
+    },
   }) as HTMLInputElement;
   localStorage.setItem(
     'sameAddress',

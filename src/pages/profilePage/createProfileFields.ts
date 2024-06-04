@@ -12,7 +12,7 @@ import {
   createPasswordUpdateField,
 } from './createPasswordFields';
 import createBasicInfoBox from './main/basicInfo/basicInfo';
-import createAddress from './main/adresses/addresses';
+import createAddressFields from './createAddressFields';
 
 const createProfileFields = () => {
   const PROFILE_WRAPPER = createElement(Tag.DIV, {
@@ -94,18 +94,12 @@ const createProfileFields = () => {
 
   PasswordContainer.appendChild(PasswordForm);
 
-  const AddressContainer = createElement(Tag.DIV, {
-    id: 'addressContainer',
-  });
-  AddressContainer.appendChild(createAddress());
-
   PasswordContainer.classList.add(styles.hidden);
-  AddressContainer.classList.add(styles.hidden);
 
   PROFILE_WRAPPER.append(
     PersonalContainer,
     PasswordContainer,
-    AddressContainer,
+    createAddressFields(),
   );
 
   return PROFILE_WRAPPER;

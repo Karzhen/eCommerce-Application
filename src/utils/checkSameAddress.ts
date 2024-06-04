@@ -1,5 +1,6 @@
 import copyBillingToShipping from '@utils/registrationSameInputs';
 import { handlerForm } from '@/pages/registrationPage/registration/eventHandlers';
+import handlerAddress from '@/pages/profilePage/eventHandlers';
 import toggleShippingInputs from './toggleInputs';
 import updatePostalCodePattern from './updatePostalCodePattern';
 
@@ -27,7 +28,7 @@ export function removeStylesToContainer(element: HTMLElement | Element) {
   }
 }
 
-export default function checkSameAddress(event: Event) {
+export default function checkSameAddress(event: Event, pageContainer: string) {
   const target = event.target as HTMLInputElement;
   if (!target) return;
 
@@ -44,5 +45,9 @@ export default function checkSameAddress(event: Event) {
     removeStylesToContainer(wrapper);
   }
   updatePostalCodePattern('shipping');
-  handlerForm();
+  if (pageContainer === 'profilePage') {
+    handlerAddress();
+  } else {
+    handlerForm();
+  }
 }

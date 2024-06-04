@@ -6,8 +6,6 @@ import {
 import { setUserFields } from '@/pages/profilePage/fillProfile';
 import store from '@/redux/store/configureStore';
 import apiUpdatePersonalData from '@/api/apiUpdatePersonalData';
-import copyBillingToShipping from './registrationSameInputs';
-import updatePostalCodePattern from './updatePostalCodePattern';
 import samePersonalData from './samePersonalData';
 
 export default function toggleAllFields(
@@ -60,10 +58,8 @@ export function addInputEventListeners(element: HTMLElement) {
 
 export async function handlerClickPersonalEditMode(event: Event) {
   event.preventDefault();
-  updatePostalCodePattern('shipping');
   const button = event.target as HTMLButtonElement;
   const PROFILE_DATA = document.getElementById('profileData') as HTMLElement;
-  const sameAddress = localStorage.getItem('sameAddress');
   const cancelButton = document.getElementById(
     'cancelProfile',
   ) as HTMLButtonElement;
@@ -74,9 +70,6 @@ export async function handlerClickPersonalEditMode(event: Event) {
       cancelButton.removeAttribute('disabled');
       toggleAllFields(PROFILE_DATA, false);
       changeBox('mainDataBox', PROFILE_DATA);
-      if (sameAddress === 'true') {
-        copyBillingToShipping();
-      }
     } else if (button.textContent === 'Save') {
       if (samePersonalData(PROFILE_DATA) === true) {
         toggleAllFields(PROFILE_DATA, true);

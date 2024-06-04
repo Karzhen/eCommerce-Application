@@ -23,7 +23,7 @@ function getElementValueById(id: string): string {
   return element.value;
 }
 
-function parseStreet(street: string): {
+export function parseStreet(street: string): {
   streetName: string;
   streetNumber: string;
 } {
@@ -34,7 +34,7 @@ function parseStreet(street: string): {
   };
 }
 
-function getAddressData(prefix: string): AddressData {
+export function getAddressData(prefix: string): AddressData {
   const street = getElementValueById(`${prefix}Street`);
   const { streetName, streetNumber } = parseStreet(street);
   const postalCode = getElementValueById(`${prefix}PostalCode`);

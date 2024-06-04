@@ -66,7 +66,12 @@ export function createCustomerBox(isRegistrationPage: boolean) {
   return CUSTOMER_BOX;
 }
 
-function createAddresses(title: string, prefix: string, isShipping?: boolean) {
+export function createAddresses(
+  title: string,
+  prefix: string,
+  pageContainer: string,
+  isShipping?: boolean,
+) {
   if (isShipping) {
     const TITLE_BOX = createElement(Tag.DIV, {});
     const TITLE = createElement(Tag.H2, {
@@ -75,7 +80,7 @@ function createAddresses(title: string, prefix: string, isShipping?: boolean) {
       textContent: title,
     });
 
-    TITLE_BOX.append(TITLE, createSameAddressCheckbox());
+    TITLE_BOX.append(TITLE, createSameAddressCheckbox(pageContainer));
 
     const ADDRESS_WRAPPER = createElement(Tag.DIV, {
       id: 'shipping-address-box',
@@ -83,10 +88,10 @@ function createAddresses(title: string, prefix: string, isShipping?: boolean) {
 
     ADDRESS_WRAPPER.append(
       TITLE_BOX,
-      createStreetField(prefix),
-      createCityField(prefix),
-      createPostalCodeField(prefix),
-      createCountryField(prefix),
+      createStreetField(prefix, pageContainer),
+      createCityField(prefix, pageContainer),
+      createPostalCodeField(prefix, pageContainer),
+      createCountryField(prefix, pageContainer),
     );
 
     toggleShippingInputs(ADDRESS_WRAPPER, true);
@@ -106,16 +111,16 @@ function createAddresses(title: string, prefix: string, isShipping?: boolean) {
 
   ADDRESS_WRAPPER.append(
     TITLE_ADDRESS,
-    createStreetField(prefix),
-    createCityField(prefix),
-    createPostalCodeField(prefix),
-    createCountryField(prefix),
+    createStreetField(prefix, pageContainer),
+    createCityField(prefix, pageContainer),
+    createPostalCodeField(prefix, pageContainer),
+    createCountryField(prefix, pageContainer),
   );
 
   return ADDRESS_WRAPPER;
 }
 
-export function createAddressBox() {
+export function createAddressBox(pageContainer: string) {
   const ADDRESS_BOX = createElement(Tag.DIV, {
     className: styles.addressBox,
   });
@@ -123,9 +128,14 @@ export function createAddressBox() {
   const SHIPPING_ADDRESS_BOX = createAddresses(
     'Shipping Address',
     'shipping',
+    pageContainer,
     true,
   );
-  const BILLING_ADDRESS_BOX = createAddresses('Billing Address', 'billing');
+  const BILLING_ADDRESS_BOX = createAddresses(
+    'Billing Address',
+    'billing',
+    pageContainer,
+  );
 
   BILLING_ADDRESS_BOX.append(createBillingCheckbox());
 
@@ -145,7 +155,7 @@ function createRegistrBox() {
     className: styles.registrBox,
   });
 
-  REGISTR_BOX.append(createCustomerBox(true), createAddressBox());
+  REGISTR_BOX.append(createCustomerBox(true), createAddressBox('registration'));
 
   return REGISTR_BOX;
 }

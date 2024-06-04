@@ -159,6 +159,15 @@ export interface AddressData {
   country: string | undefined;
 }
 
+export interface AddressGet {
+  id: string;
+  streetNumber: string | undefined;
+  streetName: string | undefined;
+  postalCode: string | undefined;
+  city: string | undefined;
+  country: string | undefined;
+}
+
 export enum CurrencyCode {
   RU = 'RUB',
   EN = 'USD',

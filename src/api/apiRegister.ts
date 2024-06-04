@@ -51,7 +51,7 @@ export function getAddresses(newCustomer: CustomerData) {
   ];
 }
 
-async function assignBillingAddressToCustomer(
+export async function assignBillingAddressToCustomer(
   addressId: string,
   customerId: string,
   version: number,
@@ -79,7 +79,7 @@ async function assignBillingAddressToCustomer(
   }
 }
 
-async function assignShippingAddressToCustomer(
+export async function assignShippingAddressToCustomer(
   addressId: string,
   customerId: string,
   version: number,

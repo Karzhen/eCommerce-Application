@@ -6,6 +6,7 @@ import {
   UPDATE_USER,
   ERROR_UPDATE_PERSONAL_DATA,
   ERROR_UPDATE_PASSWORD,
+  UPDATE_VERSION,
 } from '@actions/login';
 import { StateLogin } from '@/interface';
 
@@ -49,6 +50,10 @@ const login = createReducer(initialState, (builder) => {
         STATE.errorUpdate = null;
         STATE.version = user.version;
       }
+    })
+    .addCase(UPDATE_VERSION, (state, action) => {
+      const STATE = state;
+      STATE.version = action.payload;
     })
     .addCase(ERROR_UPDATE_PERSONAL_DATA, (state, action) => {
       const STATE = state;
