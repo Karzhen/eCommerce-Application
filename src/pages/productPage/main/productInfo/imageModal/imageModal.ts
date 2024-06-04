@@ -2,6 +2,7 @@ import createElement from '@utils/create-element';
 import createButton from '@baseComponents/button/button';
 import { Tag, TypeButton } from '@/interface';
 
+import addSwipeHandlers from '@pages/productPage/main/productInfo/imageSlider/addSwipeHandlers';
 import styles from './imageModal.module.css';
 
 export default function createModal(images: string[], startIndex: number) {
@@ -39,7 +40,8 @@ export default function createModal(images: string[], startIndex: number) {
   const mainImage = createElement(Tag.IMG, {
     className: styles.mainImage,
   }) as HTMLImageElement;
-  mainImage.src  = images[currentSlideIndex];
+  mainImage.src = images[currentSlideIndex];
+  mainImage.draggable = false;
 
   mainWrapper.appendChild(mainImage);
   modalContent.appendChild(mainWrapper);
@@ -104,6 +106,7 @@ export default function createModal(images: string[], startIndex: number) {
   buttonsContainer.appendChild(prevButton);
   buttonsContainer.appendChild(nextButton);
   modalContent.append(buttonsContainer);
+  addSwipeHandlers(modalContent, nextImage, prevImage);
 
   document.body.append(modalContent);
   (modalContent as HTMLDialogElement).showModal();
