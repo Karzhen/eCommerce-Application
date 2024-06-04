@@ -86,3 +86,19 @@ input {
   margin: 5px;
   width: 140px;
 }
+
+@media (max-width: 800px) {
+  .address {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .address-data {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .profile-buttons {
+    width: 100%;
+  }
+}

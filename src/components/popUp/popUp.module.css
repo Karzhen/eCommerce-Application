@@ -74,9 +74,13 @@
   padding: 20px;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  background-color: white;
   display: flex;
   flex-direction: column;
+  max-height: 100vh;
+  overflow-y: auto;
+  width: 70vw;
+  max-width: 600px;
+  margin: auto;
 }
 
 .modalCloseButton {
