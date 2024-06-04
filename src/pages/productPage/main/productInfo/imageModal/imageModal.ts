@@ -1,52 +1,113 @@
 import createElement from '@utils/create-element';
-import { Tag } from '@/interface';
+import createButton from '@baseComponents/button/button';
+import { Tag, TypeButton } from '@/interface';
 
+import addSwipeHandlers from '@pages/productPage/main/productInfo/imageSlider/addSwipeHandlers';
 import styles from './imageModal.module.css';
 
-export default function createModal(images: string[], currentIndex: number) {
-  const modalOverlay = createElement(Tag.DIV, {
-    className: styles.modalOverlay,
-    onclick: (event) => {
-      if (event.target === modalOverlay) {
-        document.body.removeChild(modalOverlay);
+export default function createModal(images: string[], startIndex: number) {
+  let currentSlideIndex = startIndex;
+
+  const modalContent = createElement(Tag.DIALOG, {
+    className: styles.modalContent,
+  });
+
+  modalContent.addEventListener('keydown', (event: Event) => {
+    if (event instanceof KeyboardEvent && event.code === 'Escape') {
+      event.stopPropagation();
+      modalContent.remove();
+    }
+  });
+
+  const closeButton = createButton({
+    type: TypeButton.PRIMARY,
+    option: {
+      className: styles.closeButton,
+      textContent: 'X',
+    },
+    handler: {
+      handlerClick: () => {
+        modalContent.remove();
+      },
+    },
+  });
+  modalContent.appendChild(closeButton);
+
+  const mainWrapper = createElement(Tag.DIV, {
+    className: styles.mainImageWrapper,
+  });
+
+  const mainImage = createElement(Tag.IMG, {
+    className: styles.mainImage,
+  }) as HTMLImageElement;
+  mainImage.src = images[currentSlideIndex];
+  mainImage.draggable = false;
+
+  mainWrapper.appendChild(mainImage);
+  modalContent.appendChild(mainWrapper);
+
+  function updateMainImage(index: number) {
+    currentSlideIndex = index;
+    mainImage.style.opacity = '0';
+    setTimeout(() => {
+      if (images) {
+        mainImage.src = images[currentSlideIndex];
       }
+      mainImage.style.opacity = '1';
+    }, 300);
+  }
+
+  function prevImage() {
+    if (currentSlideIndex > 0) {
+      updateMainImage(currentSlideIndex - 1);
+    } else {
+      updateMainImage(images.length - 1);
+    }
+  }
+
+  function nextImage() {
+    if (currentSlideIndex < images.length - 1) {
+      updateMainImage(currentSlideIndex + 1);
+    } else {
+      updateMainImage(0);
+    }
+  }
+
+  const buttonsContainer = createElement(Tag.DIV, {
+    className: styles.buttonsContainer,
+  });
+
+  const prevButton = createButton({
+    type: TypeButton.SECONDARY,
+    option: {
+      className: styles.navButton,
+      textContent: '<',
+    },
+    handler: {
+      handlerClick: () => {
+        prevImage();
+      },
     },
   });
 
-  const modalContent = createElement(Tag.DIV, {
-    className: styles.modalContent,
-  });
-  modalOverlay.appendChild(modalContent);
-
-  const closeButton = createElement(Tag.BUTTON, {
-    className: styles.closeButton,
-    onclick: () => document.body.removeChild(modalOverlay),
-  });
-  closeButton.innerText = 'X';
-  modalContent.appendChild(closeButton);
-
-  const swiperContainer = createElement(Tag.DIV, {
-    className: styles.swiperContainer,
-  });
-  const swiperWrapper = createElement(Tag.DIV, {
-    className: styles.swiperWrapper,
+  const nextButton = createButton({
+    type: TypeButton.SECONDARY,
+    option: {
+      className: styles.navButton,
+      textContent: '>',
+    },
+    handler: {
+      handlerClick: () => {
+        nextImage();
+      },
+    },
   });
 
-  images.forEach((image, index) => {
-    const swiperSlide = createElement(Tag.DIV, {
-      className: styles.swiperSlide,
-    }) as HTMLDivElement;
-    swiperSlide.style.display = index === currentIndex ? 'block' : 'none';
-    const img = createElement(Tag.IMG, {
-      className: styles.image,
-    }) as HTMLImageElement;
-    img.src = image;
-    swiperSlide.appendChild(img);
-    swiperWrapper.appendChild(swiperSlide);
-  });
+  buttonsContainer.appendChild(prevButton);
+  buttonsContainer.appendChild(nextButton);
+  modalContent.append(buttonsContainer);
+  addSwipeHandlers(modalContent, nextImage, prevImage);
 
-  swiperContainer.appendChild(swiperWrapper);
-  modalContent.appendChild(swiperContainer);
-
-  document.body.appendChild(modalOverlay);
+  document.body.append(modalContent);
+  (modalContent as HTMLDialogElement).showModal();
 }

@@ -92,6 +92,7 @@ export default function createImageSlider(images: string[] | undefined) {
       updateMainImage(0);
     }
   }
+
   const { prevButton, nextButton } = createNavigationButtons(
     prevImage,
     nextImage,
