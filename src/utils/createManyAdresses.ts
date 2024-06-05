@@ -22,6 +22,7 @@ export async function handlerClickEditAddress(
 ) {
   event.preventDefault();
   const button = event.target as HTMLButtonElement;
+
   const cancelButtonId = `cancelAddress_${addressBox.id.split('-').pop()}`;
   const cancelButton = document.getElementById(
     cancelButtonId,
@@ -30,6 +31,20 @@ export async function handlerClickEditAddress(
   if (button && cancelButton) {
     if (button.textContent === 'Edit') {
       button.textContent = 'Save';
+      const buttonId = button.id;
+      const idSuffix = buttonId.split('_').pop();
+      const checkboxes = document.querySelectorAll<HTMLInputElement>(
+        `input[type="checkbox"][id$="${idSuffix}"]`,
+      );
+      checkboxes.forEach((checkbox) => {
+        if (checkbox.checked === true) {
+          if (checkbox.id.includes('DefaultShipping')) {
+            localStorage.setItem('defaultShipping', 'true');
+          } else if (checkbox.id.includes('DefaultBilling')) {
+            localStorage.setItem('defaultBilling', 'true');
+          }
+        }
+      });
       cancelButton.removeAttribute('disabled');
       toggleAllFields(addressBox, false);
     } else if (button.textContent === 'Save') {

@@ -9,6 +9,71 @@ const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 const ctpClient = createCtpClientRefresh();
 const apiRoot = createApiBuilderFromCtpClient(ctpClient);
 
+async function setDefaultAddress(
+  type: 'Billing' | 'Shipping',
+  addressId: string,
+  version: number,
+) {
+  try {
+    const response = await apiRoot
+      .withProjectKey({ projectKey })
+      .me()
+      .post({
+        body: {
+          version,
+          actions: [
+            {
+              action: `setDefault${type}Address`,
+              addressId,
+            },
+          ],
+        },
+      })
+      .execute();
+
+    if (response.statusCode === 200) {
+      store.dispatch(UPDATE_VERSION(response.body.version));
+      store.dispatch(UPDATE_USER({ user: response.body as Customer }));
+      return response.body.version;
+    }
+  } catch (error) {
+    console.error(`Error setting default ${type} address:`, error);
+  }
+  return version;
+}
+
+async function removeDefaultAddress(
+  type: 'Billing' | 'Shipping',
+  addressId: string,
+  version: number,
+) {
+  try {
+    const response = await apiRoot
+      .withProjectKey({ projectKey })
+      .me()
+      .post({
+        body: {
+          version,
+          actions: [
+            {
+              action: `setDefault${type}Address`,
+            },
+          ],
+        },
+      })
+      .execute();
+
+    if (response.statusCode === 200) {
+      store.dispatch(UPDATE_VERSION(response.body.version));
+      store.dispatch(UPDATE_USER({ user: response.body as Customer }));
+      return response.body.version;
+    }
+  } catch (error) {
+    console.error(`Error removing default ${type} address:`, error);
+  }
+  return version;
+}
+
 export default async function apiUpdateAddress(addressId: string) {
   try {
     const data = store.getState().login.user;
@@ -26,12 +91,9 @@ export default async function apiUpdateAddress(addressId: string) {
     };
 
     const { streetName, postalCode, city, country } = updatedAddress;
-
     console.log(updatedAddress);
 
-    // Fetch the latest version from the store before each request
     let newVersion = store.getState().login.user?.version;
-
     if (newVersion === undefined) {
       console.error('No version found in the store.');
       return;
@@ -67,76 +129,28 @@ export default async function apiUpdateAddress(addressId: string) {
       store.dispatch(UPDATE_USER({ user: updatedCustomer as Customer }));
 
       const defaultBilling = localStorage.getItem('defaultBilling') === 'true';
-      console.log(defaultBilling === true);
-
-      if (defaultBilling) {
-        newVersion = store.getState().login.user?.version; // Fetch latest version before action
-
-        if (newVersion === undefined) {
-          console.error('No version found in the store.');
-          return;
-        }
-
-        const responseSetDefaultBilling = await apiRoot
-          .withProjectKey({ projectKey })
-          .me()
-          .post({
-            body: {
-              version: newVersion,
-              actions: [
-                {
-                  action: 'setDefaultBillingAddress',
-                  addressId,
-                },
-              ],
-            },
-          })
-          .execute();
-
-        if (responseSetDefaultBilling.statusCode === 200) {
-          const newVersionSetDef = responseSetDefaultBilling.body.version;
-          store.dispatch(UPDATE_VERSION(newVersionSetDef));
-          store.dispatch(
-            UPDATE_USER({ user: responseSetDefaultBilling.body as Customer }),
-          );
-        }
-      }
-
       const defaultShipping =
         localStorage.getItem('defaultShipping') === 'true';
-      console.log(defaultShipping);
 
-      if (defaultShipping === true) {
-        newVersion = store.getState().login.user?.version; // Fetch latest version before action
+      const isDefaultBilling =
+        store.getState().login.user?.defaultBillingAddressId === addressId;
+      const isDefaultShipping =
+        store.getState().login.user?.defaultShippingAddressId === addressId;
 
-        if (newVersion === undefined) {
-          console.error('No version found in the store.');
-          return;
-        }
+      if (defaultBilling) {
+        newVersion = await setDefaultAddress('Billing', addressId, newVersion);
+      } else if (!defaultBilling && isDefaultBilling) {
+        newVersion = await removeDefaultAddress(
+          'Billing',
+          addressId,
+          newVersion,
+        );
+      }
 
-        const responseSetDefaultShipping = await apiRoot
-          .withProjectKey({ projectKey })
-          .me()
-          .post({
-            body: {
-              version: newVersion,
-              actions: [
-                {
-                  action: 'setDefaultShippingAddress',
-                  addressId,
-                },
-              ],
-            },
-          })
-          .execute();
-
-        if (responseSetDefaultShipping.statusCode === 200) {
-          const newVersionShip = responseSetDefaultShipping.body.version;
-          store.dispatch(UPDATE_VERSION(newVersionShip));
-          store.dispatch(
-            UPDATE_USER({ user: responseSetDefaultShipping.body as Customer }),
-          );
-        }
+      if (defaultShipping) {
+        await setDefaultAddress('Shipping', addressId, newVersion);
+      } else if (!defaultShipping && isDefaultShipping) {
+        await removeDefaultAddress('Shipping', addressId, newVersion);
       }
     }
   } catch (error) {

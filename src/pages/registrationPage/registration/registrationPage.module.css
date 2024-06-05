@@ -208,6 +208,13 @@ input[type='checkbox'] {
   justify-content: space-between;
 }
 
+@media (max-width: 800px) {
+  .address-box {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
 @media (max-width: 710px) {
   .registr-page {
     align-items: normal;
