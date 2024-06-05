@@ -4,16 +4,32 @@ import createButton from '@/components/baseComponents/button/button';
 import apiDeleteAddress from '@/api/apiDeleteAddress';
 import { createAndShowPopup } from '@/pages/registrationPage/registration/eventHandlers';
 import apiUpdateAddress from '@/api/apiUpdateAddress';
+import validateProfileForm, {
+  attachInputHandlers,
+  handleCountryChange,
+  isProfileFormValid,
+} from '@/pages/profilePage/validation';
 import createElement from './create-element';
 import toggleAllFields from './editProfile';
-
 import removeContainer from './removeContainer';
-
 import createModal, { updateAddressBox } from './createModal';
 import checkDefaultShipping, {
   checkDefaultBilling,
 } from './checkDefaultAddresses';
 import clearDefaultAddresses from './clearDefaultLS';
+
+export function disabledOtherBoxes(currentAddressId: string, disable: boolean) {
+  const allEditButtons = document.querySelectorAll('[id^="editAddress_"]');
+
+  allEditButtons.forEach((button) => {
+    const editButton = button as HTMLButtonElement;
+    const addressId = editButton.id.replace('editAddress_', '');
+
+    if (addressId !== currentAddressId) {
+      editButton.disabled = disable;
+    }
+  });
+}
 
 export async function handlerClickEditAddress(
   event: Event,
@@ -30,6 +46,7 @@ export async function handlerClickEditAddress(
 
   if (button && cancelButton) {
     if (button.textContent === 'Edit') {
+      disabledOtherBoxes(addressId, true);
       button.textContent = 'Save';
       const buttonId = button.id;
       const idSuffix = buttonId.split('_').pop();
@@ -47,12 +64,26 @@ export async function handlerClickEditAddress(
       });
       cancelButton.removeAttribute('disabled');
       toggleAllFields(addressBox, false);
+      attachInputHandlers(
+        addressBox,
+        () => validateProfileForm(addressId),
+        () => handleCountryChange(event, addressId),
+      );
     } else if (button.textContent === 'Save') {
+      if (!isProfileFormValid(addressId)) {
+        createAndShowPopup(
+          'Error',
+          'Data is invalid. Address not updated',
+          false,
+        );
+        return;
+      }
       try {
         await apiUpdateAddress(addressId);
         button.textContent = 'Edit';
         toggleAllFields(addressBox, true);
         cancelButton.setAttribute('disabled', 'true');
+        createAndShowPopup('Success', 'Data successfully updated', true);
       } catch (error) {
         createAndShowPopup(
           'Failure of the update operation',
@@ -65,6 +96,24 @@ export async function handlerClickEditAddress(
       }
     }
   }
+}
+
+type PostalCodePatterns = {
+  [key: string]: string;
+};
+
+const postalCodePatterns: PostalCodePatterns = {
+  RU: '^\\d{6}$',
+  US: '^\\d{5}$',
+  DE: '^\\d{5}$|^\\d{2}[A-Za-z]\\d{3}$',
+};
+
+function createLabelError(id: string) {
+  return createElement(Tag.LABEL, {
+    id: `${id}_error`,
+    className: styles.labelError,
+    textContent: '',
+  });
 }
 
 export function handlerClickCancelAddress(
@@ -102,12 +151,16 @@ export function handlerClickAddAddress(event: Event) {
   createModal();
 }
 
+function getPostalCodePattern(country: string): string {
+  return postalCodePatterns[country] || '^\\d{6}$';
+}
+
 export function createAddressField(
   label: string,
   prefix: string,
   addressId: string,
   value: string | undefined,
-  pattern?: string,
+  pattern: string,
   required: boolean = true,
   inputHandler?: (event: Event) => void,
 ) {
@@ -128,10 +181,17 @@ export function createAddressField(
   INPUT_ELEMENT.value = value || '';
 
   if (required) INPUT_ELEMENT.setAttribute('required', 'required');
-  if (pattern) INPUT_ELEMENT.setAttribute('pattern', pattern);
+
+  INPUT_ELEMENT.setAttribute('pattern', pattern);
+
   if (inputHandler) INPUT_ELEMENT.addEventListener('input', inputHandler);
 
   FIELD_WRAPPER.append(LABEL_ELEMENT, INPUT_ELEMENT);
+
+  const errorLabel = createLabelError(`${prefix}-${addressId}`);
+
+  FIELD_WRAPPER.append(errorLabel);
+
   return FIELD_WRAPPER;
 }
 
@@ -172,6 +232,48 @@ function createDefaultCheckbox(
   CHECKBOX_ELEMENT.checked = checked;
 
   FIELD_WRAPPER.append(LABEL_ELEMENT, CHECKBOX_ELEMENT);
+  return FIELD_WRAPPER;
+}
+
+export function createCountrySelect(
+  label: string,
+  prefix: string,
+  addressId: string,
+  country: string,
+  required: boolean = true,
+  changeHandler?: (event: Event) => void,
+) {
+  const FIELD_WRAPPER = createElement(Tag.DIV, {
+    className: styles.fieldWrapper,
+  });
+
+  const LABEL_ELEMENT = createElement(Tag.LABEL, {
+    textContent: label,
+    id: `${prefix}-label-${addressId}`,
+  });
+
+  LABEL_ELEMENT.setAttribute('for', `${prefix}-${addressId}`);
+
+  const SELECT_ELEMENT: HTMLSelectElement = createElement(Tag.SELECT, {
+    id: `${prefix}-${addressId}`,
+    className: styles.select,
+  }) as HTMLSelectElement;
+
+  if (required) SELECT_ELEMENT.setAttribute('required', 'required');
+  if (changeHandler) SELECT_ELEMENT.addEventListener('change', changeHandler);
+
+  ['RU', 'US', 'DE'].forEach((item) => {
+    const OPTION_ELEMENT = createElement(Tag.OPTION, {});
+    OPTION_ELEMENT.setAttribute('value', item);
+    OPTION_ELEMENT.textContent = item;
+
+    if (item === country) {
+      OPTION_ELEMENT.setAttribute('selected', 'selected');
+    }
+    SELECT_ELEMENT.append(OPTION_ELEMENT);
+  });
+
+  FIELD_WRAPPER.append(LABEL_ELEMENT, SELECT_ELEMENT);
   return FIELD_WRAPPER;
 }
 
@@ -258,21 +360,33 @@ export function createAddresses(
       `${prefix}Street`,
       address.id,
       address.streetName,
+      '^[a-zA-Z0-9 ,\\.]*$',
     ),
-    createAddressField('City', `${prefix}City`, address.id, address.city),
+    createLabelError(`${prefix}Street-${address.id}`),
+    createAddressField(
+      'City',
+      `${prefix}City`,
+      address.id,
+      address.city,
+      `^[a-zA-Z]+$`,
+    ),
+    createLabelError(`${prefix}City-${address.id}`),
     createAddressField(
       'Postal Code',
       `${prefix}PostalCode`,
       address.id,
       address.postalCode,
-      '^[a-zA-Z0-9 ,\\.]*$',
+      getPostalCodePattern(address.country as string),
     ),
-    createAddressField(
+    createLabelError(`${prefix}PostalCode-${address.id}`),
+    createCountrySelect(
       'Country',
       `${prefix}Country`,
       address.id,
-      address.country,
+      address.country || '',
+      true,
     ),
+    createLabelError(`${prefix}Country-${address.id}`),
     createDefaultCheckbox(
       'Default Shipping',
       `${prefix}DefaultShipping`,

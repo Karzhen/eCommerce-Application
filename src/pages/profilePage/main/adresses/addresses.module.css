@@ -87,6 +87,10 @@ input {
   width: 140px;
 }
 
+.label-error {
+  color: var(--color-error);
+}
+
 @media (max-width: 800px) {
   .address {
     max-width: 100%;

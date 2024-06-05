@@ -40,6 +40,10 @@ export function changeBox(id: string, container: HTMLElement) {
   }
 }
 
+export const addressFormValidationHandler = () => {
+  validateAddressForm();
+};
+
 export function addInputEventListeners(element: HTMLElement) {
   const inputs = element.querySelectorAll('input');
   inputs.forEach((input) => {
@@ -50,9 +54,7 @@ export function addInputEventListeners(element: HTMLElement) {
 
   const selects = element.querySelectorAll<HTMLSelectElement>('select');
   selects.forEach((select) => {
-    select.addEventListener('change', () => {
-      validateAddressForm();
-    });
+    select.addEventListener('change', addressFormValidationHandler); // Используем сохраненную ссылку
   });
 }
 
