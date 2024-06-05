@@ -4,6 +4,7 @@ import store from '@/redux/store/configureStore';
 import { UPDATE_USER } from '@/redux/actions/login';
 import createUser from '@/utils/createCustomerObject';
 import { Customer } from '@/interface';
+import { createAndShowPopup } from '@/pages/registrationPage/registration/eventHandlers';
 
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
@@ -34,10 +35,19 @@ export default async function apiDeleteAddress(addressId: string) {
     const user = createUser(customer as Customer);
     if (result.statusCode === 200) {
       store.dispatch(UPDATE_USER({ user }));
+      createAndShowPopup(
+        'Address successfully deleted',
+        'You have deleted the address',
+        true,
+      );
     }
   } catch (error) {
     if (error instanceof Error) {
-      console.error('Error deleting address:', error.message);
+      createAndShowPopup(
+        'The address was not deleted',
+        `Error: ${error.message}`,
+        false,
+      );
     }
   }
 }

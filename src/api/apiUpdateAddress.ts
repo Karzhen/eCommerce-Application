@@ -2,6 +2,7 @@ import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { UPDATE_USER, UPDATE_VERSION } from '@/redux/actions/login';
 import getAddressDataById from '@/utils/getAddressById';
 import { Customer } from '@/interface';
+import { createAndShowPopup } from '@/pages/registrationPage/registration/eventHandlers';
 import store from '@/redux/store/configureStore';
 import createCtpClientRefresh from './buildClient/buildClientRefreshTokenFlow';
 
@@ -37,7 +38,11 @@ async function setDefaultAddress(
       return response.body.version;
     }
   } catch (error) {
-    console.error(`Error setting default ${type} address:`, error);
+    createAndShowPopup(
+      'Error',
+      `Error setting default ${type} address: ${error.message}`,
+      false,
+    );
   }
   return version;
 }
@@ -69,7 +74,11 @@ async function removeDefaultAddress(
       return response.body.version;
     }
   } catch (error) {
-    console.error(`Error removing default ${type} address:`, error);
+    createAndShowPopup(
+      'Error',
+      `Error removing default ${type} address: ${error.message}`,
+      false,
+    );
   }
   return version;
 }
@@ -155,7 +164,11 @@ export default async function apiUpdateAddress(addressId: string) {
     }
   } catch (error) {
     if (error instanceof Error) {
-      console.error('Error updating address:', error.message);
+      createAndShowPopup(
+        'Error',
+        `Error updating address: ${error.message}`,
+        false,
+      );
     }
   }
 }

@@ -25,6 +25,9 @@ export async function handlerClickChangePassword(event: Event) {
   const NEW_PASSWORD = document.getElementById('newPassword');
   const CANCEL = document.getElementById('cancelPassword') as HTMLButtonElement;
   const EDIT = document.getElementById('editPassword') as HTMLButtonElement;
+  const PASSWORD_DATA = document.getElementById(
+    'passwordWrapper',
+  ) as HTMLElement;
   if (
     CURRENT_PASSWORD instanceof HTMLInputElement &&
     NEW_PASSWORD instanceof HTMLInputElement &&
@@ -51,6 +54,8 @@ export async function handlerClickChangePassword(event: Event) {
   CANCEL.setAttribute('disabled', 'true');
   EDIT.removeAttribute('disabled');
   CHANGE_PASSWORD_BUTTON.setAttribute('disabled', 'true');
+  console.log(PASSWORD_DATA);
+  toggleAllFields(PASSWORD_DATA, true);
 }
 
 export function handlerClickCancelPasswordEditMode(event: Event) {

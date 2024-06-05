@@ -2,6 +2,7 @@ import store from '@redux/store/configureStore';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 import { UPDATE_USER, UPDATE_VERSION } from '@/redux/actions/login';
 import { getAddressData } from '@/utils/getRegistrationData';
+import { createAndShowPopup } from '@/pages/registrationPage/registration/eventHandlers';
 import { Customer } from '@/interface';
 import createCtpClientRefresh from './buildClient/buildClientRefreshTokenFlow';
 import { getCountryCode } from './apiRegister';
@@ -276,7 +277,18 @@ export default async function sendAddress() {
         }
       }
     }
+    createAndShowPopup(
+      'Address successfully added',
+      'You have added the address',
+      true,
+    );
   } catch (error) {
-    console.error('Error adding address:', error);
+    if (error instanceof Error) {
+      createAndShowPopup(
+        'The address was not added',
+        `Error: ${error.message}`,
+        false,
+      );
+    }
   }
 }
