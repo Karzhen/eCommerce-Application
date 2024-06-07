@@ -8,10 +8,10 @@ import { createAndShowPopup } from '@/pages/registrationPage/registration/eventH
 
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
-const ctpClient = createCtpClientRefresh();
-const apiRoot = createApiBuilderFromCtpClient(ctpClient);
-
 export default async function apiDeleteAddress(addressId: string) {
+  const ctpClient = createCtpClientRefresh();
+  const apiRoot = createApiBuilderFromCtpClient(ctpClient);
+
   try {
     const data = store.getState().login;
     const result = await apiRoot

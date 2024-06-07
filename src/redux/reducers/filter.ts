@@ -10,6 +10,7 @@ import {
   SET_START_PRICE,
   SET_END_PRICE,
   SET_SEARCH,
+  CLEAR_FILTER,
 } from '@actions/filter';
 import { Filter } from '@/interface';
 
@@ -88,6 +89,12 @@ const filter = createReducer(initialState, (builder) => {
     .addCase(SET_SEARCH, (state, action) => {
       const STATE = state;
       STATE.search = action.payload;
+    })
+    .addCase(CLEAR_FILTER, (state) => {
+      const STATE = state;
+      (Object.keys(STATE) as (keyof typeof STATE)[]).forEach((key) => {
+        if (key !== 'category') delete STATE[key];
+      });
     });
 });
 

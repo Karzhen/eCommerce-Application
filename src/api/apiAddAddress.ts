@@ -8,10 +8,11 @@ import createCtpClientRefresh from './buildClient/buildClientRefreshTokenFlow';
 import { getCountryCode } from './apiRegister';
 
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
-const ctpClient = createCtpClientRefresh();
-const apiRoot = createApiBuilderFromCtpClient(ctpClient);
 
 export default async function sendAddress() {
+  const ctpClient = createCtpClientRefresh();
+  const apiRoot = createApiBuilderFromCtpClient(ctpClient);
+
   try {
     const sameAddress = localStorage.getItem('sameAddress') === 'true';
     const defaultBilling = localStorage.getItem('defaultBilling') === 'true';

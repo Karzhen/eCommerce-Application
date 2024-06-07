@@ -1,14 +1,15 @@
 import store from '@redux/store/configureStore';
 import { ERROR_REGISTER, REGISTER } from '@redux/actions/register';
 
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import {
+  createApiBuilderFromCtpClient,
+  type ApiRoot,
+} from '@commercetools/platform-sdk';
 import createCtpClientAnonymous from '@api/buildClient/buildAnonymousSessionFlow';
 import { CustomerData } from '@utils/getRegistrationData';
 
 const projectKey: string = import.meta.env.VITE_CTP_PROJECT_KEY;
-
-const client = createCtpClientAnonymous();
-const apiRoot = createApiBuilderFromCtpClient(client);
+let apiRoot: ApiRoot;
 
 export function getCountryCode(country: string): string {
   switch (country.toLowerCase()) {
@@ -107,6 +108,9 @@ export async function assignShippingAddressToCustomer(
 }
 
 export default async function createCustomer(newCustomer: CustomerData) {
+  const ctpClient = createCtpClientAnonymous();
+  apiRoot = createApiBuilderFromCtpClient(ctpClient);
+
   let CUSTOMER_ID: string | undefined = '';
   let BILLING_ADDRESS_ID: string | undefined = '';
   let SHIPPING_ADDRESS_ID: string | undefined = '';

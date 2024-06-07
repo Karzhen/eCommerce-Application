@@ -14,3 +14,4 @@ export const SET_SIZE3 = createAction<boolean>('SET_SIZE3');
 export const SET_START_PRICE = createAction<number>('SET_START_PRICE');
 export const SET_END_PRICE = createAction<number>('SET_END_PRICE');
 export const SET_SEARCH = createAction<string>('SET_SEARCH');
+export const CLEAR_FILTER = createAction('CLEAR_FILTER');

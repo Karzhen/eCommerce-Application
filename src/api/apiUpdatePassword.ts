@@ -7,13 +7,13 @@ import { ERROR_UPDATE_PASSWORD } from '@/redux/actions/login';
 
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
-const ctpClient = createCtpClientRefresh();
-const apiRoot = createApiBuilderFromCtpClient(ctpClient);
-
 export default async function apiUpdatePassword(
   currentPassword: string,
   newPassword: string,
 ) {
+  const ctpClient = createCtpClientRefresh();
+  const apiRoot = createApiBuilderFromCtpClient(ctpClient);
+
   try {
     const data = store.getState().login;
 

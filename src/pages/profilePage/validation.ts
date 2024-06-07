@@ -52,7 +52,7 @@ export default function validateProfileForm(addressId: string): void {
   }
 }
 
-export function handleCountryChange(event: Event, addressId: string) {
+export function handleCountryChange(addressId: string) {
   const selectElement = document.querySelector(
     `select[id*="Country-${addressId}"]`,
   ) as HTMLSelectElement | null;

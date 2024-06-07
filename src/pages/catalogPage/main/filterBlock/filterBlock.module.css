@@ -36,6 +36,20 @@
   width: 100%;
 }
 
+.wrapper-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+  max-width: 250px;
+}
+
 .submit {
   align-self: center;
+  width: 100px;
+}
+
+.button-clear {
+  max-width: 150px;
+  font: var(--text-m);
+  width: 100px;
 }

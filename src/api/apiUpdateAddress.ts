@@ -1,4 +1,7 @@
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import {
+  createApiBuilderFromCtpClient,
+  type ApiRoot,
+} from '@commercetools/platform-sdk';
 import { UPDATE_USER, UPDATE_VERSION } from '@/redux/actions/login';
 import getAddressDataById from '@/utils/getAddressById';
 import { Customer } from '@/interface';
@@ -7,8 +10,7 @@ import store from '@/redux/store/configureStore';
 import createCtpClientRefresh from './buildClient/buildClientRefreshTokenFlow';
 
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
-const ctpClient = createCtpClientRefresh();
-const apiRoot = createApiBuilderFromCtpClient(ctpClient);
+let apiRoot: ApiRoot;
 
 async function setDefaultAddress(
   type: 'Billing' | 'Shipping',
@@ -38,18 +40,19 @@ async function setDefaultAddress(
       return response.body.version;
     }
   } catch (error) {
-    createAndShowPopup(
-      'Error',
-      `Error setting default ${type} address: ${error.message}`,
-      false,
-    );
+    if (error instanceof Error) {
+      createAndShowPopup(
+        'Error',
+        `Error setting default ${type} address: ${error.message}`,
+        false,
+      );
+    }
   }
   return version;
 }
 
 async function removeDefaultAddress(
   type: 'Billing' | 'Shipping',
-  addressId: string,
   version: number,
 ) {
   try {
@@ -74,16 +77,21 @@ async function removeDefaultAddress(
       return response.body.version;
     }
   } catch (error) {
-    createAndShowPopup(
-      'Error',
-      `Error removing default ${type} address: ${error.message}`,
-      false,
-    );
+    if (error instanceof Error) {
+      createAndShowPopup(
+        'Error',
+        `Error removing default ${type} address: ${error.message}`,
+        false,
+      );
+    }
   }
   return version;
 }
 
 export default async function apiUpdateAddress(addressId: string) {
+  const ctpClient = createCtpClientRefresh();
+  apiRoot = createApiBuilderFromCtpClient(ctpClient);
+
   try {
     const data = store.getState().login.user;
 
@@ -149,17 +157,13 @@ export default async function apiUpdateAddress(addressId: string) {
       if (defaultBilling) {
         newVersion = await setDefaultAddress('Billing', addressId, newVersion);
       } else if (!defaultBilling && isDefaultBilling) {
-        newVersion = await removeDefaultAddress(
-          'Billing',
-          addressId,
-          newVersion,
-        );
+        newVersion = await removeDefaultAddress('Billing', newVersion);
       }
 
       if (defaultShipping) {
         await setDefaultAddress('Shipping', addressId, newVersion);
       } else if (!defaultShipping && isDefaultShipping) {
-        await removeDefaultAddress('Shipping', addressId, newVersion);
+        await removeDefaultAddress('Shipping', newVersion);
       }
     }
   } catch (error) {

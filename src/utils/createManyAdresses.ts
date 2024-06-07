@@ -67,7 +67,7 @@ export async function handlerClickEditAddress(
       attachInputHandlers(
         addressBox,
         () => validateProfileForm(addressId),
-        () => handleCountryChange(event, addressId),
+        () => handleCountryChange(addressId),
       );
     } else if (button.textContent === 'Save') {
       if (!isProfileFormValid(addressId)) {

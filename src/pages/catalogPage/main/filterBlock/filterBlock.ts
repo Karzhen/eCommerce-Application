@@ -8,6 +8,7 @@ import {
   SET_SIZE1,
   SET_SIZE2,
   SET_SIZE3,
+  CLEAR_FILTER,
 } from '@/redux/actions/filter';
 
 import apiGetProducts from '@api/apiGetProducts';
@@ -20,6 +21,36 @@ import createSelect from '@baseComponents/selectV2/select';
 import { Tag, TypeInput, TypeButton } from '@/interface';
 
 import styles from './filterBlock.module.css';
+
+export function clearFilter() {
+  if (document.getElementById('menuCatalogPage')) {
+    const sort = document.querySelector('#sort') as HTMLElement;
+    sort.children[0].setAttribute('value', 'ASC.price');
+    sort.children[0].textContent = 'price ASC';
+    const priceStart = document.querySelector(
+      '#priceStartInput',
+    ) as HTMLInputElement;
+    priceStart.value = '';
+    const priceEnd = document.querySelector(
+      '#priceEndInput',
+    ) as HTMLInputElement;
+    priceEnd.value = '';
+    const brand = document.querySelector('#filterBrand') as HTMLElement;
+    brand.children[0].setAttribute('value', '');
+    brand.children[0].textContent = 'Choose';
+    const color = document.querySelector('#filterColor') as HTMLElement;
+    color.children[0].setAttribute('value', '');
+    color.children[0].textContent = 'Choose';
+    const size1 = document.querySelector('#checkboxSize1') as HTMLInputElement;
+    size1.checked = false;
+    const size2 = document.querySelector('#checkboxSize2') as HTMLInputElement;
+    size2.checked = false;
+    const size3 = document.querySelector('#checkboxSize3') as HTMLInputElement;
+    size3.checked = false;
+    const search = document.querySelector('#inputSearch') as HTMLInputElement;
+    search.value = '';
+  }
+}
 
 async function handlerClickSubmit() {
   const { filter } = store.getState();
@@ -231,6 +262,19 @@ function createFilterColor() {
   return WRAPPER;
 }
 
+async function handlerClickClear() {
+  clearFilter();
+  store.dispatch(CLEAR_FILTER());
+
+  const { filter } = store.getState();
+  await apiGetProducts(filter);
+
+  const MENU = document.getElementById('menuCatalogPage');
+  if (MENU && MENU.getAttribute('open') === 'true') {
+    MENU.removeAttribute('open');
+  }
+}
+
 export default function createFilterBlock() {
   const FILTER_BLOCK = createElement(Tag.DIV, {
     className: styles.filterBlock,
@@ -265,26 +309,24 @@ export default function createFilterBlock() {
     },
   });
 
-  FORM.append(BUTTON_SUBMIT);
+  const BUTTON_CLEAR = createButton({
+    type: TypeButton.TRANSPARENT,
+    option: {
+      textContent: 'Clear',
+      className: styles.buttonClear,
+    },
+    handler: { handlerClick: () => handlerClickClear() },
+  });
+
+  const WRAPPER_BUTTONS = createElement(Tag.DIV, {
+    className: styles.wrapperButtons,
+  });
+
+  WRAPPER_BUTTONS.append(BUTTON_SUBMIT, BUTTON_CLEAR);
+
+  FORM.append(WRAPPER_BUTTONS);
 
   FILTER_BLOCK.append(TITLE, FORM);
 
-  // addHandlerForChangeFilter(FILTER_BLOCK);
-
   return FILTER_BLOCK;
 }
-
-// function addHandlerForChangeFilter(
-//   wrapper: HTMLElement,
-//   goPage: (path: string) => void,
-// ) {
-//   let previousProductsState = store.getState().filter;
-//   store.subscribe(() => {
-//     const currentProductsState = store.getState().filter;
-//     if (previousProductsState !== currentProductsState) {
-//       wrapper.replaceChildren();
-//       wrapper.append(createProducts(goPage));
-//       previousProductsState = currentProductsState;
-//     }
-//   });
-// }

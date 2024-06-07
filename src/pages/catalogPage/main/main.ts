@@ -14,7 +14,7 @@ import apiGetCategories from '@api/apiGetCategories';
 
 import urlFilter from '@assets/images/filter.png';
 
-import createFilterBlock from './filterBlock/filterBlock';
+import createFilterBlock, { clearFilter } from './filterBlock/filterBlock';
 import createGridBlock from './gridBlock/gridBlock';
 import createSearchBlock from './searchBlock/searchBlock';
 import createBreadcrumbBlock from './breadcrumbBlock/breadcrumbBlock';
@@ -88,6 +88,7 @@ export async function createContentCatalogPage(
   goPage: (path: string) => void,
   categoriesId: string[],
 ) {
+  clearFilter();
   store.dispatch(SET_CATEGORIES(categoriesId));
 
   const CONTENT = createElement(Tag.DIV, {
@@ -131,6 +132,7 @@ async function createMenuCatalogPage(goPage: (path: string) => void) {
   });
 
   const CATEGORIES_BLOCK = createCategoriesBlock(goPage);
+
   const SEARCH_BLOCK = createSearchBlock();
   const FILTER_BLOCK = createFilterBlock();
   MENU.append(CATEGORIES_BLOCK, SEARCH_BLOCK, FILTER_BLOCK);

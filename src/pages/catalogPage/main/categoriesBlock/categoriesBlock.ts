@@ -5,33 +5,9 @@ import createLink from '@baseComponents/link/link';
 
 import { Tag } from '@/interface';
 
-import styles from './categoriesBlock.module.css';
+import { clearFilter } from '../filterBlock/filterBlock';
 
-function clearFilter() {
-  const sort = document.querySelector('#sort') as HTMLElement;
-  sort.children[0].setAttribute('value', 'ASC.price');
-  sort.children[0].textContent = 'price ASC';
-  const priceStart = document.querySelector(
-    '#priceStartInput',
-  ) as HTMLInputElement;
-  priceStart.value = '';
-  const priceEnd = document.querySelector('#priceEndInput') as HTMLInputElement;
-  priceEnd.value = '';
-  const brand = document.querySelector('#filterBrand') as HTMLElement;
-  brand.children[0].setAttribute('value', '');
-  brand.children[0].textContent = 'Choose';
-  const color = document.querySelector('#filterColor') as HTMLElement;
-  color.children[0].setAttribute('value', '');
-  color.children[0].textContent = 'Choose';
-  const size1 = document.querySelector('#checkboxSize1') as HTMLInputElement;
-  size1.checked = false;
-  const size2 = document.querySelector('#checkboxSize2') as HTMLInputElement;
-  size2.checked = false;
-  const size3 = document.querySelector('#checkboxSize3') as HTMLInputElement;
-  size3.checked = false;
-  const search = document.querySelector('#inputSearch') as HTMLInputElement;
-  search.value = '';
-}
+import styles from './categoriesBlock.module.css';
 
 function handlerLinkClick(event: Event, goPage: (path: string) => void) {
   event.preventDefault();
