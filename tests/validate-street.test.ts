@@ -9,10 +9,10 @@ describe("validateStreet Tests", () => {
     assert.ok(errorMessage.includes("Required field"));
   });
 
-  test("Should return error for missing English alphabet character", () => {
-    const input = { value: "12345", validity: { valueMissing: false } } as unknown as HTMLInputElement;
+  test("Should return error for invalid characters", () => {
+    const input = { value: "12$ 345*", validity: { valueMissing: false } } as unknown as HTMLInputElement;
     const errorMessage = validateStreet(input);
-    assert.ok(errorMessage.includes("Must contain at least one English alphabet character"));
+    assert.ok(errorMessage.includes("One or more characters from the English alphabet, special characters(comma, dot, spase) or numbers"));
   });
 
   test("Should return empty string for valid street", () => {

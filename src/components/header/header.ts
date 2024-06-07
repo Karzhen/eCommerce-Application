@@ -1,14 +1,12 @@
 import createElement from '@utils/create-element';
 import createLinkWithIcon from '@baseComponents/linkWithIcon/linkWithIcon';
 import createButtonWithIcon from '@baseComponents/buttonWithIcon/buttonWithIcon';
-import createInputWithIcon from '@baseComponents/inputWithIcon/inputWithIcon';
 
-import { Tag, Page, TypeButton, TypeInput } from '@/interface';
+import { Tag, Page, TypeButton } from '@/interface';
 
 import iconLogo from '@assets/images/logo.png';
 
 import iconCatalog from '@assets/images/align-justify.png';
-import iconSearch from '@assets/images/search.png';
 
 import createAuthField from './auth-block/auth-block';
 import createNavField from './nav-block/nav-block';
@@ -23,12 +21,6 @@ function handleMainClick(goPage: (page: Page) => void) {
 function handlerCatalogClick(goPage: (page: Page) => void) {
   goPage(Page.CATALOG);
 }
-
-function handlerSearchInput(event: Event) {
-  event.preventDefault();
-}
-
-function handlerSearchClick() {}
 
 export default function createHeader(goPage: (page: Page) => void) {
   const HEADER = createElement(Tag.HEADER, { className: styles.header });
@@ -49,17 +41,6 @@ export default function createHeader(goPage: (page: Page) => void) {
     handler: { handlerClick: () => handlerCatalogClick(goPage) },
   });
 
-  const INPUT_SEARCH = createInputWithIcon({
-    type: TypeInput.TEXT,
-    option: { className: styles.inputSearch },
-    iconUrl: iconSearch,
-    handler: {
-      handlerInput: (event: Event) => handlerSearchInput(event),
-      handlerClickIcon: handlerSearchClick,
-    },
-  });
-  INPUT_SEARCH.setAttribute('placeholder', 'Search');
-
   const AUTH_BLOCK = createAuthField(goPage);
   AUTH_BLOCK.classList.add(styles.authBlock);
 
@@ -71,13 +52,7 @@ export default function createHeader(goPage: (page: Page) => void) {
   const NAV = createNavField(goPage);
   NAV.classList.add(styles.nav);
 
-  HEADER.append(
-    LINK_LOGO,
-    BUTTON_CATALOG,
-    INPUT_SEARCH,
-    NAV,
-    WRAPPER_AUTH_BURGER,
-  );
+  HEADER.append(LINK_LOGO, BUTTON_CATALOG, NAV, WRAPPER_AUTH_BURGER);
 
   return HEADER;
 }

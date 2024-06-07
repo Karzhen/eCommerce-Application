@@ -1,12 +1,15 @@
+import { ProductData } from '@commercetools/platform-sdk';
+
 export enum Page {
-  LOGIN = 'login',
-  ERROR = 'error',
-  REGISTR = 'registration',
-  MAIN = 'main',
-  ABOUT = 'about',
-  BASKET = 'basket',
-  CATALOG = 'catalog',
-  PROFILE = 'profile',
+  LOGIN = '/login',
+  ERROR = '/error',
+  REGISTR = '/registration',
+  MAIN = '/main',
+  ABOUT = '/about',
+  BASKET = '/basket',
+  CATALOG = '/catalog',
+  PROFILE = '/profile',
+  PRODUCT = '/product',
 }
 
 export enum Tag {
@@ -29,6 +32,10 @@ export enum Tag {
   IMG = 'img',
   DIALOG = 'dialog',
   SPAN = 'span',
+  FIELDSET = 'fieldset',
+  LEGEND = 'legend',
+  UL = 'ul',
+  LI = 'li',
 }
 
 export enum TypeInput {
@@ -55,6 +62,7 @@ export type TypeHandler = {
   handlerInput?: HandlerComponent;
   handlerChange?: HandlerComponent;
   handlerClickIcon?: HandlerComponent;
+  handlerKeyClick?: HandlerComponent;
 };
 
 export type HandlerComponent = (event: Event) => void;
@@ -73,6 +81,10 @@ export interface ParametersBaseComponent {
 export type StateLogin = {
   value: string | null;
   isLogin: boolean;
+  user?: Customer | null;
+  version?: number | null;
+  errorUpdate?: string | null;
+  errorChangePassword?: string | null;
 };
 
 export type StateRegister = {
@@ -80,7 +92,114 @@ export type StateRegister = {
   isRegister: boolean;
 };
 
+export interface ProductM {
+  id: string;
+  name: string;
+  price: number;
+  discount: number | null;
+  img: string[];
+  description: string;
+  variantId: number;
+}
+
+export type StateProducts = {
+  value: ProductM[];
+  error: string;
+};
+
+export type StateProduct = {
+  value: ProductData;
+  error: string;
+};
+
+export interface CategoryM {
+  id: string;
+  name: string;
+  parent: string | null;
+}
+
+export interface AttributeM {
+  name: string;
+  label: string;
+  value: { key: string; label: string }[];
+}
+
+export type StateParameters = {
+  categories: CategoryM[];
+  attributes: { [id: string]: AttributeM };
+  error: string;
+};
+
 export enum LoginError {
   ERROR_EMAIL = 'This user does not exist',
   ERROR_PASSWORD = 'Wrong data',
+}
+
+export interface Customer {
+  id: string;
+  dateOfBirth: string | undefined;
+  defaultBillingAddressId: string | undefined;
+  defaultShippingAddressId: string | undefined;
+  email: string;
+  firstName: string | undefined;
+  lastName: string | undefined;
+  password: string | undefined;
+  authenticationMode: string;
+  billingAddressIds: string[] | undefined;
+  shippingAddressIds: string[] | undefined;
+  addresses: AddressData[];
+  version: number;
+}
+
+export interface AddressData {
+  streetName: string | undefined;
+  postalCode: string | undefined;
+  city: string | undefined;
+  country: string | undefined;
+}
+
+export interface AddressGet {
+  id: string;
+  streetName: string | undefined;
+  postalCode: string | undefined;
+  city: string | undefined;
+  country: string | undefined;
+}
+
+export enum CurrencyCode {
+  RU = 'RUB',
+  EN = 'USD',
+  DE = 'EUR',
+}
+
+export enum Language {
+  RU = 'ru',
+  EN = 'en',
+  DE = 'de',
+}
+
+export type StateLocal = {
+  language: Language;
+  currencyCode: CurrencyCode;
+};
+
+export interface Filter {
+  category?: string[];
+  priceStart?: number;
+  priceEnd?: number;
+  brand?: string;
+  color?: string;
+  size?: { size1?: string; size2?: string; size3?: string };
+  sort?: { name: string; order: string };
+  search?: string;
+}
+
+export interface Basket {
+  id: string;
+  version: number;
+  products: ProductM[];
+}
+
+export interface BasketState extends Basket {
+  error: string;
 }

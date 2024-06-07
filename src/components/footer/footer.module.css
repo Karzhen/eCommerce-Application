@@ -1,0 +1,27 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 10px 20px 10px 20px;
+}
+
+.wrapper-author {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.logo {
+  display: block;
+  width: 90px;
+  height: 8vh;
+}
+
+.year {
+  font: var(--text-m);
+}
+
+.link-rs {
+  width: 50px;
+}

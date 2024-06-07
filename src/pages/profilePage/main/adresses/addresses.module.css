@@ -1,0 +1,108 @@
+.address-data {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 350px;
+  box-sizing: border-box;
+}
+
+.address-box {
+  max-width: 600px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.box {
+  padding: 0px;
+}
+
+.profile-buttons {
+  display: flex;
+  width: 500px;
+  gap: 10px;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+
+input {
+  width: 100%;
+}
+
+.edit,
+.cancel,
+.delete {
+  width: 100px;
+  height: 40px;
+  margin: 10px;
+  align-self: flex-end;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.delete {
+  background: var(--color-error);
+}
+
+.fieldWrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.input {
+  padding: 10px;
+  font-size: 16px;
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+}
+
+.shippingTitle {
+  color: var(--color-surface-text);
+  font: var(--text-header-xs);
+}
+
+.billingTitle {
+  color: var(--color-surface-text);
+  font: var(--text-header-xs);
+}
+
+.address {
+  background: var(--color-primary-muted);
+  box-sizing: border-box;
+  padding: 20px;
+  width: 500px;
+}
+
+.field-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px;
+  width: 140px;
+}
+
+.label-error {
+  color: var(--color-error);
+}
+
+@media (max-width: 800px) {
+  .address {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .address-data {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .profile-buttons {
+    width: 100%;
+  }
+}

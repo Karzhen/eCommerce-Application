@@ -1,0 +1,8 @@
+.search-block {
+  padding: 10px 0;
+  font: var(--text-s);
+}
+
+.title-search {
+  font: var(--text-bold-m);
+}

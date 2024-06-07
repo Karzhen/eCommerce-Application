@@ -7,7 +7,7 @@ import stylesInputWithIcon from './inputWithIcon.module.css';
 export default function createInputWithIcon({
   type,
   option,
-  handler: { handlerInput, handlerClickIcon },
+  handler: { handlerInput, handlerClickIcon, handlerKeyClick },
   iconUrl,
 }: ParametersBaseComponent) {
   const OPTION = { ...option };
@@ -27,7 +27,7 @@ export default function createInputWithIcon({
   const INPUT_WITH_ICON = createInput({
     type,
     option: OPTION,
-    handler: { handlerInput },
+    handler: { handlerInput, handlerKeyClick },
   });
 
   WRAPPER.append(INPUT_WITH_ICON, ICON);
