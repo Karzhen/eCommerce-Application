@@ -1,14 +1,15 @@
 import store from '@redux/store/configureStore';
 import { ERROR_REGISTER, REGISTER } from '@redux/actions/register';
 
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import {
+  createApiBuilderFromCtpClient,
+  type ApiRoot,
+} from '@commercetools/platform-sdk';
 import createCtpClientAnonymous from '@api/buildClient/buildAnonymousSessionFlow';
 import { CustomerData } from '@utils/getRegistrationData';
 
 const projectKey: string = import.meta.env.VITE_CTP_PROJECT_KEY;
-
-const client = createCtpClientAnonymous();
-const apiRoot = createApiBuilderFromCtpClient(client);
+let apiRoot: ApiRoot;
 
 export function getCountryCode(country: string): string {
   switch (country.toLowerCase()) {
@@ -22,12 +23,11 @@ export function getCountryCode(country: string): string {
       throw new Error(`Country code not found for ${country}`);
   }
 }
+
 export function getAddresses(newCustomer: CustomerData) {
   if (
     newCustomer.shippingAddress.streetName !==
       newCustomer.billingAddress.streetName ||
-    newCustomer.shippingAddress.streetNumber !==
-      newCustomer.billingAddress.streetNumber ||
     newCustomer.shippingAddress.postalCode !==
       newCustomer.billingAddress.postalCode ||
     newCustomer.shippingAddress.country !== newCustomer.billingAddress.country
@@ -51,7 +51,7 @@ export function getAddresses(newCustomer: CustomerData) {
   ];
 }
 
-async function assignBillingAddressToCustomer(
+export async function assignBillingAddressToCustomer(
   addressId: string,
   customerId: string,
   version: number,
@@ -79,7 +79,7 @@ async function assignBillingAddressToCustomer(
   }
 }
 
-async function assignShippingAddressToCustomer(
+export async function assignShippingAddressToCustomer(
   addressId: string,
   customerId: string,
   version: number,
@@ -108,8 +108,10 @@ async function assignShippingAddressToCustomer(
 }
 
 export default async function createCustomer(newCustomer: CustomerData) {
+  const ctpClient = createCtpClientAnonymous();
+  apiRoot = createApiBuilderFromCtpClient(ctpClient);
+
   let CUSTOMER_ID: string | undefined = '';
-  // let ADDRESS_ID: string | undefined = '';
   let BILLING_ADDRESS_ID: string | undefined = '';
   let SHIPPING_ADDRESS_ID: string | undefined = '';
   try {
@@ -143,15 +145,17 @@ export default async function createCustomer(newCustomer: CustomerData) {
         },
       })
       .execute();
+
     if (response.body.customer.addresses.length > 1) {
       BILLING_ADDRESS_ID = response.body.customer.addresses[0].id;
       SHIPPING_ADDRESS_ID = response.body.customer.addresses[1].id;
     } else {
       BILLING_ADDRESS_ID = response.body.customer.addresses[0].id;
     }
-    // ADDRESS_ID = response.body.customer.addresses[0].id;
+
     CUSTOMER_ID = response.body.customer.id;
     let { version } = response.body.customer;
+
     if (BILLING_ADDRESS_ID && CUSTOMER_ID) {
       const billingResponse = await assignBillingAddressToCustomer(
         BILLING_ADDRESS_ID,
@@ -167,6 +171,7 @@ export default async function createCustomer(newCustomer: CustomerData) {
       );
       version = shippingResponse.body.version;
     }
+
     store.dispatch(REGISTER({ value: '', isRegister: true }));
   } catch (error) {
     if (error instanceof Error) {
@@ -178,7 +183,7 @@ export default async function createCustomer(newCustomer: CustomerData) {
           break;
         default:
           errorMessage =
-            'Something went wrong during the registration process. Please should try again later.';
+            'Something went wrong during the registration process. Please try again later.';
       }
       store.dispatch(
         ERROR_REGISTER({

@@ -5,10 +5,10 @@ export default function validateName(input: HTMLInputElement): string {
     errorMessage += 'Required field. ';
   } else if (
     input.value.trim().length > 0 &&
-    !/^[A-Za-z]+$/.test(input.value)
+    !/^[a-zA-Z]+$/.test(input.value)
   ) {
     errorMessage +=
-      'Must contain at least one character(english) and no special characters or numbers.';
+      'One or more characters from the English alphabet (no special characters or numbers)';
   }
 
   return errorMessage;

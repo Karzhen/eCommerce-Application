@@ -1,0 +1,57 @@
+.modal-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 80vw;
+  height: 60vh;
+  margin: auto;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+::backdrop {
+  background-color: black;
+  opacity: 0.8;
+}
+
+.close-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 50px;
+  height: 50px;
+  outline: none;
+  z-index: 10;
+}
+
+.main-image-wrapper {
+  width: 100%;
+  height: 80%;
+  border-bottom: 1px solid var(--color-hardest);
+}
+
+.main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  cursor: pointer;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.buttons-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.nav-button {
+  width: 60px;
+}

@@ -12,6 +12,7 @@
   /* gray scale */
   --color-lightest: #f3f2f1;
   --color-light: #bfbfbf;
+  --color-disable: #eeeeee;
   --color-hard: #8f8f8f;
   --color-hardest: #606060;
 
@@ -22,7 +23,8 @@
   --color-error: #d80000;
 
   /* button primary */
-  --color-primary-muted: #fcd5ba;
+  /* --color-primary-muted: #fcd5ba; */
+  --color-primary-muted: var(--color-lightest);
 
   /* button secondary */
   --color-secondary-muted: #e5ffde;
@@ -104,4 +106,5 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100vh;
 }

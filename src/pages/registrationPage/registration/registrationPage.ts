@@ -24,32 +24,37 @@ import { handlerClickLogin, handlerSubmit } from './eventHandlers';
 import createHeader from '../header/headerRegistr';
 import createFooter from '../footer/footerRegistr';
 
-function createCustomerBox() {
+export function createCustomerBox(isRegistrationPage: boolean) {
   const CUSTOMER_BOX = createElement(Tag.DIV, {
     className: styles.customerBox,
   });
 
   const MAIN_DATA_BOX = createElement(Tag.DIV, {
     className: styles.mainDataBox,
+    id: 'mainDataBox',
   });
 
   const EMAIL_PASSWORD_BOX = createElement(Tag.DIV, {
     className: styles.emailPasswordBox,
   });
 
-  EMAIL_PASSWORD_BOX.append(createEmailField(), createPasswordField());
-
   const NAME_BIRTH_BOX = createElement(Tag.DIV, {
     className: styles.nameBirthBox,
   });
 
-  NAME_BIRTH_BOX.append(
-    createNameField(),
-    createLastNameField(),
-    createDateBirthField(),
-  );
-
-  MAIN_DATA_BOX.append(EMAIL_PASSWORD_BOX, NAME_BIRTH_BOX);
+  if (isRegistrationPage) {
+    EMAIL_PASSWORD_BOX.append(createEmailField(), createPasswordField());
+    NAME_BIRTH_BOX.append(
+      createNameField(),
+      createLastNameField(),
+      createDateBirthField(),
+    );
+    MAIN_DATA_BOX.append(EMAIL_PASSWORD_BOX, NAME_BIRTH_BOX);
+  } else {
+    EMAIL_PASSWORD_BOX.append(createEmailField(), createDateBirthField());
+    NAME_BIRTH_BOX.append(createNameField(), createLastNameField());
+    MAIN_DATA_BOX.append(NAME_BIRTH_BOX, EMAIL_PASSWORD_BOX);
+  }
 
   const TITLE_CUSTOMER = createElement(Tag.H2, {
     className: styles.titleCustomer,
@@ -61,15 +66,21 @@ function createCustomerBox() {
   return CUSTOMER_BOX;
 }
 
-function createAddresses(title: string, prefix: string, isShipping?: boolean) {
+export function createAddresses(
+  title: string,
+  prefix: string,
+  pageContainer: string,
+  isShipping?: boolean,
+) {
   if (isShipping) {
     const TITLE_BOX = createElement(Tag.DIV, {});
     const TITLE = createElement(Tag.H2, {
       className: styles.shippingTitle,
+      id: 'shippingTitle',
       textContent: title,
     });
 
-    TITLE_BOX.append(TITLE, createSameAddressCheckbox());
+    TITLE_BOX.append(TITLE, createSameAddressCheckbox(pageContainer));
 
     const ADDRESS_WRAPPER = createElement(Tag.DIV, {
       id: 'shipping-address-box',
@@ -77,10 +88,10 @@ function createAddresses(title: string, prefix: string, isShipping?: boolean) {
 
     ADDRESS_WRAPPER.append(
       TITLE_BOX,
-      createStreetField(prefix),
-      createCityField(prefix),
-      createPostalCodeField(prefix),
-      createCountryField(prefix),
+      createStreetField(prefix, pageContainer),
+      createCityField(prefix, pageContainer),
+      createPostalCodeField(prefix, pageContainer),
+      createCountryField(prefix, pageContainer),
     );
 
     toggleShippingInputs(ADDRESS_WRAPPER, true);
@@ -100,16 +111,16 @@ function createAddresses(title: string, prefix: string, isShipping?: boolean) {
 
   ADDRESS_WRAPPER.append(
     TITLE_ADDRESS,
-    createStreetField(prefix),
-    createCityField(prefix),
-    createPostalCodeField(prefix),
-    createCountryField(prefix),
+    createStreetField(prefix, pageContainer),
+    createCityField(prefix, pageContainer),
+    createPostalCodeField(prefix, pageContainer),
+    createCountryField(prefix, pageContainer),
   );
 
   return ADDRESS_WRAPPER;
 }
 
-function createAddressBox() {
+export function createAddressBox(pageContainer: string) {
   const ADDRESS_BOX = createElement(Tag.DIV, {
     className: styles.addressBox,
   });
@@ -117,9 +128,14 @@ function createAddressBox() {
   const SHIPPING_ADDRESS_BOX = createAddresses(
     'Shipping Address',
     'shipping',
+    pageContainer,
     true,
   );
-  const BILLING_ADDRESS_BOX = createAddresses('Billing Address', 'billing');
+  const BILLING_ADDRESS_BOX = createAddresses(
+    'Billing Address',
+    'billing',
+    pageContainer,
+  );
 
   BILLING_ADDRESS_BOX.append(createBillingCheckbox());
 
@@ -139,7 +155,7 @@ function createRegistrBox() {
     className: styles.registrBox,
   });
 
-  REGISTR_BOX.append(createCustomerBox(), createAddressBox());
+  REGISTR_BOX.append(createCustomerBox(true), createAddressBox('registration'));
 
   return REGISTR_BOX;
 }
@@ -200,6 +216,7 @@ export default function createRegistrationPage(goPage: (page: Page) => void) {
   REGISTR_PAGE.append(createHeader(goPage), createForm(goPage), createFooter());
 
   clearDefaultAddresses();
+  localStorage.setItem('sameAddress', 'true');
 
   return REGISTR_PAGE;
 }

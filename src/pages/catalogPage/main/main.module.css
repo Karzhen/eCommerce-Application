@@ -1,0 +1,53 @@
+.main {
+  background-color: var(--color-background);
+  flex: 1;
+  padding: 0 20px 20px 20px;
+}
+
+.wrapper {
+  display: flex;
+  gap: 20px;
+  padding: 10px;
+}
+
+.content {
+  width: 70%;
+}
+
+.menu {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.img-filter {
+  display: none;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .menu {
+    display: none;
+  }
+
+  .content {
+    width: 100%;
+  }
+
+  .img-filter {
+    display: block;
+    margin-left: auto;
+  }
+
+  .menu[open='true'] {
+    display: flex;
+    width: 100%;
+  }
+
+  .menu[open='true'] ~ .content {
+    display: none;
+  }
+}

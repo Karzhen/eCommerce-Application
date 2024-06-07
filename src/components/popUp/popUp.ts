@@ -29,7 +29,7 @@ export default function createPopUp(
   const BUTTON_CLOSE = createButton({
     type: TypeButton.SECONDARY,
     option: {
-      className: styles.buttonClose,
+      className: isSuccess ? styles.buttonCloseSuccess : styles.buttonCloseFail,
       textContent: 'Close',
     },
     handler: { handlerClick: () => POPUP.remove() },

@@ -56,6 +56,7 @@
   padding: 5px;
   border: 1px var(--color-light) solid;
   border-radius: 4px;
+  gap: 20px;
 }
 
 .main-data-box {
@@ -70,9 +71,14 @@
 .customer-box,
 .email-password-box,
 .name-birth-box,
-.shipping-address-box,
-.billing-address-box {
+.shipping-address-box {
   padding: 5px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.billing-address-box {
   height: auto;
   display: flex;
   flex-direction: column;
@@ -94,7 +100,7 @@
 input:disabled,
 select:disabled {
   cursor: default;
-  background: var(--color-lightest);
+  background: var(--color-disable);
 }
 
 .email,
@@ -193,7 +199,6 @@ input[type='checkbox'] {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
   margin-top: 10px;
 }
 
@@ -201,6 +206,13 @@ input[type='checkbox'] {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+@media (max-width: 800px) {
+  .address-box {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 @media (max-width: 710px) {

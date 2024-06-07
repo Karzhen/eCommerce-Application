@@ -3,6 +3,7 @@
   width: 30px;
   height: 30px;
   display: none;
+  z-index: 10;
 }
 
 .burger {
@@ -74,11 +75,12 @@
 
 @media (max-width: 350px) {
   .dropdown-menu {
+    position: fixed;
     box-sizing: border-box;
     width: 100vw;
-    top: -20px;
-    min-height: 100vh;
-    right: -20px;
+    top: 0px;
+    height: 100vh;
+    right: 0px;
     padding: 65px 30px;
     align-items: center;
   }
@@ -92,5 +94,9 @@
   .link-profile,
   .link-logout {
     display: block;
+  }
+
+  body:has(.dropdown-menu[open]) {
+    overflow: hidden;
   }
 }

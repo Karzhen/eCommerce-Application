@@ -1,47 +1,93 @@
 import state from '@redux/store/configureStore';
 
-import createLoginPage from '@/pages/loginPage/login/loginPage';
+import createLoginPage from '@pages/loginPage/login/loginPage';
 import createErrorPage from '@pages/errorPage/errorPage';
-import createRegistrationPage from '@/pages/registrationPage/registration/registrationPage';
+import createRegistrationPage from '@pages/registrationPage/registration/registrationPage';
 import createMainPage from '@pages/mainPage/mainPage';
-import createProfilePage from '@/pages/profilePage/profile/profilePage';
-import createCatalogPage from '@/pages/catalogPage/catalog/catalogPage';
-import createBasketPage from '@/pages/basketPage/basket/basketPage';
-import createAboutPage from '@/pages/aboutPage/about/aboutPage';
+import createProfilePage from '@pages/profilePage/profilePage';
+import createCatalogPage from '@pages/catalogPage/catalogPage';
+import { createContentCatalogPage } from '@/pages/catalogPage/main/main';
+import createBasketPage from '@pages/basketPage/basket/basketPage';
+import createAboutPage from '@pages/aboutPage/about/aboutPage';
+import createProductPage from '@pages/productPage/productPage';
+import createMainProductPage from '@/pages/productPage/main/main';
 
 import { Page } from '@/interface';
 
-class Router {
+export class Router {
   readonly BASE_URL = '/';
 
   currentPage: Page | null = null;
 
+  currentProductId: string | null = null;
+
+  currentCategories: string[] = [];
+
   init() {
     window.addEventListener('popstate', this.handlerPopstate.bind(this));
-    const initialPage = this.getInitialPage();
-    this.currentPage = initialPage;
-    window.history.replaceState({ page: initialPage }, '', initialPage);
+
+    this.getRout();
     this.renderPage();
   }
 
-  getInitialPage(): Page {
-    const path = window.location.pathname;
-    switch (path) {
-      case this.BASE_URL:
-      case `${this.BASE_URL}${Page.MAIN}`:
-        return Page.MAIN;
-      case `${this.BASE_URL}${Page.LOGIN}`:
-        if (state.getState().login.isLogin) return Page.MAIN;
-        return Page.LOGIN;
-      case `${this.BASE_URL}${Page.REGISTR}`:
-        if (state.getState().login.isLogin) return Page.MAIN;
-        return Page.REGISTR;
-      case `${this.BASE_URL}${Page.CATALOG}`:
-        return Page.CATALOG;
-      case `${this.BASE_URL}${Page.PROFILE}`:
-        return Page.PROFILE;
+  getRout(path: string = window.location.pathname) {
+    this.currentPage = null;
+    this.currentCategories = [];
+    const pathSegments = path.substring(1).split('/');
+    const mainPartPath = `/${pathSegments[0]}`;
+
+    switch (mainPartPath) {
+      case '/':
+        this.currentPage = Page.MAIN;
+        window.history.replaceState({}, '', Page.MAIN);
+        break;
+      case Page.MAIN:
+        this.currentPage = Page.MAIN;
+        break;
+      case Page.LOGIN:
+        if (state.getState().login.isLogin) {
+          this.currentPage = Page.MAIN;
+          window.history.replaceState({}, '', Page.MAIN);
+        } else this.currentPage = Page.LOGIN;
+        break;
+      case Page.REGISTR:
+        if (state.getState().login.isLogin) {
+          this.currentPage = Page.MAIN;
+          window.history.replaceState({}, '', Page.MAIN);
+        } else this.currentPage = Page.REGISTR;
+        break;
+      case Page.PROFILE:
+        if (!state.getState().login.isLogin) {
+          this.currentPage = Page.LOGIN;
+          window.history.replaceState({}, '', Page.LOGIN);
+        } else this.currentPage = Page.PROFILE;
+        break;
+      case Page.BASKET:
+        this.currentPage = Page.BASKET;
+        break;
+      case Page.ABOUT:
+        this.currentPage = Page.ABOUT;
+        break;
+      case Page.CATALOG:
+        if (pathSegments.length > 1) {
+          const [, ...categories] = pathSegments;
+          this.currentCategories = categories;
+          this.currentPage = Page.CATALOG;
+        } else {
+          this.currentPage = Page.CATALOG;
+        }
+        break;
+      case Page.PRODUCT:
+        if (pathSegments.length > 1) {
+          const [, productId] = pathSegments;
+          this.currentProductId = productId;
+          this.currentPage = Page.PRODUCT;
+        } else {
+          this.currentPage = this.getErrorPage(path);
+        }
+        break;
       default:
-        return this.getErrorPage(path);
+        this.currentPage = this.getErrorPage(path);
     }
   }
 
@@ -55,43 +101,64 @@ class Router {
     return Page.ERROR;
   }
 
-  goPage(page: Page) {
-    if (
-      (page === Page.LOGIN && state.getState().login.isLogin) ||
-      (page === Page.REGISTR && state.getState().login.isLogin)
-    ) {
-      this.currentPage = Page.MAIN;
-    } else {
-      this.currentPage = page;
-    }
-    window.history.pushState({ page: this.currentPage }, '', this.currentPage);
+  goPage(path: string) {
+    window.history.pushState({}, '', path);
+    this.getRout(path);
     this.renderPage();
   }
 
-  renderPage() {
-    document.body.replaceChildren();
+  async renderPage() {
     const bindGoPage = this.goPage.bind(this);
+    const CATALOG_PAGE = document.getElementById('contentCatalogPage');
+    const PRODUCT_PAGE = document.getElementById('mainProductPage');
     switch (this.currentPage) {
       case Page.MAIN:
-        document.body.append(createMainPage(bindGoPage));
+        document.body.replaceChildren();
+        document.body.append(await createMainPage(bindGoPage));
         break;
       case Page.LOGIN:
+        document.body.replaceChildren();
         document.body.append(createLoginPage(bindGoPage));
         break;
       case Page.REGISTR:
+        document.body.replaceChildren();
         document.body.append(createRegistrationPage(bindGoPage));
         break;
       case Page.CATALOG:
-        document.body.append(createCatalogPage(bindGoPage));
+        if (CATALOG_PAGE === null) {
+          document.body.replaceChildren();
+          document.body.append(
+            await createCatalogPage(bindGoPage, this.currentCategories),
+          );
+        } else {
+          CATALOG_PAGE.replaceWith(
+            await createContentCatalogPage(bindGoPage, this.currentCategories),
+          );
+        }
         break;
       case Page.PROFILE:
-        document.body.append(createProfilePage(bindGoPage));
+        document.body.replaceChildren();
+        document.body.append(await createProfilePage(bindGoPage));
         break;
       case Page.BASKET:
+        document.body.replaceChildren();
         document.body.append(createBasketPage(bindGoPage));
         break;
       case Page.ABOUT:
+        document.body.replaceChildren();
         document.body.append(createAboutPage(bindGoPage));
+        break;
+      case Page.PRODUCT:
+        if (PRODUCT_PAGE === null) {
+          document.body.replaceChildren();
+          document.body.append(
+            await createProductPage(bindGoPage, this.currentProductId || ''),
+          );
+        } else {
+          PRODUCT_PAGE.replaceWith(
+            await createMainProductPage(this.currentProductId || ''),
+          );
+        }
         break;
       default:
         document.body.append(createErrorPage(bindGoPage));
@@ -100,31 +167,7 @@ class Router {
 
   handlerPopstate(event: PopStateEvent) {
     if (event.state) {
-      switch (event.state.page) {
-        case Page.MAIN:
-          this.currentPage = Page.MAIN;
-          break;
-        case Page.LOGIN:
-          this.currentPage = Page.LOGIN;
-          break;
-        case Page.REGISTR:
-          this.currentPage = Page.REGISTR;
-          break;
-        case Page.CATALOG:
-          this.currentPage = Page.CATALOG;
-          break;
-        case Page.PROFILE:
-          this.currentPage = Page.PROFILE;
-          break;
-        case Page.ABOUT:
-          this.currentPage = Page.ABOUT;
-          break;
-        case Page.BASKET:
-          this.currentPage = Page.BASKET;
-          break;
-        default:
-          this.currentPage = Page.ERROR;
-      }
+      this.getRout();
       this.renderPage();
     }
   }

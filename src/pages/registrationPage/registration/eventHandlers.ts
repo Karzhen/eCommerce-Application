@@ -6,6 +6,7 @@ import loginUser from '@/utils/login';
 
 import createCustomer from '@api/apiRegister';
 import createPopUp from '@/components/popUp/popUp';
+import handlerAddress from '@/pages/profilePage/eventHandlers';
 import getRegistrationData, {
   CustomerData,
 } from '@utils/getRegistrationData.ts';
@@ -108,7 +109,11 @@ export function getPostalCodePattern(country: string): RegExp | null {
   }
 }
 
-export function handlerCountry(event: Event, prefix: string) {
+export function handlerCountry(
+  event: Event,
+  prefix: string,
+  pageContainer: string,
+) {
   if (event.target instanceof HTMLSelectElement) {
     const selectedCountry = event.target.value;
     const postalCodePattern = getPostalCodePattern(selectedCountry);
@@ -121,6 +126,10 @@ export function handlerCountry(event: Event, prefix: string) {
     } else {
       INPUT_POSTAL_CODE?.removeAttribute('pattern');
     }
-    handlerForm();
+    if (pageContainer === 'profilePage') {
+      handlerAddress();
+    } else {
+      handlerForm();
+    }
   }
 }

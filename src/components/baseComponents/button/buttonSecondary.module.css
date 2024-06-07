@@ -1,16 +1,20 @@
 .button {
   background-color: var(--color-secondary);
+  box-shadow: -6px 6px 15px 1px rgba(0, 0, 0, 0.3);
+  transition: 0.5s;
   color: var(--color-secondary-text);
 }
 
 .button:disabled {
   background-color: var(--color-secondary-muted);
+  box-shadow: none;
   color: var(--color-secondary);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .button:hover {
-    filter: drop-shadow(4px 8px 16px rgb(112, 192, 91, 0.2));
+    transform: translate(-2px, 2px);
+    box-shadow: none;
     cursor: pointer;
   }
 }
