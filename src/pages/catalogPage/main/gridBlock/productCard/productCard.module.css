@@ -70,6 +70,25 @@
   color: var(--color-secondary);
 }
 
+.wrapper-attributes {
+  display: flex;
+  gap: 10px;
+}
+
+.product-color {
+  background-color: var(--color);
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: 1px solid var(--color-light);
+  filter: drop-shadow(-4px 4px 4px rgb(0, 0, 0, 0.25));
+}
+
+.wrapper-price {
+  display: flex;
+  flex-direction: column;
+}
+
 .product-price {
   font: var(--text-bold-m);
 }

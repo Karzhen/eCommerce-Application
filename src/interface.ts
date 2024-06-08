@@ -92,6 +92,13 @@ export type StateRegister = {
   isRegister: boolean;
 };
 
+export enum Color {
+  RED = 'red',
+  GREY = 'grey',
+  WHITE = 'white',
+  GREEN = 'green',
+}
+
 export interface ProductM {
   id: string;
   name: string;
@@ -99,7 +106,14 @@ export interface ProductM {
   discount: number | null;
   img: string[];
   description: string;
+  size: string;
+  color: Color;
   variantId: number;
+}
+
+export interface ProductBasket extends ProductM {
+  quantity: number;
+  totalPrice: number;
 }
 
 export type StateProducts = {

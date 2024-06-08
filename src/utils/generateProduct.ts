@@ -62,6 +62,10 @@ export default function generateProduct(element: ProductProjection) {
     name: element.name[language],
     description: grabDescription(element, language),
     img: grabImage(elementVariant),
+    size: elementVariant.attributes?.find((el) => el.name === 'size')?.value
+      .label,
+    color: elementVariant.attributes?.find((el) => el.name === 'color')?.value
+      .label,
     price: grabPrice(elementVariant),
     discount: grabDiscount(elementVariant),
     variantId: elementVariant.id,

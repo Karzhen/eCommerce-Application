@@ -24,8 +24,14 @@ export default function generateProduct(element: LineItem) {
     name: element.name[language],
     description: '',
     img: grabImage(element),
+    size: element.variant.attributes?.find((el) => el.name === 'size')?.value
+      .label,
+    color: element.variant.attributes?.find((el) => el.name === 'color')?.value
+      .label,
     price: element.price.value.centAmount,
-    discount: element.price.value.centAmount,
+    quantity: element.quantity,
+    totalPrice: element.totalPrice.centAmount,
+    discount: element.price.discounted?.value.centAmount || null,
     variantId: element.variant.id,
   };
 }

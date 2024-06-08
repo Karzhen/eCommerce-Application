@@ -5,7 +5,7 @@ import createElement from '@/utils/create-element';
 import createInput from '@baseComponents/input/input';
 import createButton from '@baseComponents/button/button';
 
-import { Tag, ProductM, TypeInput, TypeButton } from '@/interface';
+import { Tag, ProductBasket, TypeInput, TypeButton } from '@/interface';
 
 import styles from './products.module.css';
 
@@ -30,7 +30,7 @@ function addCountBlock(count: number) {
   return COUNT_BLOCK;
 }
 
-function addProduct(product: ProductM) {
+function addProduct(product: ProductBasket) {
   const TITLE = createElement(Tag.LABEL, {
     className: styles.title,
     textContent: product.name,
@@ -47,14 +47,34 @@ function addProduct(product: ProductM) {
 
   WRAPPER_IMAGE.append(IMAGE);
 
+  const SIZE = createElement(Tag.LABEL, {
+    textContent: product.size,
+  });
+
+  const COLOR = createElement(Tag.LABEL, {
+    textContent: product.color,
+  });
+
+  const WRAPPER_PRICE = createElement(Tag.DIV, {
+    className: styles.wrapperPrice,
+  });
   const PRICE = createElement(Tag.LABEL, {
     className: styles.price,
     textContent: String(product.price),
   });
+  WRAPPER_PRICE.append(PRICE);
 
-  const DISCOUNT = createElement(Tag.LABEL, {
-    className: styles.discount,
-    textContent: String(product.discount),
+  if (product.discount) {
+    const DISCOUNT = createElement(Tag.LABEL, {
+      className: styles.discount,
+      textContent: String(product.discount),
+    });
+    WRAPPER_PRICE.append(DISCOUNT);
+  }
+
+  const TOTAL_VALUE = createElement(Tag.LABEL, {
+    className: styles.totalValue,
+    textContent: String(product.totalPrice),
   });
 
   const DELETE_BUTTON = createButton({
@@ -66,9 +86,11 @@ function addProduct(product: ProductM) {
   return [
     TITLE,
     WRAPPER_IMAGE,
-    PRICE,
-    DISCOUNT,
-    addCountBlock(1),
+    SIZE,
+    COLOR,
+    WRAPPER_PRICE,
+    addCountBlock(product.quantity),
+    TOTAL_VALUE,
     DELETE_BUTTON,
   ];
 }

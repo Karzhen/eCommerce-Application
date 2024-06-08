@@ -5,7 +5,6 @@ import apiAddProductToBasket from '@api/apiAddProductToBasket';
 import createElement from '@utils/create-element';
 import createLink from '@baseComponents/link/link';
 import createPopUp from '@components/popUp/popUp';
-
 import createButton from '@baseComponents/button/button';
 
 import { Tag, ProductM, TypeButton } from '@/interface';
@@ -77,6 +76,19 @@ export default function createProductCard(
     textContent: product.description,
   });
 
+  const WRAPPER_ATTRIBUTES = createElement(Tag.DIV, {
+    className: styles.wrapperAttributes,
+  });
+  const SIZE = createElement(Tag.LABEL, {
+    textContent: product.size,
+  });
+
+  const COLOR = createElement(Tag.DIV, {
+    className: styles.productColor,
+  });
+  COLOR.style.setProperty('--color', product.color);
+  WRAPPER_ATTRIBUTES.append(SIZE, COLOR);
+
   const WRAPPER = createElement(Tag.DIV, { className: styles.wrapper });
 
   const WRAPPER_PRICE = createElement(Tag.DIV, {
@@ -87,15 +99,12 @@ export default function createProductCard(
     className: styles.productPrice,
     textContent: formatPrice(product.price),
   });
-
   WRAPPER_PRICE.append(PRICE);
-
   if (product.discount) {
     const DISCOUNT = createElement(Tag.LABEL, {
       className: styles.productDiscount,
       textContent: formatPrice(product.discount),
     });
-
     WRAPPER_PRICE.append(DISCOUNT);
   }
 
@@ -114,7 +123,7 @@ export default function createProductCard(
   }
   WRAPPER.append(WRAPPER_PRICE, BUTTON_BASKET);
 
-  INFO.append(TITLE, DESCRIPTION, WRAPPER);
+  INFO.append(TITLE, DESCRIPTION, WRAPPER_ATTRIBUTES, WRAPPER);
 
   CARD.append(WRAPPER_IMAGE, INFO);
 
