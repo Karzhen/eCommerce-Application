@@ -13,7 +13,7 @@ import generateBasket from '@utils/generateBasket';
 
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
-export default async function apiDeleteProductFromBusket(itemBasketId: string) {
+export default async function apiDeleteProductFromBasket(itemBasketId: string) {
   let ctpClient;
   if (store.getState().login.isLogin) {
     ctpClient = createCtpClientRefresh();
@@ -42,8 +42,6 @@ export default async function apiDeleteProductFromBusket(itemBasketId: string) {
         },
       })
       .execute();
-
-    console.log(result.body);
 
     const basketItems: ProductBasket[] = [];
     result.body.lineItems.forEach((item) => {

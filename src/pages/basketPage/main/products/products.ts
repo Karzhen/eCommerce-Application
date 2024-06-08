@@ -1,6 +1,7 @@
 import store from '@redux/store/configureStore';
 
 import apiChangeQuantity from '@/api/apiChangeQuantity';
+import apiDeleteProductFromBasket from '@api/apiDeleteProductFromBasket';
 
 import createElement from '@/utils/create-element';
 
@@ -111,10 +112,14 @@ function addProduct(product: ProductBasket) {
   const DELETE_BUTTON = createButton({
     type: TypeButton.PRIMARY,
     option: {
-      textContent: 'Delete',
+      textContent: 'Remove from Cart',
       id: `buttonDelete:${product.id}:${product.variantId}`,
     },
-    handler: {},
+    handler: {
+      handlerClick: async () => {
+        await apiDeleteProductFromBasket(product.itemBasketId);
+      },
+    },
   });
 
   return [
