@@ -117,7 +117,11 @@ export default function createProductCard(
 
   if (
     store.getState().basket.products &&
-    store.getState().basket.products.some((pr) => pr.id === product.id)
+    store
+      .getState()
+      .basket.products.some(
+        (pr) => pr.id === product.id && pr.variantId === product.variantId,
+      )
   ) {
     BUTTON_BASKET.setAttribute('disabled', '');
   }

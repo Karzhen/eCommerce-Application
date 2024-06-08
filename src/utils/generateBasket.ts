@@ -20,6 +20,7 @@ export default function generateProduct(element: LineItem) {
   const { language } = store.getState().local;
 
   return {
+    itemBasketId: element.id,
     id: element.productId,
     name: element.name[language],
     description: '',

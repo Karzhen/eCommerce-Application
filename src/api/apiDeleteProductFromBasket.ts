@@ -3,18 +3,17 @@ import store from '@redux/store/configureStore';
 import { GET_BASKET, ERROR_BASKET } from '@redux/actions/basket';
 
 import { ProductBasket } from '@/interface';
-import generateBasket from '@utils/generateBasket';
 
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 
 import createCtpClientRefresh from '@api/buildClient/buildClientRefreshTokenFlow';
 import createCtpClientAnonymous from '@api/buildClient/buildAnonymousSessionFlow';
 
+import generateBasket from '@utils/generateBasket';
+
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
-// const idBasket = 'de325073-75c0-484b-86be-e5db9758bf10';
-
-export default async function apiGetBasket(idBasket: string) {
+export default async function apiDeleteProductFromBusket(itemBasketId: string) {
   let ctpClient;
   if (store.getState().login.isLogin) {
     ctpClient = createCtpClientRefresh();
@@ -23,6 +22,7 @@ export default async function apiGetBasket(idBasket: string) {
   }
 
   const apiRoot = createApiBuilderFromCtpClient(ctpClient);
+  const idBasket = store.getState().basket.id;
 
   try {
     const result = await apiRoot
@@ -30,8 +30,20 @@ export default async function apiGetBasket(idBasket: string) {
       .me()
       .carts()
       .withId({ ID: idBasket })
-      .get()
+      .post({
+        body: {
+          version: store.getState().basket.version,
+          actions: [
+            {
+              'action': 'removeLineItem',
+              'lineItemId': itemBasketId,
+            },
+          ],
+        },
+      })
       .execute();
+
+    console.log(result.body);
 
     const basketItems: ProductBasket[] = [];
     result.body.lineItems.forEach((item) => {

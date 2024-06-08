@@ -112,6 +112,7 @@ export interface ProductM {
 }
 
 export interface ProductBasket extends ProductM {
+  itemBasketId: string;
   quantity: number;
   totalPrice: number;
 }
@@ -211,7 +212,7 @@ export interface Filter {
 export interface Basket {
   id: string;
   version: number;
-  products: ProductM[];
+  products: ProductBasket[];
 }
 
 export interface BasketState extends Basket {

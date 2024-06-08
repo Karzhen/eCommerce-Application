@@ -1,29 +1,54 @@
 import store from '@redux/store/configureStore';
 
+import apiChangeQuantity from '@/api/apiChangeQuantity';
+
 import createElement from '@/utils/create-element';
 
 import createInput from '@baseComponents/input/input';
 import createButton from '@baseComponents/button/button';
 
+import formatPrice from '@utils/formatPrice';
+
 import { Tag, ProductBasket, TypeInput, TypeButton } from '@/interface';
 
 import styles from './products.module.css';
 
-function addCountBlock(count: number) {
+function addCountBlock(count: number, itemBasketId: string) {
   const COUNT_BLOCK = createElement(Tag.DIV, { className: styles.promoBlock });
-
-  const INPUT_COUNT = createInput({
-    type: TypeInput.TEXT,
-    option: {},
-    handler: {},
-  });
-  INPUT_COUNT.setAttribute('value', String(count));
 
   const COUNT_BUTTON = createButton({
     type: TypeButton.PRIMARY,
-    option: { textContent: 'Submit' },
-    handler: {},
+    option: {
+      textContent: 'Submit',
+      id: `setQuantity:${itemBasketId}`,
+    },
+    handler: {
+      handlerClick: async () => {
+        COUNT_BUTTON.setAttribute('disabled', '');
+
+        const elInputQuantity = document.getElementById(
+          `inputQuantity:${itemBasketId}`,
+        );
+        if (elInputQuantity instanceof HTMLInputElement) {
+          await apiChangeQuantity(itemBasketId, Number(elInputQuantity.value));
+        }
+      },
+    },
   });
+  COUNT_BUTTON.setAttribute('disabled', '');
+
+  const INPUT_COUNT = createInput({
+    type: TypeInput.TEXT,
+    option: {
+      id: `inputQuantity:${itemBasketId}`,
+    },
+    handler: {
+      handlerInput: () => {
+        COUNT_BUTTON.removeAttribute('disabled');
+      },
+    },
+  });
+  INPUT_COUNT.setAttribute('value', String(count));
 
   COUNT_BLOCK.append(INPUT_COUNT, COUNT_BUTTON);
 
@@ -60,26 +85,35 @@ function addProduct(product: ProductBasket) {
   });
   const PRICE = createElement(Tag.LABEL, {
     className: styles.price,
-    textContent: String(product.price),
+    textContent: String(
+      formatPrice(product.price, store.getState().local.currencyCode),
+    ),
   });
   WRAPPER_PRICE.append(PRICE);
 
   if (product.discount) {
     const DISCOUNT = createElement(Tag.LABEL, {
       className: styles.discount,
-      textContent: String(product.discount),
+      textContent: String(
+        formatPrice(product.discount, store.getState().local.currencyCode),
+      ),
     });
     WRAPPER_PRICE.append(DISCOUNT);
   }
 
   const TOTAL_VALUE = createElement(Tag.LABEL, {
     className: styles.totalValue,
-    textContent: String(product.totalPrice),
+    textContent: String(
+      formatPrice(product.totalPrice, store.getState().local.currencyCode),
+    ),
   });
 
   const DELETE_BUTTON = createButton({
     type: TypeButton.PRIMARY,
-    option: { textContent: 'Delete' },
+    option: {
+      textContent: 'Delete',
+      id: `buttonDelete:${product.id}:${product.variantId}`,
+    },
     handler: {},
   });
 
@@ -89,10 +123,24 @@ function addProduct(product: ProductBasket) {
     SIZE,
     COLOR,
     WRAPPER_PRICE,
-    addCountBlock(product.quantity),
+    addCountBlock(product.quantity, product.itemBasketId),
     TOTAL_VALUE,
     DELETE_BUTTON,
   ];
+}
+
+function addHandlerForChangeBasket(wrapper: HTMLElement) {
+  let previousProductsState = store.getState().basket.products;
+  store.subscribe(() => {
+    const currentProductsState = store.getState().basket.products;
+    if (previousProductsState !== currentProductsState) {
+      wrapper.replaceChildren();
+      store.getState().basket.products.forEach((product) => {
+        wrapper.append(...addProduct(product));
+      });
+      previousProductsState = currentProductsState;
+    }
+  });
 }
 
 export default function createProducts() {
@@ -103,6 +151,8 @@ export default function createProducts() {
   store.getState().basket.products.forEach((product) => {
     PRODUCTS_BLOCK.append(...addProduct(product));
   });
+
+  addHandlerForChangeBasket(PRODUCTS_BLOCK);
 
   return PRODUCTS_BLOCK;
 }
