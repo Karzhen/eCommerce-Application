@@ -212,6 +212,9 @@ export interface Filter {
 export interface Basket {
   id: string;
   version: number;
+  totalPrice: number;
+  totalQuantity: number;
+  lastModified: string;
   products: ProductBasket[];
 }
 

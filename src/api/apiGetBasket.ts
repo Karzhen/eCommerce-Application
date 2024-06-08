@@ -42,6 +42,9 @@ export default async function apiGetBasket(idBasket: string) {
       GET_BASKET({
         id: result.body.id,
         version: result.body.version,
+        lastModified: result.body.lastModifiedAt,
+        totalPrice: result.body.totalPrice.centAmount,
+        totalQuantity: result.body.totalLineItemQuantity || 0,
         products: basketItems,
       }),
     );

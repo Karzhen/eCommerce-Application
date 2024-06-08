@@ -25,6 +25,9 @@ const products = createReducer(initialState, (builder) => {
     .addCase(GET_BASKET, (state, action) => {
       const STATE = state;
       STATE.version = action.payload.version;
+      STATE.lastModified = action.payload.lastModified;
+      STATE.totalPrice = action.payload.totalPrice;
+      STATE.totalQuantity = action.payload.totalQuantity;
       STATE.products = action.payload.products;
     })
     .addCase(ADD_TO_BASKET, (state, action) => {
