@@ -7,7 +7,7 @@ import createMainPage from '@pages/mainPage/mainPage';
 import createProfilePage from '@pages/profilePage/profilePage';
 import createCatalogPage from '@pages/catalogPage/catalogPage';
 import { createContentCatalogPage } from '@/pages/catalogPage/main/main';
-import createBasketPage from '@pages/basketPage/basket/basketPage';
+import createBasketPage from '@pages/basketPage/basketPage';
 import createAboutPage from '@pages/aboutPage/about/aboutPage';
 import createProductPage from '@pages/productPage/productPage';
 import createMainProductPage from '@/pages/productPage/main/main';
@@ -142,7 +142,7 @@ export class Router {
         break;
       case Page.BASKET:
         document.body.replaceChildren();
-        document.body.append(createBasketPage(bindGoPage));
+        document.body.append(await createBasketPage(bindGoPage));
         break;
       case Page.ABOUT:
         document.body.replaceChildren();
