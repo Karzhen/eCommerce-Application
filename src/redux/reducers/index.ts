@@ -6,6 +6,7 @@ import parameters from '@reducers/parameters';
 import local from '@reducers/local';
 import filter from '@reducers/filter';
 import product from '@reducers/product';
+import basket from '@reducers/basket';
 
 export default combineReducers({
   login,
@@ -15,4 +16,5 @@ export default combineReducers({
   local,
   filter,
   product,
+  basket,
 });

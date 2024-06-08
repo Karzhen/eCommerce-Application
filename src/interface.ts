@@ -193,3 +193,13 @@ export interface Filter {
   sort?: { name: string; order: string };
   search?: string;
 }
+
+export interface Basket {
+  id: string;
+  version: number;
+  products: ProductM[];
+}
+
+export interface BasketState extends Basket {
+  error: string;
+}

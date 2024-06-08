@@ -91,6 +91,16 @@
   position: relative;
 }
 
+.wrapper {
+  display: flex;
+  align-items: top;
+  justify-content: space-between;
+}
+
+.button-buy {
+  width: 150px;
+}
+
 .product-description:after {
   content: '';
   position: absolute;

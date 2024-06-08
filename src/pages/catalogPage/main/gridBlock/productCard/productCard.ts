@@ -1,7 +1,10 @@
+import store from '@redux/store/configureStore';
+
 import createElement from '@utils/create-element';
 import createLink from '@baseComponents/link/link';
+import createButton from '@baseComponents/button/button';
 
-import { Tag, ProductM } from '@/interface';
+import { Tag, ProductM, TypeButton } from '@/interface';
 import formatPrice from '@utils/formatPrice';
 
 import styles from './productCard.module.css';
@@ -10,6 +13,13 @@ function handlerTitleClick(event: Event, goPage: (path: string) => void) {
   const element = event.target as HTMLAnchorElement;
   const path = element.getAttribute('href') || '';
   goPage(path);
+}
+
+async function handlerBuyClick(event: Event) {
+  const el = event.target;
+  if (el instanceof HTMLButtonElement) {
+    el.setAttribute('disabled', '');
+  }
 }
 
 export default function createProductCard(
@@ -51,12 +61,18 @@ export default function createProductCard(
     textContent: product.description,
   });
 
+  const WRAPPER = createElement(Tag.DIV, { className: styles.wrapper });
+
+  const WRAPPER_PRICE = createElement(Tag.DIV, {
+    className: styles.wrapperPrice,
+  });
+
   const PRICE = createElement(Tag.LABEL, {
     className: styles.productPrice,
     textContent: formatPrice(product.price),
   });
 
-  INFO.append(TITLE, DESCRIPTION, PRICE);
+  WRAPPER_PRICE.append(PRICE);
 
   if (product.discount) {
     const DISCOUNT = createElement(Tag.LABEL, {
@@ -64,8 +80,25 @@ export default function createProductCard(
       textContent: formatPrice(product.discount),
     });
 
-    INFO.append(DISCOUNT);
+    WRAPPER_PRICE.append(DISCOUNT);
   }
+
+  const BUTTON_BASKET = createButton({
+    type: TypeButton.PRIMARY,
+    option: { textContent: 'Add to Cart', className: styles.buttonBuy },
+    handler: { handlerClick: (event: Event) => handlerBuyClick(event) },
+  });
+  BUTTON_BASKET.setAttribute('value', `${product.id}:${product.variantId}`);
+
+  if (
+    store.getState().basket.products &&
+    store.getState().basket.products.some((pr) => pr.id === product.id)
+  ) {
+    BUTTON_BASKET.setAttribute('disabled', '');
+  }
+  WRAPPER.append(WRAPPER_PRICE, BUTTON_BASKET);
+
+  INFO.append(TITLE, DESCRIPTION, WRAPPER);
 
   CARD.append(WRAPPER_IMAGE, INFO);
 
