@@ -25,6 +25,7 @@ export default async function createMainProductPage(productVariantId: string) {
   });
 
   const [productId] = productVariantId.split(':');
+  const productVariant = productVariantId.split(':')[1];
 
   await apiGetEachProduct(productId);
 
@@ -33,7 +34,11 @@ export default async function createMainProductPage(productVariantId: string) {
     const ERROR_PAGE = createErrorProductPage(productData.error);
     MAIN.append(ERROR_PAGE);
   } else {
-    const productInfo = createProductInfo(productData.value);
+    const productInfo = createProductInfo(
+      productData.value,
+      productId,
+      productVariant,
+    );
     MAIN.append(productInfo);
   }
 

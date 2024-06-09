@@ -2,7 +2,7 @@ import { Attribute } from '@/pages/productPage/main/productInfo/interfaces';
 import createElement from '@utils/create-element';
 import { Tag } from '@/interface';
 import styles from '@pages/productPage/main/productInfo/productInfo.module.css';
-import { ProductData } from '@commercetools/platform-sdk';
+import { ProductData, ProductVariant } from '@commercetools/platform-sdk';
 
 function findProductVariant(
   productData: ProductData,
@@ -74,6 +74,7 @@ function handleButtonClick(
 function createButtons(
   productData: ProductData,
   attribute: Attribute,
+  currentVariant: ProductVariant,
 ): HTMLElement {
   const radio = createElement(Tag.INPUT, {}) as HTMLInputElement;
   radio.type = 'radio';
@@ -95,7 +96,12 @@ function createButtons(
     label.style.setProperty('--button-color', attribute.value.label);
   }
 
-  if (attribute.master) {
+  const isActive = currentVariant.attributes?.some(
+    (attr) =>
+      attr.name === attribute.name && attr.value.key === attribute.value.key,
+  );
+
+  if (isActive) {
     label.classList.add(styles.attributeActive);
   } else {
     label.classList.add(styles.attributeInactive);
@@ -110,6 +116,7 @@ const createFieldset = (
   productData: ProductData,
   attributes: Attribute[],
   legendText: string,
+  currentVariant: ProductVariant,
 ) => {
   const fieldset = createElement(Tag.FIELDSET, {
     className: styles.attributeFieldset,
@@ -123,7 +130,7 @@ const createFieldset = (
   fieldset.append(legend);
 
   attributes.forEach((attr) => {
-    fieldset.append(createButtons(productData, attr));
+    fieldset.append(createButtons(productData, attr, currentVariant));
   });
 
   return fieldset;
@@ -132,6 +139,7 @@ const createFieldset = (
 export default function createAttributeButtons(
   productData: ProductData,
   attributeArray: Attribute[],
+  currentVariant: ProductVariant,
 ) {
   const container = createElement(Tag.DIV, {
     className: styles.attributesContainer,
@@ -142,8 +150,18 @@ export default function createAttributeButtons(
     (attr) => attr.name === 'color',
   );
 
-  const sizeFieldset = createFieldset(productData, sizeAttributes, 'Size');
-  const colorFieldset = createFieldset(productData, colorAttributes, 'Color');
+  const sizeFieldset = createFieldset(
+    productData,
+    sizeAttributes,
+    'Size',
+    currentVariant,
+  );
+  const colorFieldset = createFieldset(
+    productData,
+    colorAttributes,
+    'Color',
+    currentVariant,
+  );
 
   container.append(sizeFieldset, colorFieldset);
 

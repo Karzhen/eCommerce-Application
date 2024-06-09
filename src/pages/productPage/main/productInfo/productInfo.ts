@@ -9,7 +9,29 @@ import { ProductData, ProductVariant } from '@commercetools/platform-sdk';
 import createAttributeButtons from '@/pages/productPage/main/productInfo/creationFunctions/createAttributeButtons';
 import createPriceElements from '@/pages/productPage/main/productInfo/creationFunctions/createPriceElements';
 
+import store from '@redux/store/configureStore';
+import apiAddProductToBasket from '@api/apiAddProductToBasket.ts';
+import createPopUp from '@components/popUp/popUp';
 import styles from './productInfo.module.css';
+
+async function handlerBuyClick(event: Event) {
+  const el = event.target;
+  if (el instanceof HTMLButtonElement) {
+    el.setAttribute('disabled', '');
+    const [productId, variantId] = el.value.split(':');
+    await apiAddProductToBasket(productId, Number(variantId));
+    if (store.getState().basket.error) {
+      el.removeAttribute('disabled');
+      const POPUP = createPopUp(
+        'Error',
+        'Product cannot be added to cart',
+        false,
+      );
+      document.body.append(POPUP);
+      (POPUP as HTMLDialogElement).showModal();
+    }
+  }
+}
 
 function extractAttributes(productData: ProductData) {
   const uniqueAttributes = new Map<string, Attribute>();
@@ -45,10 +67,18 @@ function extractAttributes(productData: ProductData) {
 
 export default function createProductInfo(
   productData: ProductData,
-  variant?: ProductVariant,
+  productID: string,
+  variantID: string,
+  // variant?: ProductVariant,
 ) {
-  const currentVariant = variant || productData.masterVariant;
-  // console.log(currentVariant)
+  // console.log(productID);
+  // console.log(variantID);
+  const currentVariant: ProductVariant =
+    productData.variants.find(
+      (variant) => variant.id.toString() === variantID,
+    ) || productData.masterVariant;
+  // console.log(currentVariant);
+  // console.log(productData);
   const productInfoContainer = createElement(Tag.DIV, {
     className: styles.productInfo,
   });
@@ -100,23 +130,45 @@ export default function createProductInfo(
   });
   rightContainer.append(productDescription);
 
-  const attributes = extractAttributes(productData);
+  const allAttributes = extractAttributes(productData);
 
-  const attributeButtons = createAttributeButtons(productData, attributes);
+  const attributeButtons = createAttributeButtons(
+    productData,
+    allAttributes,
+    currentVariant,
+  );
   rightContainer.append(attributeButtons);
 
   const priceElements = createPriceElements(currentVariant);
   priceElements.forEach((element) => rightContainer.appendChild(element));
 
-  const buyButton = createButton({
+  const BUTTON_BASKET = createButton({
     type: TypeButton.PRIMARY,
-    option: {
-      textContent: 'Add to Cart',
-      className: styles.buyButton,
-    },
-    handler: {},
+    option: { textContent: 'Add to Cart', className: styles.buyButton },
+    handler: { handlerClick: (event: Event) => handlerBuyClick(event) },
   });
-  rightContainer.append(buyButton);
+  BUTTON_BASKET.setAttribute('value', `${productID}:${variantID}`);
+
+  if (
+    store.getState().basket.products &&
+    store
+      .getState()
+      .basket.products.some(
+        (pr) => pr.id === productID && pr.variantId.toString() === variantID,
+      )
+  ) {
+    BUTTON_BASKET.setAttribute('disabled', '');
+  }
+
+  // const buyButton = createButton({
+  //   type: TypeButton.PRIMARY,
+  //   option: {
+  //     textContent: 'Add to Cart',
+  //     className: styles.buyButton,
+  //   },
+  //   handler: {},
+  // });
+  rightContainer.append(BUTTON_BASKET);
 
   contentContainer.append(leftContainer, rightContainer);
   productInfoContainer.append(contentContainer);
