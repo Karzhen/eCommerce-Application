@@ -3,15 +3,15 @@ import createButton from '@baseComponents/button/button';
 import { Tag, TypeButton } from '@/interface';
 
 import createImageSlider from '@/pages/productPage/main/productInfo/imageSlider/createImageSlider';
-import { Attribute } from '@/pages/productPage/main/productInfo/interfaces';
 
-import { ProductData, ProductVariant } from '@commercetools/platform-sdk';
+import {Attribute, ProductVariant} from '@commercetools/platform-sdk';
 import createAttributeButtons from '@/pages/productPage/main/productInfo/creationFunctions/createAttributeButtons';
 import createPriceElements from '@/pages/productPage/main/productInfo/creationFunctions/createPriceElements';
 
 import store from '@redux/store/configureStore';
-import apiAddProductToBasket from '@api/apiAddProductToBasket.ts';
+import apiAddProductToBasket from '@api/apiAddProductToBasket';
 import createPopUp from '@components/popUp/popUp';
+import extractAttributes from "@pages/productPage/main/productInfo/utils/extractAttributes";
 import styles from './productInfo.module.css';
 
 async function handlerBuyClick(event: Event) {
@@ -33,52 +33,20 @@ async function handlerBuyClick(event: Event) {
   }
 }
 
-function extractAttributes(productData: ProductData) {
-  const uniqueAttributes = new Map<string, Attribute>();
-
-  const masterAttributes = new Map<string, boolean>();
-
-  productData.masterVariant.attributes?.forEach((attr) => {
-    const key = `${attr.name}-${attr.value.key}`;
-    if (attr.name !== 'brand') {
-      uniqueAttributes.set(key, { ...attr, master: true });
-      masterAttributes.set(key, true);
-    }
-  });
-
-  productData.variants.forEach((variant) => {
-    variant.attributes?.forEach((attr) => {
-      const key = `${attr.name}-${attr.value.key}`;
-      if (attr.name !== 'brand') {
-        if (!uniqueAttributes.has(key)) {
-          uniqueAttributes.set(key, {
-            ...attr,
-            master: masterAttributes.has(key),
-          });
-        } else if (masterAttributes.has(key)) {
-          uniqueAttributes.get(key)!.master = true;
-        }
-      }
-    });
-  });
-
-  return Array.from(uniqueAttributes.values());
-}
-
 export default function createProductInfo(
-  productData: ProductData,
+  // productData: ProductData,
   productID: string,
   variantID: string,
   // variant?: ProductVariant,
 ) {
-  // console.log(productID);
-  // console.log(variantID);
+  const productData = store.getState().product.value;
+  console.log(productData);
   const currentVariant: ProductVariant =
     productData.variants.find(
       (variant) => variant.id.toString() === variantID,
     ) || productData.masterVariant;
-  // console.log(currentVariant);
-  // console.log(productData);
+  console.log('currentVariant');
+  console.log(currentVariant);
   const productInfoContainer = createElement(Tag.DIV, {
     className: styles.productInfo,
   });
@@ -108,7 +76,7 @@ export default function createProductInfo(
 
   const productName = createElement(Tag.H1, {
     className: styles.productName,
-    textContent: productData.name.en,
+    textContent: <string><unknown>productData.name,
   });
 
   const brandName = currentVariant.attributes?.find(
@@ -126,22 +94,28 @@ export default function createProductInfo(
 
   const productDescription = createElement(Tag.P, {
     className: styles.productDescription,
-    textContent: productData.description?.en || 'Description not available',
+    textContent: <string><unknown>productData.description || 'Description not available',
   });
   rightContainer.append(productDescription);
 
-  const allAttributes = extractAttributes(productData);
+  const allAttributes: Attribute[] = extractAttributes(productData);
 
   const attributeButtons = createAttributeButtons(
     productData,
     allAttributes,
     currentVariant,
+    productID,
   );
   rightContainer.append(attributeButtons);
 
   const priceElements = createPriceElements(currentVariant);
   priceElements.forEach((element) => rightContainer.appendChild(element));
 
+  const BUTTON_CONTAINER = createElement(Tag.DIV, {
+    className: styles.buttonContainer,
+  });
+
+// Создание кнопки "Добавить в корзину"
   const BUTTON_BASKET = createButton({
     type: TypeButton.PRIMARY,
     option: { textContent: 'Add to Cart', className: styles.buyButton },
@@ -149,16 +123,50 @@ export default function createProductInfo(
   });
   BUTTON_BASKET.setAttribute('value', `${productID}:${variantID}`);
 
+// Проверка, добавлен ли товар в корзину
   if (
-    store.getState().basket.products &&
-    store
-      .getState()
-      .basket.products.some(
-        (pr) => pr.id === productID && pr.variantId.toString() === variantID,
+      store.getState().basket.products &&
+      store
+          .getState()
+          .basket.products.some(
+          (pr) => pr.id === productID && pr.variantId.toString() === variantID,
       )
   ) {
     BUTTON_BASKET.setAttribute('disabled', '');
   }
+  BUTTON_CONTAINER.append(BUTTON_BASKET);
+
+// Создание контейнера для управления количеством товара
+  const QUANTITY_CONTAINER = createElement(Tag.DIV, {
+    className: styles.quantityContainer,
+  });
+
+// Создание кнопки "-" для уменьшения количества
+  const BUTTON_DECREASE = createButton({
+    type: TypeButton.SECONDARY,
+    option: { textContent: '-', className: styles.quantityButton },
+    handler: { handlerClick: (event: Event) => handlerDecreaseClick(event) }, // Логику здесь можно не прописывать
+  });
+
+// Создание текстового поля для отображения количества
+  const QUANTITY_DISPLAY = createElement(Tag.SPAN, {
+    className: styles.quantityDisplay,
+    textContent: '1', // Начальное значение количества
+  });
+
+// Создание кнопки "+" для увеличения количества
+  const BUTTON_INCREASE = createButton({
+    type: TypeButton.SECONDARY,
+    option: { textContent: '+', className: styles.quantityButton },
+    handler: { handlerClick: (event: Event) => handlerIncreaseClick(event) }, // Логику здесь можно не прописывать
+  });
+
+// Добавление элементов в контейнер для управления количеством
+  QUANTITY_CONTAINER.append(BUTTON_DECREASE, QUANTITY_DISPLAY, BUTTON_INCREASE);
+
+// Добавление контейнера для количества и кнопки "Добавить в корзину" в общий контейнер
+  BUTTON_CONTAINER.append(QUANTITY_CONTAINER, BUTTON_BASKET);
+
 
   // const buyButton = createButton({
   //   type: TypeButton.PRIMARY,
@@ -168,7 +176,7 @@ export default function createProductInfo(
   //   },
   //   handler: {},
   // });
-  rightContainer.append(BUTTON_BASKET);
+  rightContainer.append(BUTTON_CONTAINER);
 
   contentContainer.append(leftContainer, rightContainer);
   productInfoContainer.append(contentContainer);

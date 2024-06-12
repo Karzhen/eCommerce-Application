@@ -173,6 +173,37 @@
   padding: 10px;
 }
 
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 20px;
+}
+
+.buy-button {
+  height: 60px;
+  align-self: center;
+  padding: 10px 20px;
+}
+
+.quantity-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.quantity-button {
+  height: 60px;
+  flex: 1;
+  font: var(--text-s);
+}
+
+.quantityDisplay {
+  flex: 5;
+  text-align: center;
+  font: var(--text-s);
+}
+
 .attributes-container {
   display: flex;
   flex-direction: column;
@@ -254,12 +285,6 @@
 
 .old-price {
   text-decoration: line-through;
-}
-
-.buy-button {
-  align-self: center;
-  padding: 10px 20px;
-  margin-top: 20px;
 }
 
 @media (max-width: 600px) {
