@@ -114,7 +114,7 @@ export interface ProductM {
 
 export interface ProductVariants extends ProductM {
   masterVariant: ProductVariant;
-  variants: ProductVariant[];
+  variants?: ProductVariant[];
 }
 
 export interface ProductBasket extends ProductM {

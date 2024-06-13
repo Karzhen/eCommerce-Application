@@ -58,11 +58,13 @@ function generateProductVariants(
   const { language } = store.getState().local;
 
   let elementVariant: ProductVariant;
-  if (!element.masterVariant.isMatchingVariant) {
-    const arrElementVariant = element.variants.filter(
-      (el) => el.isMatchingVariant !== false,
-    );
-    [elementVariant] = arrElementVariant;
+
+  const matchingVariants = element.variants.filter(
+    (el) => el.isMatchingVariant !== false,
+  );
+
+  if (matchingVariants.length > 0) {
+    [elementVariant] = matchingVariants;
   } else {
     elementVariant = element.masterVariant;
   }
@@ -105,7 +107,7 @@ export default async function apiGetEachProduct(
       .get()
       .execute();
 
-    console.log(generateProductVariants(response.body, variantID));
+    // console.log(generateProductVariants(response.body, variantID));
     store.dispatch(
       GET_PRODUCT(generateProductVariants(response.body, variantID)),
     );

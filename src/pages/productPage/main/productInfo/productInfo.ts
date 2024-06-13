@@ -13,8 +13,9 @@ import extractAttributes from '@pages/productPage/main/productInfo/utils/extract
 import handlerBuyClick from '@pages/productPage/main/productInfo/handlers/handlerBuyClick';
 import handlerDecreaseClick from '@pages/productPage/main/productInfo/handlers/handlerDecreaseClick';
 import handlerIncreaseClick from '@pages/productPage/main/productInfo/handlers/handlerIncreaseClick';
+import findItemBasketId from '@pages/productPage/main/productInfo/utils/findItemBasketId';
 import styles from './productInfo.module.css';
-import findItemBasketId from '@pages/productPage/main/productInfo/utils/findItemBasketId.ts';
+import findItemBasket from '@pages/productPage/main/productInfo/utils/findItemBasket.ts';
 
 export default function createProductInfo(
   productID: string,
@@ -22,7 +23,7 @@ export default function createProductInfo(
 ) {
   const productData: ProductVariants = store.getState().product.value;
   const currentVariant: ProductVariant =
-    productData.variants.find(
+    productData.variants?.find(
       (variant) => variant.id.toString() === variantID,
     ) || productData.masterVariant;
   const productInfoContainer = createElement(Tag.DIV, {
@@ -97,7 +98,10 @@ export default function createProductInfo(
   const BUTTON_BASKET = createButton({
     type: TypeButton.PRIMARY,
     option: { textContent: 'Add to Cart', className: styles.buyButton },
-    handler: { handlerClick: (event: Event) => handlerBuyClick(event) },
+    handler: {
+      handlerClick: (event: Event) =>
+        handlerBuyClick(event, productID, variantID),
+    },
   });
   BUTTON_BASKET.setAttribute('value', `${productID}:${variantID}`);
 
@@ -118,7 +122,6 @@ export default function createProductInfo(
   const QUANTITY_CONTAINER = createElement(Tag.DIV, {
     className: styles.quantityContainer,
   });
-  // QUANTITY_CONTAINER.style.display = 'none';
 
   // Создание кнопки "-" для уменьшения количества
   const BUTTON_DECREASE = createButton({
@@ -133,7 +136,7 @@ export default function createProductInfo(
   // Создание текстового поля для отображения количества
   const QUANTITY_DISPLAY = createElement(Tag.SPAN, {
     className: styles.quantityDisplay,
-    textContent: '1', // Начальное значение количества
+    textContent: findItemBasket(productID, variantID).toString(), // Начальное значение количества
   });
 
   // Создание кнопки "+" для увеличения количества

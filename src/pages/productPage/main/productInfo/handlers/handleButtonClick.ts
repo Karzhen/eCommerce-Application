@@ -1,7 +1,7 @@
 import styles from '@pages/productPage/main/productInfo/productInfo.module.css';
-import { ProductVariants } from '@/interface.ts';
-import router from '@router/router.ts';
-import findProductVariant from '@utils/findProductVariantByAttributes.ts';
+import { ProductVariants } from '@/interface';
+import router from '@router/router';
+import findProductVariant from '@utils/findProductVariantByAttributes';
 
 function logActiveAttributes(productData: ProductVariants) {
   const productId = productData.id;
@@ -25,7 +25,14 @@ function logActiveAttributes(productData: ProductVariants) {
     const productPagePath = `/product/${productId}:${currentVariantID}`;
     router.goPage(productPagePath);
   } else {
-    const BUY_BUTTON = document.querySelector(`.${styles.buyButton}`)!;
+    const QUANTITY_CONTAINER: HTMLElement = document.querySelector(
+      `.${styles.quantityContainer}`,
+    )!;
+    QUANTITY_CONTAINER.style.display = 'none';
+    const BUY_BUTTON: HTMLElement = document.querySelector(
+      `.${styles.buyButton}`,
+    )!;
+    BUY_BUTTON.style.display = 'block';
     BUY_BUTTON.textContent = 'This variant is not available now';
     BUY_BUTTON.setAttribute('disabled', 'disabled');
   }

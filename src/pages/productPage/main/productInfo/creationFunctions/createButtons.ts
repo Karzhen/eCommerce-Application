@@ -3,7 +3,7 @@ import { Attribute } from '@pages/productPage/main/productInfo/interfaces';
 import createElement from '@utils/create-element';
 import { ProductVariants, Tag } from '@/interface';
 import styles from '@pages/productPage/main/productInfo/productInfo.module.css';
-import handleButtonClick from '@pages/productPage/main/productInfo/handlers/handleButtonClick.ts';
+import handleButtonClick from '@pages/productPage/main/productInfo/handlers/handleButtonClick';
 
 export default function createButtons(
   productData: ProductVariants,
