@@ -1,6 +1,12 @@
 import styles from '@pages/productPage/main/productInfo/productInfo.module.css';
+import apiChangeQuantity from '@api/apiChangeQuantity';
+import findItemBasketId from '@pages/productPage/main/productInfo/utils/findItemBasketId';
 
-export default function handlerDecreaseClick(event: Event) {
+export default async function handlerDecreaseClick(
+  event: Event,
+  productID: string,
+  variantID: string,
+) {
   const quantityDisplay = (
     event.target as HTMLElement
   ).parentElement?.querySelector(`.${styles.quantityDisplay}`);
@@ -8,6 +14,13 @@ export default function handlerDecreaseClick(event: Event) {
     const currentQuantity = parseInt(quantityDisplay.textContent || '1', 10);
     if (currentQuantity > 1) {
       quantityDisplay.textContent = (currentQuantity - 1).toString();
+      const product = findItemBasketId(productID, variantID);
+      console.log(product);
+      if (product) {
+        await apiChangeQuantity(product, currentQuantity - 1);
+      }
+    } else {
+      // Функционал удаления
     }
   }
 }

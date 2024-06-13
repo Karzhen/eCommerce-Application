@@ -29,4 +29,5 @@ export default async function handlerBuyClick(event: Event) {
       (POPUP as HTMLDialogElement).showModal();
     }
   }
+  console.log(store.getState().basket.products);
 }

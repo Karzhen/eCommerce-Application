@@ -181,15 +181,20 @@
 }
 
 .buy-button {
-  height: 60px;
+  /*height: 60px;*/
   align-self: center;
   padding: 10px 20px;
 }
 
-.quantity-container {
+.quantity-wrapper {
   width: 100%;
   display: flex;
   align-items: center;
+}
+
+.quantity-container {
+  display: flex;
+  flex-direction: column;
 }
 
 .quantity-button {

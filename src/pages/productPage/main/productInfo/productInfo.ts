@@ -14,6 +14,7 @@ import handlerBuyClick from '@pages/productPage/main/productInfo/handlers/handle
 import handlerDecreaseClick from '@pages/productPage/main/productInfo/handlers/handlerDecreaseClick';
 import handlerIncreaseClick from '@pages/productPage/main/productInfo/handlers/handlerIncreaseClick';
 import styles from './productInfo.module.css';
+import findItemBasketId from '@pages/productPage/main/productInfo/utils/findItemBasketId.ts';
 
 export default function createProductInfo(
   productID: string,
@@ -117,13 +118,16 @@ export default function createProductInfo(
   const QUANTITY_CONTAINER = createElement(Tag.DIV, {
     className: styles.quantityContainer,
   });
-  QUANTITY_CONTAINER.style.display = 'none';
+  // QUANTITY_CONTAINER.style.display = 'none';
 
   // Создание кнопки "-" для уменьшения количества
   const BUTTON_DECREASE = createButton({
     type: TypeButton.SECONDARY,
     option: { textContent: '-', className: styles.quantityButton },
-    handler: { handlerClick: (event: Event) => handlerDecreaseClick(event) },
+    handler: {
+      handlerClick: (event: Event) =>
+        handlerDecreaseClick(event, productID, variantID),
+    },
   });
 
   // Создание текстового поля для отображения количества
@@ -136,7 +140,10 @@ export default function createProductInfo(
   const BUTTON_INCREASE = createButton({
     type: TypeButton.SECONDARY,
     option: { textContent: '+', className: styles.quantityButton },
-    handler: { handlerClick: (event: Event) => handlerIncreaseClick(event) },
+    handler: {
+      handlerClick: (event: Event) =>
+        handlerIncreaseClick(event, productID, variantID),
+    },
   });
 
   // Добавление элементов в контейнер для управления количеством
@@ -144,6 +151,15 @@ export default function createProductInfo(
 
   // Добавление контейнера для количества и кнопки "Добавить в корзину" в общий контейнер
   BUTTON_CONTAINER.append(QUANTITY_CONTAINER, BUTTON_BASKET);
+
+  const product = findItemBasketId(productID, variantID);
+  if (product) {
+    BUTTON_BASKET.style.display = 'none';
+    QUANTITY_CONTAINER.style.display = 'flex';
+  } else {
+    BUTTON_BASKET.style.display = 'block';
+    QUANTITY_CONTAINER.style.display = 'none';
+  }
 
   rightContainer.append(BUTTON_CONTAINER);
 
