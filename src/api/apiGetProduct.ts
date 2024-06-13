@@ -4,9 +4,13 @@ import { GET_PRODUCT, ERROR_GET_PRODUCT } from '@redux/actions/product';
 
 import createCtpClientRefresh from '@api/buildClient/buildClientRefreshTokenFlow';
 import createCtpClientAnonymous from '@api/buildClient/buildAnonymousSessionFlow';
-import {createApiBuilderFromCtpClient, ProductProjection, ProductVariant} from '@commercetools/platform-sdk';
-import {ProductVariants} from "@/interface.ts";
-import urlNoImg from "@assets/images/noImg.jpg";
+import {
+  createApiBuilderFromCtpClient,
+  ProductProjection,
+  ProductVariant,
+} from '@commercetools/platform-sdk';
+import { ProductVariants } from '@/interface';
+import urlNoImg from '@assets/images/noImg.jpg';
 
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
@@ -31,9 +35,9 @@ function grabPrice(elementVariant: ProductVariant) {
 
 function grabDiscount(elementVariant: ProductVariant) {
   if (
-      elementVariant.prices &&
-      elementVariant.prices[0] &&
-      elementVariant.prices[0].discounted
+    elementVariant.prices &&
+    elementVariant.prices[0] &&
+    elementVariant.prices[0].discounted
   ) {
     return elementVariant.prices[0].discounted.value.centAmount;
   }
@@ -47,13 +51,16 @@ function grabDescription(element: ProductProjection, language: string) {
   return '';
 }
 
-function generateProductVariant(element: ProductProjection, variantID: string): ProductVariants {
+function generateProductVariants(
+  element: ProductProjection,
+  variantID: string,
+): ProductVariants {
   const { language } = store.getState().local;
 
   let elementVariant: ProductVariant;
   if (!element.masterVariant.isMatchingVariant) {
     const arrElementVariant = element.variants.filter(
-        (el) => el.isMatchingVariant !== false,
+      (el) => el.isMatchingVariant !== false,
     );
     [elementVariant] = arrElementVariant;
   } else {
@@ -63,20 +70,24 @@ function generateProductVariant(element: ProductProjection, variantID: string): 
   return {
     id: element.id,
     name: element.name[language],
-    description: grabDescription(element, language),
-    img: grabImage(elementVariant),
-    size: elementVariant.attributes?.find((el) => el.name === 'size')?.value.label,
-    color: elementVariant.attributes?.find((el) => el.name === 'color')?.value.label,
     price: grabPrice(elementVariant),
     discount: grabDiscount(elementVariant),
+    img: grabImage(elementVariant),
+    description: grabDescription(element, language),
+    size: elementVariant.attributes?.find((el) => el.name === 'size')?.value
+      .label,
+    color: elementVariant.attributes?.find((el) => el.name === 'color')?.value
+      .label,
     variantId: variantID,
     masterVariant: element.masterVariant,
     variants: element.variants,
   };
 }
 
-
-export default async function apiGetEachProduct(productID: string, variantID: string) {
+export default async function apiGetEachProduct(
+  productID: string,
+  variantID: string,
+) {
   let ctpClient;
   if (store.getState().login.isLogin) {
     ctpClient = createCtpClientRefresh();
@@ -94,10 +105,10 @@ export default async function apiGetEachProduct(productID: string, variantID: st
       .get()
       .execute();
 
-    console.log(response.body);
-    console.log(generateProductVariant(response.body, variantID));
-    // Использовать generateProduct(response.body)
-    store.dispatch(GET_PRODUCT(generateProductVariant(response.body, variantID)));
+    console.log(generateProductVariants(response.body, variantID));
+    store.dispatch(
+      GET_PRODUCT(generateProductVariants(response.body, variantID)),
+    );
   } catch (error) {
     if (error instanceof Error) {
       store.dispatch(

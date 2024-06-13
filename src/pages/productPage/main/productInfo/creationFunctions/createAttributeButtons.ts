@@ -1,15 +1,14 @@
 import { Attribute } from '@/pages/productPage/main/productInfo/interfaces';
 import createElement from '@utils/create-element';
-import { Tag } from '@/interface';
+import { ProductVariants, Tag } from '@/interface';
 import styles from '@pages/productPage/main/productInfo/productInfo.module.css';
-import { ProductData, ProductVariant } from '@commercetools/platform-sdk';
-import createFieldset from "@pages/productPage/main/productInfo/creationFunctions/createFieldset";
+import { ProductVariant } from '@commercetools/platform-sdk';
+import createFieldset from '@pages/productPage/main/productInfo/creationFunctions/createFieldset';
 
 export default function createAttributeButtons(
-  productData: ProductData,
+  productData: ProductVariants,
   attributeArray: Attribute[],
   currentVariant: ProductVariant,
-  productID: string,
 ) {
   const container = createElement(Tag.DIV, {
     className: styles.attributesContainer,
@@ -25,14 +24,12 @@ export default function createAttributeButtons(
     sizeAttributes,
     'Size',
     currentVariant,
-    productID,
   );
   const colorFieldset = createFieldset(
     productData,
     colorAttributes,
     'Color',
     currentVariant,
-    productID,
   );
 
   container.append(sizeFieldset, colorFieldset);

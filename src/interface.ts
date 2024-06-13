@@ -1,4 +1,4 @@
-import {ProductData, ProductVariant} from '@commercetools/platform-sdk';
+import { ProductVariant } from '@commercetools/platform-sdk';
 
 export enum Page {
   LOGIN = '/login',
@@ -109,7 +109,7 @@ export interface ProductM {
   description: string;
   size: string;
   color: Color;
-  variantId: number;
+  variantId: string;
 }
 
 export interface ProductVariants extends ProductM {
@@ -129,7 +129,7 @@ export type StateProducts = {
 };
 
 export type StateProduct = {
-  value: ProductData;
+  value: ProductVariants;
   error: string;
 };
 
