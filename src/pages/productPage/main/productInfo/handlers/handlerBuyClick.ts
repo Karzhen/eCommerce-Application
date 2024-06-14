@@ -21,8 +21,6 @@ export default async function handlerBuyClick(
   if (el instanceof HTMLButtonElement) {
     el.setAttribute('disabled', '');
     el.style.display = 'none';
-    // const [productId, variantId] = el.value.split(':');
-    // console.log(productId, variantId)
     await apiAddProductToBasket(productID, Number(variantID));
     if (store.getState().basket.error) {
       el.removeAttribute('disabled');

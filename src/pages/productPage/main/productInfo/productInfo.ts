@@ -105,7 +105,9 @@ export default function createProductInfo(
         handlerBuyClick(event, productID, variantID),
     },
   });
-  BUTTON_BASKET.setAttribute('value', `${productID}:${variantID}`);
+  // BUTTON_BASKET.setAttribute('value', `${productID}:${variantID}`);
+
+  // console.log(store.getState().basket.products)
 
   // Проверка, добавлен ли товар в корзину
   if (

@@ -9,7 +9,7 @@ import createCtpClientAnonymous from '@api/buildClient/buildAnonymousSessionFlow
 
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
-export default async function apiGetBasket() {
+export default async function apiCreateBasket() {
   let ctpClient;
   let apiRoot;
 
