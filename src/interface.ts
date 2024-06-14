@@ -109,7 +109,7 @@ export interface ProductM {
   description: string;
   size: string;
   color: Color;
-  variantId: string;
+  variantId: number;
 }
 
 export interface ProductVariants extends ProductM {

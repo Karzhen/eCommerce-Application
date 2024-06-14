@@ -9,13 +9,15 @@ import createAttributeButtons from '@/pages/productPage/main/productInfo/creatio
 import createPriceElements from '@/pages/productPage/main/productInfo/creationFunctions/createPriceElements';
 
 import store from '@redux/store/configureStore';
-import extractAttributes from '@pages/productPage/main/productInfo/utils/extractAttributes';
-import handlerBuyClick from '@pages/productPage/main/productInfo/handlers/handlerBuyClick';
-import handlerDecreaseClick from '@pages/productPage/main/productInfo/handlers/handlerDecreaseClick';
-import handlerIncreaseClick from '@pages/productPage/main/productInfo/handlers/handlerIncreaseClick';
-import findItemBasketId from '@pages/productPage/main/productInfo/utils/findItemBasketId';
+
+import handlerBuyClick from './handlers/handlerBuyClick';
+import handlerDecreaseClick from './handlers/handlerDecreaseClick';
+import handlerIncreaseClick from './handlers/handlerIncreaseClick';
+import findItemBasketId from './utils/findItemBasketId';
+import findItemBasket from './utils/findItemBasket';
+import extractAttributes from './utils/extractAttributes';
+
 import styles from './productInfo.module.css';
-import findItemBasket from '@pages/productPage/main/productInfo/utils/findItemBasket.ts';
 
 export default function createProductInfo(
   productID: string,
