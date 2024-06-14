@@ -12,3 +12,10 @@
 .button-remove-promo {
   font: var(--text-s);
 }
+
+@media (max-width: 600px) {
+  .promo-block {
+    width: 100%;
+    max-width: 100%;
+  }
+}

@@ -51,7 +51,7 @@
   --text-header-xl: 64px /1.5 'Rubic Bold', sans-serif;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 500px) {
   :root {
     /* text */
     --text-xs: 8px /1.5 'Rubic Regular', sans-serif;

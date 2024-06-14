@@ -3,3 +3,21 @@
   justify-content: space-between;
   align-items: flex-start;
 }
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 50%;
+}
+
+@media (max-width: 600px) {
+  .menu {
+    flex-direction: column;
+  }
+
+  .wrapper {
+    width: 100%;
+    max-width: 100%;
+  }
+}

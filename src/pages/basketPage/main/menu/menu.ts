@@ -1,6 +1,9 @@
-import createElement from '@/utils/create-element';
+import apiClearBasket from '@/api/apiClearBasket';
 
-import { Tag } from '@/interface';
+import createElement from '@/utils/create-element';
+import createButton from '@baseComponents/button/button';
+
+import { Tag, TypeButton } from '@/interface';
 
 import createPromoBlock from './promo/promo';
 import createInfoBlock from './info/info';
@@ -12,9 +15,25 @@ export default function createMenu() {
     className: StyleSheet.menu,
   });
 
-  const PROMO_BLOCK = createPromoBlock();
+  const WRAPPER = createElement(Tag.DIV, {
+    className: StyleSheet.wrapper,
+  });
   const INFO_BLOCK = createInfoBlock();
+  const CLEAR_BUTTON = createButton({
+    type: TypeButton.TRANSPARENT,
+    option: {
+      textContent: 'Clear shopping cart',
+    },
+    handler: {
+      handlerClick: async () => {
+        await apiClearBasket();
+      },
+    },
+  });
+  WRAPPER.append(INFO_BLOCK, CLEAR_BUTTON);
 
-  MENU.append(INFO_BLOCK, PROMO_BLOCK);
+  const PROMO_BLOCK = createPromoBlock();
+
+  MENU.append(WRAPPER, PROMO_BLOCK);
   return MENU;
 }

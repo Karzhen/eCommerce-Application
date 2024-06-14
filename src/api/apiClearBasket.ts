@@ -44,7 +44,7 @@ export default async function apiClearBasket() {
       .getState()
       .basket.products.map((el) => ({
         action: 'removeLineItem',
-        lineItemId: el.id,
+        lineItemId: el.itemBasketId,
       }));
 
     const result2 = await apiRoot
