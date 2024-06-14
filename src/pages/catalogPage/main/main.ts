@@ -11,6 +11,7 @@ import apiGetProducts from '@api/apiGetProducts';
 
 import apiGetAttributes from '@api/apiGetAttributes';
 import apiGetCategories from '@api/apiGetCategories';
+import { GET_COUNT_OF_PRODUCTS } from '@/redux/actions/products';
 
 import urlFilter from '@assets/images/filter.png';
 
@@ -84,6 +85,34 @@ function handlerIconFilterClick() {
   }
 }
 
+export function createPaginationButtons(container: HTMLElement) {
+  const PAGINATION = container;
+  PAGINATION.innerHTML = '';
+
+  const { total, limit, offset } = store.getState().products.countProducts;
+  const pages = Math.ceil(total / limit);
+
+  for (let i = 1; i <= pages; i += 1) {
+    const PAGE_BUTTON = createElement(Tag.BUTTON, {});
+    if (limit * (i - 1) === offset) {
+      PAGE_BUTTON.classList.add(styles.pageActiveButton);
+    } else {
+      PAGE_BUTTON.classList.add(styles.pagePassiveButton);
+      PAGE_BUTTON.addEventListener('click', async () => {
+        const newOffset = limit * (i - 1);
+        store.dispatch(
+          GET_COUNT_OF_PRODUCTS({ total, limit, offset: newOffset }),
+        );
+        const { filter } = store.getState();
+        await apiGetProducts(filter, newOffset); // Передача нового offset напрямую в apiGetProducts
+        createPaginationButtons(PAGINATION);
+      });
+    }
+    PAGE_BUTTON.innerText = `${i}`;
+    PAGINATION.append(PAGE_BUTTON);
+  }
+}
+
 export async function createContentCatalogPage(
   goPage: (path: string) => void,
   categoriesId: string[],
@@ -118,6 +147,15 @@ export async function createContentCatalogPage(
       CONTENT.append(ERROR_PAGE);
     }
   }
+
+  const PAGINATION = createElement(Tag.DIV, {
+    className: styles.pagination,
+    id: 'pagination',
+  });
+
+  CONTENT.append(PAGINATION);
+
+  createPaginationButtons(PAGINATION);
 
   return CONTENT;
 }

@@ -21,6 +21,7 @@ import createSelect from '@baseComponents/selectV2/select';
 import { Tag, TypeInput, TypeButton } from '@/interface';
 
 import styles from './filterBlock.module.css';
+import { createPaginationButtons } from '../main';
 
 export function clearFilter() {
   if (document.getElementById('menuCatalogPage')) {
@@ -55,6 +56,8 @@ export function clearFilter() {
 async function handlerClickSubmit() {
   const { filter } = store.getState();
   await apiGetProducts(filter);
+  const PAGINATION = document.getElementById('pagination') as HTMLElement;
+  createPaginationButtons(PAGINATION);
 
   const MENU = document.getElementById('menuCatalogPage');
   if (MENU && MENU.getAttribute('open') === 'true') {
@@ -268,6 +271,8 @@ async function handlerClickClear() {
 
   const { filter } = store.getState();
   await apiGetProducts(filter);
+  const PAGINATION = document.getElementById('pagination') as HTMLElement;
+  createPaginationButtons(PAGINATION);
 
   const MENU = document.getElementById('menuCatalogPage');
   if (MENU && MENU.getAttribute('open') === 'true') {

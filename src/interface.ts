@@ -126,6 +126,11 @@ export interface ProductBasket extends ProductM {
 export type StateProducts = {
   value: ProductM[];
   error: string;
+  countProducts: {
+    total: number;
+    limit: number;
+    offset: number;
+  };
 };
 
 export type StateProduct = {

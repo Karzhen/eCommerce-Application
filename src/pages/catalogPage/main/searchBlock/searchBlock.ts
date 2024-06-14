@@ -11,10 +11,13 @@ import { Tag, TypeInput } from '@/interface';
 import iconSearch from '@assets/images/search.png';
 
 import styles from './searchBlock.module.css';
+import { createPaginationButtons } from '../main';
 
 async function handlerSearchClick() {
   const { filter } = store.getState();
   await apiGetProducts(filter);
+  const PAGINATION = document.getElementById('pagination') as HTMLElement;
+  createPaginationButtons(PAGINATION);
 }
 
 function handlerKeySearchClick(event: Event) {

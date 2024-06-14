@@ -2,7 +2,11 @@ import store from '@redux/store/configureStore';
 
 import { Filter, ProductM } from '@/interface';
 
-import { GET_PRODUCTS, ERROR_GET_PRODUCTS } from '@redux/actions/products';
+import {
+  GET_PRODUCTS,
+  ERROR_GET_PRODUCTS,
+  GET_COUNT_OF_PRODUCTS,
+} from '@redux/actions/products';
 
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 
@@ -19,20 +23,28 @@ function createQueryString(filter: Filter) {
     where.push(
       `categories.id:"${filter.category[filter.category.length - 1]}"`,
     );
+    const { total, limit } = store.getState().products.countProducts;
+    store.dispatch(GET_COUNT_OF_PRODUCTS({ total, limit, offset: 0 }));
   }
 
   if (filter.priceStart || filter.priceEnd) {
     where.push(
       `variants.price.centAmount:range(${filter.priceStart ? filter.priceStart : '*'} to ${filter.priceEnd ? filter.priceEnd : '*'})`,
     );
+    const { total, limit } = store.getState().products.countProducts;
+    store.dispatch(GET_COUNT_OF_PRODUCTS({ total, limit, offset: 0 }));
   }
 
   if (filter.brand) {
     where.push(`variants.attributes.brand.key:"${filter.brand}"`);
+    const { total, limit } = store.getState().products.countProducts;
+    store.dispatch(GET_COUNT_OF_PRODUCTS({ total, limit, offset: 0 }));
   }
 
   if (filter.color) {
     where.push(`variants.attributes.color.key:"${filter.color}"`);
+    const { total, limit } = store.getState().products.countProducts;
+    store.dispatch(GET_COUNT_OF_PRODUCTS({ total, limit, offset: 0 }));
   }
 
   if (filter.size && Object.keys(filter.size).length > 0) {
@@ -42,6 +54,8 @@ function createQueryString(filter: Filter) {
         .map((value) => `"${value}"`)
         .join(',')}`,
     );
+    const { total, limit } = store.getState().products.countProducts;
+    store.dispatch(GET_COUNT_OF_PRODUCTS({ total, limit, offset: 0 }));
   }
 
   return where;
@@ -63,7 +77,10 @@ function createSortString(filter: Filter) {
   return sort;
 }
 
-export default async function apiGetProducts(filter: Filter = {}) {
+export default async function apiGetProducts(
+  filter: Filter = {},
+  newOffset?: number,
+) {
   let ctpClient;
   if (store.getState().login.isLogin) {
     ctpClient = createCtpClientRefresh();
@@ -78,12 +95,18 @@ export default async function apiGetProducts(filter: Filter = {}) {
     where = createQueryString(filter);
   }
 
+  const offsetParameter =
+    newOffset !== undefined
+      ? newOffset
+      : store.getState().products.countProducts.offset;
   try {
     const queryArgs: {
       localeProjection: string;
       priceCurrency: string;
       sort: string;
       markMatchingVariants: boolean;
+      limit: number;
+      offset: number;
       filter?: string[];
       ['text.en']?: string;
       ['text.ru']?: string;
@@ -94,6 +117,8 @@ export default async function apiGetProducts(filter: Filter = {}) {
       priceCurrency: `${store.getState().local.currencyCode}`,
       sort: createSortString(filter),
       markMatchingVariants: true,
+      limit: 6,
+      offset: offsetParameter,
     };
 
     if (where) {
@@ -116,6 +141,15 @@ export default async function apiGetProducts(filter: Filter = {}) {
     result.body.results.forEach((element) => {
       products.push(generateProduct(element));
     });
+    const { total, limit, offset } = result.body;
+
+    store.dispatch(
+      GET_COUNT_OF_PRODUCTS({
+        total: total as number,
+        limit: limit as number,
+        offset: offset as number,
+      }),
+    );
     store.dispatch(GET_PRODUCTS(products));
   } catch (error) {
     if (error instanceof Error) {
