@@ -235,7 +235,13 @@ export default function createProducts() {
     className: styles.productsBlock,
   });
 
-  createTable(PRODUCTS_BLOCK);
+  // createTable(PRODUCTS_BLOCK);
+
+  store.getState().basket.products.forEach((product) => {
+    console.log(product);
+    PRODUCTS_BLOCK.append(...addProduct(product));
+  });
+
   addHandlerForChangeBasket(PRODUCTS_BLOCK);
 
   return PRODUCTS_BLOCK;

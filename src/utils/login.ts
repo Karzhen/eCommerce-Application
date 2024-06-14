@@ -19,5 +19,5 @@ export default async function loginUser(login: string, password: string) {
   }
 
   await apiCreateBasket();
-  await apiGetBasket(store.getState().basket.id);
+  await apiGetBasket();
 }

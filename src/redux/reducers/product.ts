@@ -2,10 +2,9 @@ import { createReducer } from '@reduxjs/toolkit';
 
 import { GET_PRODUCT, ERROR_GET_PRODUCT } from '@/redux/actions/product';
 
-import { StateProduct } from '@/interface';
-import { ProductData } from '@commercetools/platform-sdk';
+import { ProductVariants, StateProduct } from '@/interface';
 
-const initialState: StateProduct = { value: {} as ProductData, error: '' };
+const initialState: StateProduct = { value: {} as ProductVariants, error: '' };
 
 const products = createReducer(initialState, (builder) => {
   builder

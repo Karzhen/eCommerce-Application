@@ -6,6 +6,7 @@ import { Tag } from '@/interface';
 
 import createElement from '@utils/create-element';
 
+import apiGetBasket from '@api/apiGetBasket';
 import createProductInfo from './productInfo/productInfo';
 import styles from './main.module.css';
 
@@ -24,16 +25,17 @@ export default async function createMainProductPage(productVariantId: string) {
     id: 'mainProductPage',
   });
 
-  const [productId] = productVariantId.split(':');
+  const [productId, productVariant] = productVariantId.split(':');
 
-  await apiGetEachProduct(productId);
+  await apiGetEachProduct(productId, productVariant);
+  await apiGetBasket();
 
-  const productData = store.getState().product;
-  if (productData.error) {
-    const ERROR_PAGE = createErrorProductPage(productData.error);
+  // const productData = store.getState().product;
+  if (store.getState().product.error) {
+    const ERROR_PAGE = createErrorProductPage(store.getState().product.error);
     MAIN.append(ERROR_PAGE);
   } else {
-    const productInfo = createProductInfo(productData.value);
+    const productInfo = createProductInfo(productId, productVariant);
     MAIN.append(productInfo);
   }
 

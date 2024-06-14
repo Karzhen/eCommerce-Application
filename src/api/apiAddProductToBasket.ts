@@ -8,6 +8,7 @@ import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 
 import createCtpClientRefresh from '@api/buildClient/buildClientRefreshTokenFlow';
 import createCtpClientAnonymous from '@api/buildClient/buildAnonymousSessionFlow';
+import apiCreateBasket from '@api/apiCreateBasket';
 
 import generateBasket from '@utils/generateBasket';
 
@@ -25,6 +26,11 @@ export default async function apiGetBasket(
   }
 
   const apiRoot = createApiBuilderFromCtpClient(ctpClient);
+
+  if (!store.getState().basket.id)  {
+    await apiCreateBasket();
+  }
+
   const idBasket = store.getState().basket.id;
 
   try {
