@@ -11,6 +11,7 @@ import createBasketPage from '@pages/basketPage/basketPage';
 import createAboutPage from '@pages/aboutPage/about/aboutPage';
 import createProductPage from '@pages/productPage/productPage';
 import createMainProductPage from '@/pages/productPage/main/main';
+import createSpinner from '@baseComponents/spinner/spinner';
 
 import { Page } from '@/interface';
 
@@ -111,6 +112,11 @@ export class Router {
     const bindGoPage = this.goPage.bind(this);
     const CATALOG_PAGE = document.getElementById('contentCatalogPage');
     const PRODUCT_PAGE = document.getElementById('mainProductPage');
+
+    const SPINNER = createSpinner({
+      option: {},
+      handler: {},
+    });
     switch (this.currentPage) {
       case Page.MAIN:
         document.body.replaceChildren();
@@ -142,7 +148,10 @@ export class Router {
         break;
       case Page.BASKET:
         document.body.replaceChildren();
+        document.body.append(SPINNER);
+        SPINNER.style.display = 'block';
         document.body.append(await createBasketPage(bindGoPage));
+        SPINNER.style.display = 'none';
         break;
       case Page.ABOUT:
         document.body.replaceChildren();

@@ -13,7 +13,11 @@ export default async function createMainPage(goPage: (page: Page) => void) {
     className: styles.mainPage,
   });
 
-  MAIN_PAGE.append(createHeader(goPage), await createMain(), createFooter());
+  MAIN_PAGE.append(
+    await createHeader(goPage),
+    await createMain(),
+    createFooter(),
+  );
 
   return MAIN_PAGE;
 }

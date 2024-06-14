@@ -17,7 +17,7 @@ export default async function createCatalogPage(
   });
 
   CATALOG_PAGE.append(
-    createHeader(goPage),
+    await createHeader(goPage),
     await createMainCatalogPage(goPage, categoriesId),
     createFooter(),
   );

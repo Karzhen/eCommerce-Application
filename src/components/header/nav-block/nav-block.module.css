@@ -3,3 +3,17 @@
   align-items: center;
   gap: 10px;
 }
+
+.count-items-basket {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: solid 1px var(--color-primary);
+  text-align: center;
+  z-index: -10;
+}
+
+.count-items-basket:empty {
+  display: none;
+}

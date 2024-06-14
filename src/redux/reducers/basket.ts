@@ -14,6 +14,7 @@ const initialState: BasketState = {
   id: '',
   totalPrice: 0,
   totalQuantity: 0,
+  discountOnTotalPrice: 0,
   lastModified: '',
   promoCode: null,
   products: [],
@@ -30,6 +31,7 @@ const products = createReducer(initialState, (builder) => {
     .addCase(UPDATE_BASKET, (state, action) => {
       const STATE = state;
       STATE.totalPrice = action.payload.totalPrice;
+      STATE.discountOnTotalPrice = action.payload.discountOnTotalPrice;
       STATE.totalQuantity = action.payload.totalQuantity;
       STATE.lastModified = action.payload.lastModified;
       STATE.promoCode = action.payload.promoCode;
@@ -43,6 +45,7 @@ const products = createReducer(initialState, (builder) => {
     .addCase(CLEAR_BASKET, (state) => {
       const STATE = state;
       STATE.totalPrice = 0;
+      STATE.discountOnTotalPrice = 0;
       STATE.totalQuantity = 0;
       STATE.lastModified = '';
       STATE.promoCode = null;
@@ -53,6 +56,7 @@ const products = createReducer(initialState, (builder) => {
       const STATE = state;
       STATE.id = '';
       STATE.totalPrice = 0;
+      STATE.discountOnTotalPrice = 0;
       STATE.totalQuantity = 0;
       STATE.lastModified = '';
       STATE.promoCode = null;

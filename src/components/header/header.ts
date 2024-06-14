@@ -22,7 +22,7 @@ function handlerCatalogClick(goPage: (page: Page) => void) {
   goPage(Page.CATALOG);
 }
 
-export default function createHeader(goPage: (page: Page) => void) {
+export default async function createHeader(goPage: (page: Page) => void) {
   const HEADER = createElement(Tag.HEADER, { className: styles.header });
 
   const LINK_LOGO = createLinkWithIcon({
@@ -49,7 +49,7 @@ export default function createHeader(goPage: (page: Page) => void) {
   });
   WRAPPER_AUTH_BURGER.append(AUTH_BLOCK, BURGER);
 
-  const NAV = createNavField(goPage);
+  const NAV = await createNavField(goPage);
   NAV.classList.add(styles.nav);
 
   HEADER.append(LINK_LOGO, BUTTON_CATALOG, NAV, WRAPPER_AUTH_BURGER);

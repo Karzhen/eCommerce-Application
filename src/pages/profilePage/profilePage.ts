@@ -28,7 +28,7 @@ export default async function createProfilePage(goPage: (page: Page) => void) {
 
   PROFILE_MAIN.append(tabsContainer, await createProfileFields());
 
-  PROFILE_PAGE.append(createHeader(goPage), PROFILE_MAIN, createFooter());
+  PROFILE_PAGE.append(await createHeader(goPage), PROFILE_MAIN, createFooter());
 
   clearDefaultAddresses();
   fillProfileFields(PROFILE_PAGE);

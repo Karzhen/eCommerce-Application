@@ -213,6 +213,7 @@ export interface Filter {
 export interface Basket {
   id: string;
   totalPrice: number;
+  discountOnTotalPrice: number;
   totalQuantity: number;
   lastModified: string;
   promoCode: { promoCodeId: string; title: string } | null;

@@ -1,3 +1,7 @@
+import store from '@redux/store/configureStore';
+
+import apiGetBasket from '@/api/apiGetBasket';
+
 import createElement from '@utils/create-element';
 import createLinkWithIcon from '@baseComponents/linkWithIcon/linkWithIcon';
 
@@ -18,7 +22,7 @@ function handleBasketClick(event: Event, goPage: (page: Page) => void) {
   goPage(Page.BASKET);
 }
 
-export default function createNavField(goPage: (page: Page) => void) {
+export default async function createNavField(goPage: (page: Page) => void) {
   const NAVIGATION = createElement(Tag.NAV, { className: styles.nav });
 
   const LINK_BASKET = createLinkWithIcon({
@@ -30,6 +34,20 @@ export default function createNavField(goPage: (page: Page) => void) {
   });
   LINK_BASKET.setAttribute('href', Page.BASKET);
 
+  await apiGetBasket();
+  const COUNT_ITEMS_BASKET = createElement(Tag.DIV, {
+    className: styles.countItemsBasket,
+    textContent: String(store.getState().basket.totalQuantity || ''),
+  });
+  let previousProductsState = store.getState().basket.totalQuantity;
+  store.subscribe(() => {
+    const currentProductsState = store.getState().basket.totalQuantity;
+    if (previousProductsState !== currentProductsState) {
+      COUNT_ITEMS_BASKET.textContent = String(currentProductsState || '');
+      previousProductsState = currentProductsState;
+    }
+  });
+
   const LINK_ABOUT = createLinkWithIcon({
     option: { textContent: 'About Us' },
     iconUrl: iconAbout,
@@ -39,7 +57,7 @@ export default function createNavField(goPage: (page: Page) => void) {
   });
   LINK_ABOUT.setAttribute('href', Page.ABOUT);
 
-  NAVIGATION.append(LINK_BASKET, LINK_ABOUT);
+  NAVIGATION.append(LINK_BASKET, COUNT_ITEMS_BASKET, LINK_ABOUT);
 
   return NAVIGATION;
 }

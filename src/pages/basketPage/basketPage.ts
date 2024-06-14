@@ -17,7 +17,11 @@ export default async function createBasketPage(goPage: (page: Page) => void) {
 
   await apiGetBasket();
 
-  BASKET_PAGE.append(createHeader(goPage), await createMain(), createFooter());
+  BASKET_PAGE.append(
+    await createHeader(goPage),
+    await createMain(),
+    createFooter(),
+  );
 
   return BASKET_PAGE;
 }

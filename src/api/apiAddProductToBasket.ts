@@ -80,6 +80,8 @@ export default async function apiGetBasket(
       UPDATE_BASKET({
         id: result2.body.id,
         totalPrice: result2.body.totalPrice.centAmount,
+        discountOnTotalPrice:
+          result2.body.discountOnTotalPrice?.discountedAmount.centAmount || 0,
         totalQuantity: result2.body.totalLineItemQuantity || 0,
         lastModified: result2.body.lastModifiedAt,
         promoCode: promoCode || null,

@@ -27,6 +27,18 @@ function addInfo() {
   });
   WRAPPER_TOTAL_PRICE.append(LABEL_TOTAL_PRICE, TOTAL_PRICE);
 
+  if (store.getState().basket.discountOnTotalPrice > 0) {
+    const TOTAL_PRICE_OLD = createElement(Tag.LABEL, {
+      className: styles.totalPriceOld,
+      textContent: formatPrice(
+        store.getState().basket.totalPrice +
+          store.getState().basket.discountOnTotalPrice,
+        store.getState().local.currencyCode,
+      ),
+    });
+    WRAPPER_TOTAL_PRICE.append(TOTAL_PRICE_OLD);
+  }
+
   const WRAPPER_TOTAL_QUANTITY = createElement(Tag.DIV, {
     className: styles.wrapperTotalQuantity,
   });

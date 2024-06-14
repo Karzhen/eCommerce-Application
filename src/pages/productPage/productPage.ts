@@ -16,7 +16,10 @@ export default async function createProductPage(
     className: styles.productPage,
   });
 
-  PRODUCT_PAGE.append(createHeader(goPage), await createMain(productVariantId));
+  PRODUCT_PAGE.append(
+    await createHeader(goPage),
+    await createMain(productVariantId),
+  );
 
   return PRODUCT_PAGE;
 }

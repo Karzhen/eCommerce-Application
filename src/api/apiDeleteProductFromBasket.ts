@@ -76,6 +76,8 @@ export default async function apiDeleteProductFromBasket(itemBasketId: string) {
         id: result2.body.id,
         lastModified: result2.body.lastModifiedAt,
         totalPrice: result2.body.totalPrice.centAmount,
+        discountOnTotalPrice:
+          result2.body.discountOnTotalPrice?.discountedAmount.centAmount || 0,
         totalQuantity: result2.body.totalLineItemQuantity || 0,
         promoCode: promoCode || null,
         products: basketItems,

@@ -46,12 +46,14 @@ export default function createPromoBlock() {
         PROMO_REMOVE_BUTTON.removeAttribute('disabled');
         INPUT_PROMO.setAttribute('disabled', '');
         const promoCode = (INPUT_PROMO as HTMLInputElement).value.toUpperCase();
+        const SPINNER = document.getElementById('spinner');
+        if (SPINNER) {
+          SPINNER.style.display = 'block';
+        }
         await apiSetPromocode(promoCode);
-        INPUT_PROMO.setAttribute(
-          'promoCodeId',
-          store.getState().basket.promoCode.promoCodeId,
-        );
-
+        if (SPINNER) {
+          SPINNER.style.display = 'none';
+        }
         if (store.getState().basket.error) {
           (INPUT_PROMO as HTMLInputElement).value = '';
           INPUT_PROMO.removeAttribute('disabled');
@@ -64,6 +66,11 @@ export default function createPromoBlock() {
           );
           document.body.appendChild(POPUP);
           (POPUP as HTMLDialogElement).showModal();
+        } else {
+          INPUT_PROMO.setAttribute(
+            'promoCodeId',
+            store.getState().basket.promoCode!.promoCodeId,
+          );
         }
       },
     },
@@ -91,7 +98,14 @@ export default function createPromoBlock() {
         (INPUT_PROMO as HTMLInputElement).value = '';
 
         if (promoCode) {
+          const SPINNER = document.getElementById('spinner');
+          if (SPINNER) {
+            SPINNER.style.display = 'block';
+          }
           await apiRemovePromocode(promoCode);
+          if (SPINNER) {
+            SPINNER.style.display = 'none';
+          }
         }
       },
     },

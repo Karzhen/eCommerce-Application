@@ -41,10 +41,17 @@ function addCountBlock(count: number, itemBasketId: string) {
             `inputQuantity:${itemBasketId}`,
           );
           if (elInputQuantity instanceof HTMLInputElement) {
+            const SPINNER = document.getElementById('spinner');
+            if (SPINNER) {
+              SPINNER.style.display = 'block';
+            }
             await apiChangeQuantity(
               itemBasketId,
               Number(elInputQuantity.value),
             );
+            if (SPINNER) {
+              SPINNER.style.display = 'none';
+            }
           }
         } else {
           const previousQuantity = store
@@ -163,7 +170,14 @@ function addProduct(product: ProductBasket) {
     },
     handler: {
       handlerClick: async () => {
+        const SPINNER = document.getElementById('spinner');
+        if (SPINNER) {
+          SPINNER.style.display = 'block';
+        }
         await apiDeleteProductFromBasket(product.itemBasketId);
+        if (SPINNER) {
+          SPINNER.style.display = 'none';
+        }
       },
     },
   });

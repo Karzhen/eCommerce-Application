@@ -30,3 +30,9 @@
 .last-modified-date {
   font: var(--text-m);
 }
+
+.total-price-old {
+  font: var(--text-m);
+  color: var(--color-hard);
+  text-decoration: line-through;
+}
