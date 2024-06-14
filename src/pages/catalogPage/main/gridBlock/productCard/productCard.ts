@@ -1,5 +1,6 @@
 import store from '@redux/store/configureStore';
 
+import apiCreateBasket from '@api/apiCreateBasket';
 import apiAddProductToBasket from '@api/apiAddProductToBasket';
 
 import createElement from '@utils/create-element';
@@ -23,6 +24,9 @@ async function handlerBuyClick(event: Event) {
   if (el instanceof HTMLButtonElement) {
     el.setAttribute('disabled', '');
     const [productId, variantId] = el.value.split(':');
+    if (store.getState().basket.id === '') {
+      await apiCreateBasket();
+    }
     await apiAddProductToBasket(productId, Number(variantId));
     if (store.getState().basket.error) {
       el.removeAttribute('disabled');

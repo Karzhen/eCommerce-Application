@@ -12,6 +12,7 @@ export default function createInput({
   switch (type) {
     case TypeInput.PASS:
     case TypeInput.TEXT:
+    case TypeInput.NUMBER:
       OPTION.className = `${option.className} ${styles.input}`;
       break;
     case TypeInput.SUBMIT:

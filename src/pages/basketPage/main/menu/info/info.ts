@@ -3,6 +3,7 @@ import store from '@redux/store/configureStore';
 import createElement from '@/utils/create-element';
 
 import formatPrice from '@utils/formatPrice';
+import formatDateTime from '@utils/formatDateTime';
 
 import { Tag } from '@/interface';
 
@@ -48,7 +49,7 @@ function addInfo() {
   });
   const LAST_MODIFIED_DATE = createElement(Tag.LABEL, {
     className: styles.lastModifiedDate,
-    textContent: store.getState().basket.lastModified,
+    textContent: formatDateTime(store.getState().basket.lastModified),
   });
   WRAPPER_LAST_MODIFIED_DATE.append(
     LABEL_LAST_MODIFIED_DATE,
@@ -62,9 +63,9 @@ function addInfo() {
 }
 
 function addHandlerForChangeBasket(wrapper: HTMLElement) {
-  let previousProductsState = store.getState().basket.products;
+  let previousProductsState = store.getState().basket;
   store.subscribe(() => {
-    const currentProductsState = store.getState().basket.products;
+    const currentProductsState = store.getState().basket;
     if (previousProductsState !== currentProductsState) {
       wrapper.replaceChildren();
       wrapper.append(...addInfo());

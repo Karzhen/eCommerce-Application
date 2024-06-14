@@ -13,10 +13,7 @@ import generateBasket from '@utils/generateBasket';
 
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
-export default async function apiChangeQuantity(
-  itemBasketId: string,
-  quantity: number,
-) {
+export default async function apiSetPromocode(promocode: string) {
   let ctpClient;
   if (store.getState().login.isLogin) {
     ctpClient = createCtpClientRefresh();
@@ -31,18 +28,14 @@ export default async function apiChangeQuantity(
     const result1 = await apiRoot
       .withProjectKey({ projectKey })
       .carts()
-      .get({
-        queryArgs: {
-          where: `id = "${store.getState().basket.id}"`,
-        },
-      })
+      .withId({ ID: idBasket })
+      .get()
       .execute();
 
-    const { version } = result1.body.results[0];
+    const { version } = result1.body;
 
     const result2 = await apiRoot
       .withProjectKey({ projectKey })
-      .me()
       .carts()
       .withId({ ID: idBasket })
       .post({
@@ -50,9 +43,8 @@ export default async function apiChangeQuantity(
           version,
           actions: [
             {
-              'action': 'changeLineItemQuantity',
-              'lineItemId': itemBasketId,
-              'quantity': quantity,
+              'action': 'addDiscountCode',
+              'code': promocode,
             },
           ],
         },

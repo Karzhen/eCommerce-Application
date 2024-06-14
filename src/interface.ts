@@ -44,6 +44,7 @@ export enum TypeInput {
   SUBMIT = 'submit',
   CHECKBOX = 'checkbox',
   PASS = 'password',
+  NUMBER = 'number',
 }
 
 export enum TypeButton {
@@ -211,10 +212,10 @@ export interface Filter {
 
 export interface Basket {
   id: string;
-  version: number;
   totalPrice: number;
   totalQuantity: number;
   lastModified: string;
+  promoCode: { promoCodeId: string; title: string } | null;
   products: ProductBasket[];
 }
 

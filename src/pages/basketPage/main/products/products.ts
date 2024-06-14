@@ -7,6 +7,7 @@ import createElement from '@/utils/create-element';
 
 import createInput from '@baseComponents/input/input';
 import createButton from '@baseComponents/button/button';
+import createPopUp from '@components/popUp/popUp';
 
 import formatPrice from '@utils/formatPrice';
 
@@ -15,8 +16,11 @@ import { Tag, ProductBasket, TypeInput, TypeButton } from '@/interface';
 import styles from './products.module.css';
 
 function addCountBlock(count: number, itemBasketId: string) {
-  const COUNT_BLOCK = createElement(Tag.DIV, { className: styles.promoBlock });
+  const COUNT_BLOCK = createElement(Tag.DIV, {
+    className: styles.promoBlock,
+  });
 
+  let INPUT_COUNT: HTMLElement;
   const COUNT_BUTTON = createButton({
     type: TypeButton.PRIMARY,
     option: {
@@ -25,21 +29,46 @@ function addCountBlock(count: number, itemBasketId: string) {
     },
     handler: {
       handlerClick: async () => {
-        COUNT_BUTTON.setAttribute('disabled', '');
+        if (
+          INPUT_COUNT instanceof HTMLInputElement &&
+          Number(INPUT_COUNT.value) > 0 &&
+          Number(INPUT_COUNT.value) % 1 === 0
+        ) {
+          INPUT_COUNT.value = String(Number(INPUT_COUNT.value));
+          COUNT_BUTTON.setAttribute('disabled', '');
 
-        const elInputQuantity = document.getElementById(
-          `inputQuantity:${itemBasketId}`,
-        );
-        if (elInputQuantity instanceof HTMLInputElement) {
-          await apiChangeQuantity(itemBasketId, Number(elInputQuantity.value));
+          const elInputQuantity = document.getElementById(
+            `inputQuantity:${itemBasketId}`,
+          );
+          if (elInputQuantity instanceof HTMLInputElement) {
+            await apiChangeQuantity(
+              itemBasketId,
+              Number(elInputQuantity.value),
+            );
+          }
+        } else {
+          const previousQuantity = store
+            .getState()
+            .basket.products.find(
+              (product) => product.itemBasketId === itemBasketId,
+            )?.quantity;
+          (INPUT_COUNT as HTMLInputElement).value = String(previousQuantity);
+          COUNT_BUTTON.setAttribute('disabled', '');
+          const POPUP = createPopUp(
+            'Error',
+            'Enter an integer greater than 0',
+            false,
+          );
+          document.body.appendChild(POPUP);
+          (POPUP as HTMLDialogElement).showModal();
         }
       },
     },
   });
   COUNT_BUTTON.setAttribute('disabled', '');
 
-  const INPUT_COUNT = createInput({
-    type: TypeInput.TEXT,
+  INPUT_COUNT = createInput({
+    type: TypeInput.NUMBER,
     option: {
       id: `inputQuantity:${itemBasketId}`,
     },
@@ -49,6 +78,8 @@ function addCountBlock(count: number, itemBasketId: string) {
       },
     },
   });
+  INPUT_COUNT.setAttribute('min', '1');
+  INPUT_COUNT.setAttribute('step', '1');
   INPUT_COUNT.setAttribute('value', String(count));
 
   COUNT_BLOCK.append(INPUT_COUNT, COUNT_BUTTON);
@@ -57,10 +88,31 @@ function addCountBlock(count: number, itemBasketId: string) {
 }
 
 function addProduct(product: ProductBasket) {
+  const WRAPPER_TITLE = createElement(Tag.DIV, {
+    className: styles.wrapperTitle,
+  });
+
   const TITLE = createElement(Tag.LABEL, {
     className: styles.title,
     textContent: product.name,
   });
+
+  const WRAPPER_ATTRIBUTES = createElement(Tag.DIV, {
+    className: styles.wrapperAttributes,
+  });
+
+  const SIZE = createElement(Tag.LABEL, {
+    className: styles.size,
+    textContent: product.size,
+  });
+
+  const COLOR = createElement(Tag.LABEL, {
+    className: styles.color,
+  });
+  COLOR.style.setProperty('--color', product.color);
+
+  WRAPPER_ATTRIBUTES.append(SIZE, COLOR);
+  WRAPPER_TITLE.append(TITLE, WRAPPER_ATTRIBUTES);
 
   const WRAPPER_IMAGE = createElement(Tag.DIV, {
     className: styles.wrapperProductImg,
@@ -72,14 +124,6 @@ function addProduct(product: ProductBasket) {
   IMAGE.setAttribute('src', product.img[0]);
 
   WRAPPER_IMAGE.append(IMAGE);
-
-  const SIZE = createElement(Tag.LABEL, {
-    textContent: product.size,
-  });
-
-  const COLOR = createElement(Tag.LABEL, {
-    textContent: product.color,
-  });
 
   const WRAPPER_PRICE = createElement(Tag.DIV, {
     className: styles.wrapperPrice,
@@ -109,9 +153,11 @@ function addProduct(product: ProductBasket) {
     ),
   });
 
+  const WRAPPER_DELETE = createElement(Tag.DIV, {});
   const DELETE_BUTTON = createButton({
-    type: TypeButton.PRIMARY,
+    type: TypeButton.SECONDARY,
     option: {
+      className: styles.deleteButton,
       textContent: 'Remove from Cart',
       id: `buttonDelete:${product.id}:${product.variantId}`,
     },
@@ -121,17 +167,41 @@ function addProduct(product: ProductBasket) {
       },
     },
   });
+  WRAPPER_DELETE.append(DELETE_BUTTON);
 
   return [
-    TITLE,
+    WRAPPER_TITLE,
     WRAPPER_IMAGE,
-    SIZE,
-    COLOR,
     WRAPPER_PRICE,
     addCountBlock(product.quantity, product.itemBasketId),
     TOTAL_VALUE,
-    DELETE_BUTTON,
+    WRAPPER_DELETE,
   ];
+}
+
+function addHeader(titles: string[]) {
+  return titles.map((title) =>
+    createElement(Tag.LABEL, {
+      className: styles.titleTable,
+      textContent: title,
+    }),
+  );
+}
+
+function createTable(element: HTMLElement) {
+  element.append(
+    ...addHeader([
+      'Name (size, color)',
+      'Image',
+      'Price',
+      'Quantity',
+      'Total Price',
+      'Delete',
+    ]),
+  );
+  store.getState().basket.products.forEach((product) => {
+    element.append(...addProduct(product));
+  });
 }
 
 function addHandlerForChangeBasket(wrapper: HTMLElement) {
@@ -140,9 +210,7 @@ function addHandlerForChangeBasket(wrapper: HTMLElement) {
     const currentProductsState = store.getState().basket.products;
     if (previousProductsState !== currentProductsState) {
       wrapper.replaceChildren();
-      store.getState().basket.products.forEach((product) => {
-        wrapper.append(...addProduct(product));
-      });
+      createTable(wrapper);
       previousProductsState = currentProductsState;
     }
   });
@@ -153,10 +221,7 @@ export default function createProducts() {
     className: styles.productsBlock,
   });
 
-  store.getState().basket.products.forEach((product) => {
-    PRODUCTS_BLOCK.append(...addProduct(product));
-  });
-
+  createTable(PRODUCTS_BLOCK);
   addHandlerForChangeBasket(PRODUCTS_BLOCK);
 
   return PRODUCTS_BLOCK;

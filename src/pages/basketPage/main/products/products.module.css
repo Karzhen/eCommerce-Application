@@ -1,11 +1,25 @@
 .products-block {
   display: grid;
 
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   grid-column-gap: 5px;
   grid-row-gap: 5px;
+}
 
-  padding: 20px;
+.wrapper-title {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.title {
+  font: var(--text-s);
+  /* color: var(--color-secondary); */
+}
+
+.size {
+  font: var(--text-s);
+  color: var(--color-hard);
 }
 
 .wrapper-product-img {
@@ -36,4 +50,28 @@
 .wrapper-price:has(.discount) .price {
   color: var(--color-hard);
   text-decoration: line-through;
+}
+
+.wrapper-attributes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+.color {
+  background-color: var(--color);
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  border: 1px solid var(--color-light);
+  filter: drop-shadow(-4px 4px 4px rgb(0, 0, 0, 0.25));
+}
+
+.title-table {
+  font: var(--text-bold-s);
+  color: var(--color-hard);
+}
+
+.delete-button {
+  font: var(--text-s);
 }

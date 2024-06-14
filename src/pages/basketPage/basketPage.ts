@@ -1,5 +1,3 @@
-import store from '@redux/store/configureStore';
-
 import { Page, Tag } from '@/interface';
 import createElement from '@/utils/create-element';
 import createHeader from '@components/header/header';
@@ -17,7 +15,7 @@ export default async function createBasketPage(goPage: (page: Page) => void) {
     className: styles.basketPage,
   });
 
-  await apiGetBasket(store.getState().basket.id);
+  await apiGetBasket();
 
   BASKET_PAGE.append(createHeader(goPage), await createMain(), createFooter());
 

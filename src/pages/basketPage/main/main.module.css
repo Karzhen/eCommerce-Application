@@ -1,0 +1,9 @@
+.main {
+  background-color: var(--color-background);
+  flex: 1;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

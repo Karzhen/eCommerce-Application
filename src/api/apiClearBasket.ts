@@ -4,7 +4,10 @@ import { UPDATE_BASKET, ERROR_BASKET } from '@redux/actions/basket';
 
 import { ProductBasket } from '@/interface';
 
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
+import {
+  createApiBuilderFromCtpClient,
+  type MyCartRemoveLineItemAction,
+} from '@commercetools/platform-sdk';
 
 import createCtpClientRefresh from '@api/buildClient/buildClientRefreshTokenFlow';
 import createCtpClientAnonymous from '@api/buildClient/buildAnonymousSessionFlow';
@@ -13,10 +16,7 @@ import generateBasket from '@utils/generateBasket';
 
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
-export default async function apiChangeQuantity(
-  itemBasketId: string,
-  quantity: number,
-) {
+export default async function apiClearBasket() {
   let ctpClient;
   if (store.getState().login.isLogin) {
     ctpClient = createCtpClientRefresh();
@@ -40,6 +40,13 @@ export default async function apiChangeQuantity(
 
     const { version } = result1.body.results[0];
 
+    const actions: MyCartRemoveLineItemAction[] = store
+      .getState()
+      .basket.products.map((el) => ({
+        action: 'removeLineItem',
+        lineItemId: el.id,
+      }));
+
     const result2 = await apiRoot
       .withProjectKey({ projectKey })
       .me()
@@ -48,13 +55,7 @@ export default async function apiChangeQuantity(
       .post({
         body: {
           version,
-          actions: [
-            {
-              'action': 'changeLineItemQuantity',
-              'lineItemId': itemBasketId,
-              'quantity': quantity,
-            },
-          ],
+          actions,
         },
       })
       .execute();

@@ -1,6 +1,8 @@
 import store from '@redux/store/configureStore';
 
-import { ADD_TO_BASKET, ERROR_BASKET } from '@redux/actions/basket';
+import { ProductBasket } from '@/interface';
+
+import { UPDATE_BASKET, ERROR_BASKET } from '@redux/actions/basket';
 
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 
@@ -26,14 +28,22 @@ export default async function apiGetBasket(
   const idBasket = store.getState().basket.id;
 
   try {
-    const result = await apiRoot
+    const result1 = await apiRoot
       .withProjectKey({ projectKey })
-      .me()
+      .carts()
+      .withId({ ID: idBasket })
+      .get()
+      .execute();
+
+    const { version } = result1.body;
+
+    const result2 = await apiRoot
+      .withProjectKey({ projectKey })
       .carts()
       .withId({ ID: idBasket })
       .post({
         body: {
-          version: store.getState().basket.version,
+          version,
           actions: [
             {
               'action': 'addLineItem',
@@ -46,13 +56,34 @@ export default async function apiGetBasket(
       })
       .execute();
 
-    const product = generateBasket(result.body.lineItems[0]);
+    let promoCodeId;
+    let promoCode;
+    if (result2.body.discountCodes && result2.body.discountCodes.length > 0) {
+      promoCodeId = result2.body.discountCodes[0].discountCode.id;
+
+      const result3 = await apiRoot
+        .withProjectKey({ projectKey })
+        .discountCodes()
+        .withId({ ID: promoCodeId })
+        .get()
+        .execute();
+
+      promoCode = { promoCodeId, title: result3.body.code };
+    }
+
+    const basketItems: ProductBasket[] = [];
+    result2.body.lineItems.forEach((item) => {
+      basketItems.push(generateBasket(item));
+    });
 
     store.dispatch(
-      ADD_TO_BASKET({
-        basketId: result.body.id,
-        version: result.body.version,
-        product,
+      UPDATE_BASKET({
+        id: result2.body.id,
+        totalPrice: result2.body.totalPrice.centAmount,
+        totalQuantity: result2.body.totalLineItemQuantity || 0,
+        lastModified: result2.body.lastModifiedAt,
+        promoCode: promoCode || null,
+        products: basketItems,
       }),
     );
   } catch (error) {

@@ -1,6 +1,6 @@
 import store from '@redux/store/configureStore';
 
-import { GET_BASKET, ERROR_BASKET } from '@redux/actions/basket';
+import { UPDATE_BASKET, ERROR_BASKET } from '@redux/actions/basket';
 
 import { ProductBasket } from '@/interface';
 
@@ -25,14 +25,22 @@ export default async function apiDeleteProductFromBasket(itemBasketId: string) {
   const idBasket = store.getState().basket.id;
 
   try {
-    const result = await apiRoot
+    const result1 = await apiRoot
       .withProjectKey({ projectKey })
-      .me()
+      .carts()
+      .withId({ ID: idBasket })
+      .get()
+      .execute();
+
+    const { version } = result1.body;
+
+    const result2 = await apiRoot
+      .withProjectKey({ projectKey })
       .carts()
       .withId({ ID: idBasket })
       .post({
         body: {
-          version: store.getState().basket.version,
+          version,
           actions: [
             {
               'action': 'removeLineItem',
@@ -43,18 +51,33 @@ export default async function apiDeleteProductFromBasket(itemBasketId: string) {
       })
       .execute();
 
+    let promoCodeId;
+    let promoCode;
+    if (result2.body.discountCodes && result2.body.discountCodes.length > 0) {
+      promoCodeId = result2.body.discountCodes[0].discountCode.id;
+
+      const result3 = await apiRoot
+        .withProjectKey({ projectKey })
+        .discountCodes()
+        .withId({ ID: promoCodeId })
+        .get()
+        .execute();
+
+      promoCode = { promoCodeId, title: result3.body.code };
+    }
+
     const basketItems: ProductBasket[] = [];
-    result.body.lineItems.forEach((item) => {
+    result2.body.lineItems.forEach((item) => {
       basketItems.push(generateBasket(item));
     });
 
     store.dispatch(
-      GET_BASKET({
-        id: result.body.id,
-        version: result.body.version,
-        lastModified: result.body.lastModifiedAt,
-        totalPrice: result.body.totalPrice.centAmount,
-        totalQuantity: result.body.totalLineItemQuantity || 0,
+      UPDATE_BASKET({
+        id: result2.body.id,
+        lastModified: result2.body.lastModifiedAt,
+        totalPrice: result2.body.totalPrice.centAmount,
+        totalQuantity: result2.body.totalLineItemQuantity || 0,
+        promoCode: promoCode || null,
         products: basketItems,
       }),
     );

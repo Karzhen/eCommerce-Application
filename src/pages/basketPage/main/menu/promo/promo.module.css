@@ -1,3 +1,14 @@
 .promo-block {
   display: flex;
+  gap: 5px;
+  max-width: 50%;
+}
+
+.input-promo {
+  text-transform: uppercase;
+}
+
+.button-submit-promo,
+.button-remove-promo {
+  font: var(--text-s);
 }
