@@ -18,6 +18,7 @@ import findItemBasket from './utils/findItemBasket';
 import extractAttributes from './utils/extractAttributes';
 
 import styles from './productInfo.module.css';
+import apiDeleteProductFromBasket from '@api/apiDeleteProductFromBasket';
 
 export default function createProductInfo(
   productID: string,
@@ -153,8 +154,37 @@ export default function createProductInfo(
     },
   });
 
+  const DELETE_BUTTON = createButton({
+    type: TypeButton.PRIMARY,
+    option: {
+      textContent: 'Remove from Cart',
+      className: styles.deleteButton,
+      // id: `buttonDelete:${product.id}:${product.variantId}`,
+    },
+    handler: {
+      handlerClick: async () => {
+        const product = findItemBasketId(productID, variantID)!;
+        await apiDeleteProductFromBasket(product);
+        if (findItemBasketId(productID, variantID)) {
+          BUTTON_BASKET.style.display = 'none';
+          QUANTITY_CONTAINER.style.display = 'flex';
+        } else {
+          BUTTON_BASKET.style.display = 'block';
+          BUTTON_BASKET.removeAttribute('disabled');
+          QUANTITY_CONTAINER.style.display = 'none';
+        }
+      },
+    },
+  });
+
+  const QUANTITY_WRAPPER = createElement(Tag.DIV, {
+    className: styles.quantityWrapper,
+  });
+
+  QUANTITY_WRAPPER.append(BUTTON_DECREASE, QUANTITY_DISPLAY, BUTTON_INCREASE);
+
   // Добавление элементов в контейнер для управления количеством
-  QUANTITY_CONTAINER.append(BUTTON_DECREASE, QUANTITY_DISPLAY, BUTTON_INCREASE);
+  QUANTITY_CONTAINER.append(QUANTITY_WRAPPER, DELETE_BUTTON);
 
   // Добавление контейнера для количества и кнопки "Добавить в корзину" в общий контейнер
   BUTTON_CONTAINER.append(QUANTITY_CONTAINER, BUTTON_BASKET);

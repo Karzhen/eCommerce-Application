@@ -27,7 +27,7 @@ export default async function apiGetBasket(
 
   const apiRoot = createApiBuilderFromCtpClient(ctpClient);
 
-  if (!store.getState().basket.id)  {
+  if (!store.getState().basket.id) {
     await apiCreateBasket();
   }
 

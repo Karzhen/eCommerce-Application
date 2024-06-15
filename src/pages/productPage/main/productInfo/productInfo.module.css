@@ -195,12 +195,17 @@
 .quantity-container {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 
 .quantity-button {
   height: 60px;
   flex: 1;
   font: var(--text-s);
+}
+
+.delete-button {
+  width: 100%;
 }
 
 .quantityDisplay {
