@@ -10,6 +10,7 @@ import createPriceElements from '@/pages/productPage/main/productInfo/creationFu
 
 import store from '@redux/store/configureStore';
 
+import handlerRemoveClick from '@pages/productPage/main/productInfo/handlers/handlerRemoveClick';
 import handlerBuyClick from './handlers/handlerBuyClick';
 import handlerDecreaseClick from './handlers/handlerDecreaseClick';
 import handlerIncreaseClick from './handlers/handlerIncreaseClick';
@@ -18,7 +19,6 @@ import findItemBasket from './utils/findItemBasket';
 import extractAttributes from './utils/extractAttributes';
 
 import styles from './productInfo.module.css';
-import apiDeleteProductFromBasket from '@api/apiDeleteProductFromBasket';
 
 export default function createProductInfo(
   productID: string,
@@ -163,16 +163,7 @@ export default function createProductInfo(
     },
     handler: {
       handlerClick: async () => {
-        const product = findItemBasketId(productID, variantID)!;
-        await apiDeleteProductFromBasket(product);
-        if (findItemBasketId(productID, variantID)) {
-          BUTTON_BASKET.style.display = 'none';
-          QUANTITY_CONTAINER.style.display = 'flex';
-        } else {
-          BUTTON_BASKET.style.display = 'block';
-          BUTTON_BASKET.removeAttribute('disabled');
-          QUANTITY_CONTAINER.style.display = 'none';
-        }
+        await handlerRemoveClick(productID, variantID);
       },
     },
   });
