@@ -10,6 +10,7 @@ import createPriceElements from '@/pages/productPage/main/productInfo/creationFu
 
 import store from '@redux/store/configureStore';
 
+import handlerRemoveClick from '@pages/productPage/main/productInfo/handlers/handlerRemoveClick';
 import handlerBuyClick from './handlers/handlerBuyClick';
 import handlerDecreaseClick from './handlers/handlerDecreaseClick';
 import handlerIncreaseClick from './handlers/handlerIncreaseClick';
@@ -150,8 +151,28 @@ export default function createProductInfo(
     },
   });
 
+  const DELETE_BUTTON = createButton({
+    type: TypeButton.PRIMARY,
+    option: {
+      textContent: 'Remove from Cart',
+      className: styles.deleteButton,
+      // id: `buttonDelete:${product.id}:${product.variantId}`,
+    },
+    handler: {
+      handlerClick: async () => {
+        await handlerRemoveClick(productID, variantID);
+      },
+    },
+  });
+
+  const QUANTITY_WRAPPER = createElement(Tag.DIV, {
+    className: styles.quantityWrapper,
+  });
+
+  QUANTITY_WRAPPER.append(BUTTON_DECREASE, QUANTITY_DISPLAY, BUTTON_INCREASE);
+
   // Добавление элементов в контейнер для управления количеством
-  QUANTITY_CONTAINER.append(BUTTON_DECREASE, QUANTITY_DISPLAY, BUTTON_INCREASE);
+  QUANTITY_CONTAINER.append(QUANTITY_WRAPPER, DELETE_BUTTON);
 
   // Добавление контейнера для количества и кнопки "Добавить в корзину" в общий контейнер
   BUTTON_CONTAINER.append(QUANTITY_CONTAINER, BUTTON_BASKET);

@@ -2,6 +2,7 @@ import styles from '@pages/productPage/main/productInfo/productInfo.module.css';
 import apiChangeQuantity from '@api/apiChangeQuantity';
 import findItemBasketId from '@pages/productPage/main/productInfo/utils/findItemBasketId';
 import findItemBasket from '@pages/productPage/main/productInfo/utils/findItemBasket';
+import handlerRemoveClick from '@pages/productPage/main/productInfo/handlers/handlerRemoveClick';
 
 export default async function handlerDecreaseClick(
   event: Event,
@@ -21,7 +22,7 @@ export default async function handlerDecreaseClick(
         QUANTITY_DISPLAY.textContent = productCounter.toString();
       }
     } else {
-      // Функционал удаления
+      await handlerRemoveClick(productID, variantID);
     }
   }
 }
