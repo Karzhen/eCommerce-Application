@@ -237,11 +237,20 @@ export default function createProducts() {
 
   // createTable(PRODUCTS_BLOCK);
 
-  store.getState().basket.products.forEach((product) => {
-    PRODUCTS_BLOCK.append(...addProduct(product));
-  });
+  if  (store.getState().basket.products.length  > 0)  {
+    store.getState().basket.products.forEach((product) => {
+      PRODUCTS_BLOCK.append(...addProduct(product));
+    });
 
-  addHandlerForChangeBasket(PRODUCTS_BLOCK);
+    addHandlerForChangeBasket(PRODUCTS_BLOCK);
+  } else {
+    const emptyText = createElement(Tag.H1, {
+      className: styles.emptyCart,
+      textContent: 'The Cart is empty',
+    });
+    PRODUCTS_BLOCK.append(emptyText);
+    PRODUCTS_BLOCK.classList.add(styles.productsEmpty);
+  }
 
   return PRODUCTS_BLOCK;
 }

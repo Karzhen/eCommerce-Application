@@ -6,6 +6,18 @@
   grid-row-gap: 5px;
 }
 
+.products-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.empty-cart {
+  justify-self: center;
+  font: var(--text-header-l);
+  color: var(--color-surface-text);
+}
+
 .wrapper-title {
   display: flex;
   flex-direction: column;
