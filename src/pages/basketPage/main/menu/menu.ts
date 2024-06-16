@@ -29,7 +29,9 @@ export default function createMenu() {
     handler: {
       handlerClick: async () => {
         await apiClearBasket();
-        const PRODUCTS_BLOCK: HTMLElement = document.querySelector(`.${styles.productsBlock}`)!;
+        const PRODUCTS_BLOCK: HTMLElement = document.querySelector(
+          `.${styles.productsBlock}`,
+        )!;
         PRODUCTS_BLOCK.innerHTML = '';
         createEmptyPlug(PRODUCTS_BLOCK);
       },

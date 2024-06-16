@@ -13,8 +13,8 @@ import formatPrice from '@utils/formatPrice';
 
 import { Tag, ProductBasket, TypeInput, TypeButton } from '@/interface';
 
+import createEmptyPlug from '@pages/basketPage/main/utils/createEmptyPlug';
 import styles from './products.module.css';
-import createEmptyPlug from "@pages/basketPage/main/utils/createEmptyPlug.ts";
 
 function addCountBlock(count: number, itemBasketId: string) {
   const COUNT_BLOCK = createElement(Tag.DIV, {
@@ -180,7 +180,9 @@ function addProduct(product: ProductBasket) {
           SPINNER.style.display = 'none';
         }
         if (store.getState().basket.products.length === 0) {
-          const PRODUCTS_BLOCK: HTMLElement = document.querySelector(`.${styles.productsBlock}`)!;
+          const PRODUCTS_BLOCK: HTMLElement = document.querySelector(
+            `.${styles.productsBlock}`,
+          )!;
           PRODUCTS_BLOCK.innerHTML = '';
           createEmptyPlug(PRODUCTS_BLOCK);
         }
