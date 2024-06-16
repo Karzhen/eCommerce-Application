@@ -3,7 +3,6 @@ import store from '@redux/store/configureStore';
 import { GET_PRODUCT, ERROR_GET_PRODUCT } from '@redux/actions/product';
 
 import createCtpClientRefresh from '@api/buildClient/buildClientRefreshTokenFlow';
-import createCtpClientAnonymous from '@api/buildClient/buildAnonymousSessionFlow';
 import {
   createApiBuilderFromCtpClient,
   ProductProjection,
@@ -11,6 +10,7 @@ import {
 } from '@commercetools/platform-sdk';
 import { ProductVariants } from '@/interface';
 import urlNoImg from '@assets/images/noImg.jpg';
+import { getAnonymousApiClient } from './apiAnonymous';
 
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
@@ -91,13 +91,13 @@ export default async function apiGetEachProduct(
   variantID: string,
 ) {
   let ctpClient;
+  let apiRoot;
   if (store.getState().login.isLogin) {
     ctpClient = createCtpClientRefresh();
+    apiRoot = createApiBuilderFromCtpClient(ctpClient);
   } else {
-    ctpClient = createCtpClientAnonymous();
+    apiRoot = getAnonymousApiClient();
   }
-
-  const apiRoot = createApiBuilderFromCtpClient(ctpClient);
 
   try {
     const response = await apiRoot
@@ -107,7 +107,6 @@ export default async function apiGetEachProduct(
       .get()
       .execute();
 
-    // console.log(generateProductVariants(response.body, variantID));
     store.dispatch(
       GET_PRODUCT(generateProductVariants(response.body, variantID)),
     );

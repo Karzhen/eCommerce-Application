@@ -238,7 +238,6 @@ export default function createProducts() {
   // createTable(PRODUCTS_BLOCK);
 
   store.getState().basket.products.forEach((product) => {
-    console.log(product);
     PRODUCTS_BLOCK.append(...addProduct(product));
   });
 

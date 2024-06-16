@@ -14,6 +14,7 @@ import formatPrice from '@utils/formatPrice';
 import styles from './productCard.module.css';
 
 function handlerTitleClick(event: Event, goPage: (path: string) => void) {
+  event.preventDefault();
   const element = event.target as HTMLAnchorElement;
   const path = element.getAttribute('href') || '';
   goPage(path);

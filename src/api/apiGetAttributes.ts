@@ -12,19 +12,19 @@ import {
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 
 import createCtpClientRefresh from '@api/buildClient/buildClientRefreshTokenFlow';
-import createCtpClientAnonymous from '@api/buildClient/buildAnonymousSessionFlow';
+import { getAnonymousApiClient } from './apiAnonymous';
 
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
 export default async function apiGetAttributes() {
   let ctpClient;
+  let apiRoot;
   if (store.getState().login.isLogin) {
     ctpClient = createCtpClientRefresh();
+    apiRoot = createApiBuilderFromCtpClient(ctpClient);
   } else {
-    ctpClient = createCtpClientAnonymous();
+    apiRoot = getAnonymousApiClient();
   }
-
-  const apiRoot = createApiBuilderFromCtpClient(ctpClient);
 
   const ID_TYPE = '8423575c-eb4c-4fa1-bcb8-2cee21834968';
 

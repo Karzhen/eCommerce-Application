@@ -10,21 +10,22 @@ import {
 } from '@commercetools/platform-sdk';
 
 import createCtpClientRefresh from '@api/buildClient/buildClientRefreshTokenFlow';
-import createCtpClientAnonymous from '@api/buildClient/buildAnonymousSessionFlow';
 
 import generateBasket from '@utils/generateBasket';
+import { getAnonymousApiClient } from './apiAnonymous';
 
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
 export default async function apiClearBasket() {
   let ctpClient;
+  let apiRoot;
   if (store.getState().login.isLogin) {
     ctpClient = createCtpClientRefresh();
+    apiRoot = createApiBuilderFromCtpClient(ctpClient);
   } else {
-    ctpClient = createCtpClientAnonymous();
+    apiRoot = getAnonymousApiClient();
   }
 
-  const apiRoot = createApiBuilderFromCtpClient(ctpClient);
   const idBasket = store.getState().basket.id;
 
   try {

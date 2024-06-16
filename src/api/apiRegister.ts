@@ -1,12 +1,10 @@
 import store from '@redux/store/configureStore';
 import { ERROR_REGISTER, REGISTER } from '@redux/actions/register';
 
-import {
-  createApiBuilderFromCtpClient,
-  type ApiRoot,
-} from '@commercetools/platform-sdk';
-import createCtpClientAnonymous from '@api/buildClient/buildAnonymousSessionFlow';
+import { type ApiRoot } from '@commercetools/platform-sdk';
 import { CustomerData } from '@utils/getRegistrationData';
+import { SET_ANONYMOUS_ID } from '@/redux/actions/basket';
+import { getAnonymousApiClient } from './apiAnonymous';
 
 const projectKey: string = import.meta.env.VITE_CTP_PROJECT_KEY;
 let apiRoot: ApiRoot;
@@ -108,8 +106,7 @@ export async function assignShippingAddressToCustomer(
 }
 
 export default async function createCustomer(newCustomer: CustomerData) {
-  const ctpClient = createCtpClientAnonymous();
-  apiRoot = createApiBuilderFromCtpClient(ctpClient);
+  apiRoot = getAnonymousApiClient();
 
   let CUSTOMER_ID: string | undefined = '';
   let BILLING_ADDRESS_ID: string | undefined = '';
@@ -145,6 +142,7 @@ export default async function createCustomer(newCustomer: CustomerData) {
         },
       })
       .execute();
+    store.dispatch(SET_ANONYMOUS_ID(''));
 
     if (response.body.customer.addresses.length > 1) {
       BILLING_ADDRESS_ID = response.body.customer.addresses[0].id;
