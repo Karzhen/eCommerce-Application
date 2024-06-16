@@ -54,7 +54,6 @@ export async function handlerClickChangePassword(event: Event) {
   CANCEL.setAttribute('disabled', 'true');
   EDIT.removeAttribute('disabled');
   CHANGE_PASSWORD_BUTTON.setAttribute('disabled', 'true');
-  console.log(PASSWORD_DATA);
   toggleAllFields(PASSWORD_DATA, true);
 }
 

@@ -7,10 +7,10 @@ import { UPDATE_BASKET, ERROR_BASKET } from '@redux/actions/basket';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 
 import createCtpClientRefresh from '@api/buildClient/buildClientRefreshTokenFlow';
-import createCtpClientAnonymous from '@api/buildClient/buildAnonymousSessionFlow';
 import apiCreateBasket from '@api/apiCreateBasket';
 
 import generateBasket from '@utils/generateBasket';
+import { getAnonymousApiClient } from './apiAnonymous';
 
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
@@ -19,15 +19,15 @@ export default async function apiGetBasket(
   variantId: number,
 ) {
   let ctpClient;
+  let apiRoot;
   if (store.getState().login.isLogin) {
     ctpClient = createCtpClientRefresh();
+    apiRoot = createApiBuilderFromCtpClient(ctpClient);
   } else {
-    ctpClient = createCtpClientAnonymous();
+    apiRoot = getAnonymousApiClient();
   }
 
-  const apiRoot = createApiBuilderFromCtpClient(ctpClient);
-
-  if (!store.getState().basket.id)  {
+  if (!store.getState().basket.id) {
     await apiCreateBasket();
   }
 

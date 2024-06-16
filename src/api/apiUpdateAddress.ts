@@ -108,7 +108,6 @@ export default async function apiUpdateAddress(addressId: string) {
     };
 
     const { streetName, postalCode, city, country } = updatedAddress;
-    console.log(updatedAddress);
 
     let newVersion = store.getState().login.user?.version;
     if (newVersion === undefined) {

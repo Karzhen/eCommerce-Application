@@ -222,6 +222,7 @@ export interface Filter {
 
 export interface Basket {
   id: string;
+  anonymousId?: string;
   totalPrice: number;
   discountOnTotalPrice: number;
   totalQuantity: number;

@@ -11,9 +11,9 @@ import {
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 
 import createCtpClientRefresh from '@api/buildClient/buildClientRefreshTokenFlow';
-import createCtpClientAnonymous from '@api/buildClient/buildAnonymousSessionFlow';
 
 import generateProduct from '@utils/generateProduct';
+import { getAnonymousApiClient } from './apiAnonymous';
 
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
@@ -82,13 +82,13 @@ export default async function apiGetProducts(
   newOffset?: number,
 ) {
   let ctpClient;
+  let apiRoot;
   if (store.getState().login.isLogin) {
     ctpClient = createCtpClientRefresh();
+    apiRoot = createApiBuilderFromCtpClient(ctpClient);
   } else {
-    ctpClient = createCtpClientAnonymous();
+    apiRoot = getAnonymousApiClient();
   }
-
-  const apiRoot = createApiBuilderFromCtpClient(ctpClient);
 
   let where;
   if (Object.keys(filter).length > 0) {

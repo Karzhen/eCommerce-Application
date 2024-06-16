@@ -36,7 +36,6 @@ export default async function handlerBuyClick(
         `.${styles.quantityDisplay}`,
       )!;
       const productCounter = findItemBasket(productID, variantID);
-      console.log(`quantity: ${productCounter}`);
       QUANTITY_DISPLAY.textContent = productCounter.toString();
     }
   }

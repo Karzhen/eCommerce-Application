@@ -14,7 +14,6 @@ export default function createButtons(
   radio.type = 'radio';
   radio.value = attribute.value.key;
   radio.name = attribute.name;
-  // console.log(`${attribute.name}: ${attribute.value.key}`);
 
   const label = createElement(Tag.LABEL, {
     textContent: attribute.value.label,

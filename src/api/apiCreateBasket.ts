@@ -5,7 +5,7 @@ import { CREATE_BASKET, ERROR_BASKET } from '@redux/actions/basket';
 import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
 
 import createCtpClientRefresh from '@api/buildClient/buildClientRefreshTokenFlow';
-import createCtpClientAnonymous from '@api/buildClient/buildAnonymousSessionFlow';
+import { getAnonymousApiClient } from './apiAnonymous';
 
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
@@ -40,13 +40,8 @@ export default async function apiCreateBasket() {
         store.dispatch(CREATE_BASKET(result2.body.id));
       }
     } else {
-      ctpClient = createCtpClientAnonymous();
-      apiRoot = createApiBuilderFromCtpClient(ctpClient);
-
-      const anonymousId =
-        Math.random().toString(36).substring(2, 15) +
-        Math.random().toString(36).substring(2, 15);
-
+      apiRoot = getAnonymousApiClient();
+      const { anonymousId } = store.getState().basket;
       const result3 = await apiRoot
         .withProjectKey({ projectKey })
         .carts()
@@ -63,7 +58,7 @@ export default async function apiCreateBasket() {
   } catch (error) {
     if (error instanceof Error) {
       store.dispatch(
-        ERROR_BASKET('Something went wrong. Please should try again later.'),
+        ERROR_BASKET('Something went wrong. Please try again later.'),
       );
     }
   }

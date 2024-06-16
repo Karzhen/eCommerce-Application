@@ -2,6 +2,7 @@ import { createReducer } from '@reduxjs/toolkit';
 
 import {
   CREATE_BASKET,
+  SET_ANONYMOUS_ID,
   UPDATE_BASKET,
   CLEAR_BASKET,
   DELETE_BASKET,
@@ -12,6 +13,7 @@ import { BasketState } from '@/interface';
 
 const initialState: BasketState = {
   id: '',
+  anonymousId: '',
   totalPrice: 0,
   totalQuantity: 0,
   discountOnTotalPrice: 0,
@@ -28,8 +30,13 @@ const products = createReducer(initialState, (builder) => {
       STATE.id = action.payload;
       STATE.error = '';
     })
+    .addCase(SET_ANONYMOUS_ID, (state, action) => {
+      const STATE = state;
+      STATE.anonymousId = action.payload;
+    })
     .addCase(UPDATE_BASKET, (state, action) => {
       const STATE = state;
+      STATE.id = action.payload.id;
       STATE.totalPrice = action.payload.totalPrice;
       STATE.discountOnTotalPrice = action.payload.discountOnTotalPrice;
       STATE.totalQuantity = action.payload.totalQuantity;

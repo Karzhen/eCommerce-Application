@@ -25,8 +25,6 @@ export default function createFieldset(
   attributes.forEach((attr) => {
     fieldset.append(createButtons(productData, attr, currentVariant));
   });
-  // console.clear();
-  // console.log(productData);
 
   return fieldset;
 }

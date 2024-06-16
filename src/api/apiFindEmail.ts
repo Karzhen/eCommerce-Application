@@ -2,17 +2,13 @@ import store from '@redux/store/configureStore';
 
 import { ERROR_LOGIN } from '@redux/actions/login';
 
-import { createApiBuilderFromCtpClient } from '@commercetools/platform-sdk';
-
-import createCtpClientAnonymous from '@api/buildClient/buildAnonymousSessionFlow';
-
 import { LoginError } from '@/interface';
+import { getAnonymousApiClient } from './apiAnonymous';
 
 const projectKey = import.meta.env.VITE_CTP_PROJECT_KEY;
 
 export default async function apiLogin(email: string) {
-  const ctpClient = createCtpClientAnonymous();
-  const apiRoot = createApiBuilderFromCtpClient(ctpClient);
+  const apiRoot = getAnonymousApiClient();
 
   try {
     await apiRoot
