@@ -14,6 +14,7 @@ import formatPrice from '@utils/formatPrice';
 import { Tag, ProductBasket, TypeInput, TypeButton } from '@/interface';
 
 import styles from './products.module.css';
+import createEmptyPlug from "@pages/basketPage/main/utils/createEmptyPlug.ts";
 
 function addCountBlock(count: number, itemBasketId: string) {
   const COUNT_BLOCK = createElement(Tag.DIV, {
@@ -178,6 +179,11 @@ function addProduct(product: ProductBasket) {
         if (SPINNER) {
           SPINNER.style.display = 'none';
         }
+        if (store.getState().basket.products.length === 0) {
+          const PRODUCTS_BLOCK: HTMLElement = document.querySelector(`.${styles.productsBlock}`)!;
+          PRODUCTS_BLOCK.innerHTML = '';
+          createEmptyPlug(PRODUCTS_BLOCK);
+        }
       },
     },
   });
@@ -237,19 +243,14 @@ export default function createProducts() {
 
   // createTable(PRODUCTS_BLOCK);
 
-  if  (store.getState().basket.products.length  > 0)  {
+  if (store.getState().basket.products.length > 0) {
     store.getState().basket.products.forEach((product) => {
       PRODUCTS_BLOCK.append(...addProduct(product));
     });
 
     addHandlerForChangeBasket(PRODUCTS_BLOCK);
   } else {
-    const emptyText = createElement(Tag.H1, {
-      className: styles.emptyCart,
-      textContent: 'The Cart is empty',
-    });
-    PRODUCTS_BLOCK.append(emptyText);
-    PRODUCTS_BLOCK.classList.add(styles.productsEmpty);
+    createEmptyPlug(PRODUCTS_BLOCK);
   }
 
   return PRODUCTS_BLOCK;
