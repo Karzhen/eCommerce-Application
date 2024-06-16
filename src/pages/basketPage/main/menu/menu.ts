@@ -5,10 +5,12 @@ import createButton from '@baseComponents/button/button';
 
 import { Tag, TypeButton } from '@/interface';
 
+import createEmptyPlug from '@pages/basketPage/main/utils/createEmptyPlug';
 import createPromoBlock from './promo/promo';
 import createInfoBlock from './info/info';
 
 import StyleSheet from './menu.module.css';
+import styles from '../products/products.module.css';
 
 export default function createMenu() {
   const MENU = createElement(Tag.DIV, {
@@ -27,6 +29,9 @@ export default function createMenu() {
     handler: {
       handlerClick: async () => {
         await apiClearBasket();
+        const PRODUCTS_BLOCK: HTMLElement = document.querySelector(`.${styles.productsBlock}`)!;
+        PRODUCTS_BLOCK.innerHTML = '';
+        createEmptyPlug(PRODUCTS_BLOCK);
       },
     },
   });
