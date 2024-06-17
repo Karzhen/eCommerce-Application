@@ -1,8 +1,10 @@
 .footer {
+  background: var(--color-surface);
   display: flex;
   justify-content: space-between;
   align-items: center;
-
+  border: var(--color-additional) 3px solid;
+  border-radius: 10px;
   padding: 10px 20px 10px 20px;
 }
 
@@ -19,9 +21,17 @@
 }
 
 .year {
-  font: var(--text-m);
+  font: var(--text-bold-l);
 }
 
 .link-rs {
   width: 50px;
+}
+
+.link-rs:hover {
+  transform: scale(1.2);
+}
+
+.link-footer {
+  font: var(--text-header-xs);
 }

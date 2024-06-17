@@ -85,7 +85,7 @@ function createFilterSize() {
       LABEL_SIZE.setAttribute('for', 'checkboxSize1');
       const CHECKBOX_SIZE = createInput({
         type: TypeInput.CHECKBOX,
-        option: { id: `checkboxSize${ind + 1}` },
+        option: { id: `checkboxSize${ind + 1}`, className: styles.sizes },
         handler: {
           handlerInput: (event: Event) => {
             const el = event.target as HTMLInputElement;

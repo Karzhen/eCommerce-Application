@@ -1,9 +1,12 @@
 .header {
+  background: var(--color-surface);
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
   padding: 10px 20px;
+  border: var(--color-additional) 3px solid;
+  border-radius: 10px;
 }
 
 .logo {

@@ -3,8 +3,9 @@
   gap: 10px;
   flex-wrap: wrap;
   align-items: center;
-  border-bottom: 2px solid var(--color-light);
-  padding: 10px 0;
+  justify-content: center;
+  background: black;
+  padding: 10px 10px;
 }
 
 .sepearator {
@@ -12,8 +13,8 @@
 }
 
 .breadcrumb {
-  font: var(--text-s);
-  text-decoration: underline;
+  font: var(--text-header-m);
+  color: var(--color-additional-yellow);
   text-underline-offset: 5px;
 }
 

@@ -1,6 +1,9 @@
 .search-block {
-  padding: 10px 0;
+  padding: 10px 10px;
   font: var(--text-s);
+  background: rgb(0 0 0 / 57%);
+  color: rgba(255, 252, 186, 0.774);
+  border-radius: 10px;
 }
 
 .title-search {

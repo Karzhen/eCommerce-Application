@@ -3,23 +3,26 @@
   overflow-y: auto;
 }
 
-categories-block {
-  padding: 10px 0;
+.categories-block {
+  padding: 10px 10px;
+  background: rgb(0 0 0 / 57%);
+  color: var(--color-additional-yellow);
+  border-radius: 10px;
 }
 
 .title-categories {
   font: var(--text-bold-m);
 }
 
-.category {
-  margin-left: 5px;
-}
-
-.category div {
-  margin-left: 5px;
+.categories-block {
+  text-align: unset;
 }
 
 .wrapper > div > a {
   font: var(--text-bold-s);
-  color: var(--color-secondary);
+  color: var(--color-additional-yellow);
+}
+
+.tag {
+  color: rgba(255, 252, 186, 0.774);
 }

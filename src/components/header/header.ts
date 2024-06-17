@@ -1,12 +1,9 @@
 import createElement from '@utils/create-element';
 import createLinkWithIcon from '@baseComponents/linkWithIcon/linkWithIcon';
-import createButtonWithIcon from '@baseComponents/buttonWithIcon/buttonWithIcon';
 
-import { Tag, Page, TypeButton } from '@/interface';
+import { Tag, Page } from '@/interface';
 
 import iconLogo from '@assets/images/logo.png';
-
-import iconCatalog from '@assets/images/align-justify.png';
 
 import createAuthField from './auth-block/auth-block';
 import createNavField from './nav-block/nav-block';
@@ -16,10 +13,6 @@ import styles from './header.module.css';
 
 function handleMainClick(goPage: (page: Page) => void) {
   goPage(Page.MAIN);
-}
-
-function handlerCatalogClick(goPage: (page: Page) => void) {
-  goPage(Page.CATALOG);
 }
 
 export default async function createHeader(goPage: (page: Page) => void) {
@@ -34,13 +27,6 @@ export default async function createHeader(goPage: (page: Page) => void) {
   const BURGER = createBurger(goPage);
   BURGER.classList.add(styles.burger);
 
-  const BUTTON_CATALOG = createButtonWithIcon({
-    type: TypeButton.SECONDARY,
-    option: { textContent: 'Catalog', className: styles.buttonCatalog },
-    iconUrl: iconCatalog,
-    handler: { handlerClick: () => handlerCatalogClick(goPage) },
-  });
-
   const AUTH_BLOCK = createAuthField(goPage);
   AUTH_BLOCK.classList.add(styles.authBlock);
 
@@ -52,7 +38,7 @@ export default async function createHeader(goPage: (page: Page) => void) {
   const NAV = await createNavField(goPage);
   NAV.classList.add(styles.nav);
 
-  HEADER.append(LINK_LOGO, BUTTON_CATALOG, NAV, WRAPPER_AUTH_BURGER);
+  HEADER.append(LINK_LOGO, NAV, WRAPPER_AUTH_BURGER);
 
   return HEADER;
 }

@@ -7,20 +7,54 @@
   border: 1px solid var(--color-light);
   border-radius: 10px;
   filter: drop-shadow(0 4px 4px rgb(0, 0, 0, 0.25));
-
-  width: 400px;
-  height: 300px;
+  width: 100%;
 }
 
 .banner-promo-code {
-  background-color: var(--color-primary);
-  color: var(--color-primary-text);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 20px;
+  border: 5px solid var(--color-additional-yellow);
 }
 
 .title {
   font: var(--text-bold-l);
 }
 
+.banners20,
+.banners50 {
+  width: 300px;
+  height: 400px;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.banners20 {
+  background-image: url('/src/assets/images/promocode20.png');
+}
+
+.banners50 {
+  background-image: url('/src/assets/images/promocode50.png');
+}
+
 .description {
   font: var(--text-m);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: var(--text-header-l);
+  color: var(--color-surface-text);
+  text-align: center;
+  width: 100%;
+}
+
+@media (max-width: 800px) {
+  .banner-promo-code {
+    flex-direction: column;
+  }
+
+  .description {
+    width: 380px;
+  }
 }

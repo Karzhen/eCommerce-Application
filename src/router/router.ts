@@ -155,7 +155,7 @@ export class Router {
         break;
       case Page.ABOUT:
         document.body.replaceChildren();
-        document.body.append(createAboutPage(bindGoPage));
+        document.body.append(await createAboutPage(bindGoPage));
         break;
       case Page.PRODUCT:
         if (PRODUCT_PAGE === null) {

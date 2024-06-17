@@ -15,7 +15,9 @@ export default async function handlerIncreaseClick(
     const currentQuantity = parseInt(QUANTITY_DISPLAY.textContent || '1', 10);
     const product = findItemBasketId(productID, variantID);
     if (product) {
+      document.getElementById('buttonIncrease')?.setAttribute('disabled', '');
       await apiChangeQuantity(product, currentQuantity + 1);
+      document.getElementById('buttonIncrease')?.removeAttribute('disabled');
       const productCounter = findItemBasket(productID, variantID);
       QUANTITY_DISPLAY.textContent = productCounter.toString();
     }

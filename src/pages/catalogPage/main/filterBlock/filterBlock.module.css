@@ -1,8 +1,11 @@
 .filter-block {
   display: flex;
   flex-direction: column;
-  padding: 10px 0;
+  padding: 10px 10px;
   font: var(--text-s);
+  background: rgb(0 0 0 / 57%);
+  color: rgba(255, 252, 186, 0.774);
+  border-radius: 10px;
 }
 
 .title-filter {
@@ -18,9 +21,11 @@
 .wrapper-size1,
 .wrapper-size2,
 .wrapper-size3 {
+  width: 100%;
   display: flex;
   align-items: center;
-  gap: 5px;
+  justify-content: space-between;
+  text-wrap: nowrap;
 }
 
 .wrapper-price-start,
@@ -40,7 +45,8 @@
   display: flex;
   justify-content: space-between;
   gap: 5px;
-  max-width: 250px;
+  width: 100%;
+  padding: 0px 50px;
 }
 
 .submit {
@@ -52,4 +58,12 @@
   max-width: 150px;
   font: var(--text-m);
   width: 100px;
+}
+
+.sizes {
+  width: 20px;
+}
+
+label {
+  font: normal;
 }

@@ -4,6 +4,7 @@ import apiGetBasket from '@/api/apiGetBasket';
 
 import createElement from '@utils/create-element';
 import createLinkWithIcon from '@baseComponents/linkWithIcon/linkWithIcon';
+import iconCatalog from '@assets/images/catalog.png';
 
 import { Tag, Page } from '@/interface';
 
@@ -22,8 +23,18 @@ function handleBasketClick(event: Event, goPage: (page: Page) => void) {
   goPage(Page.BASKET);
 }
 
+function handlerCatalogClick(goPage: (page: Page) => void) {
+  goPage(Page.CATALOG);
+}
+
 export default async function createNavField(goPage: (page: Page) => void) {
   const NAVIGATION = createElement(Tag.NAV, { className: styles.nav });
+
+  const BUTTON_CATALOG = createLinkWithIcon({
+    option: { textContent: 'Catalog', className: styles.buttonCatalog },
+    iconUrl: iconCatalog,
+    handler: { handlerClick: () => handlerCatalogClick(goPage) },
+  });
 
   const LINK_BASKET = createLinkWithIcon({
     option: { textContent: 'Basket' },
@@ -57,7 +68,12 @@ export default async function createNavField(goPage: (page: Page) => void) {
   });
   LINK_ABOUT.setAttribute('href', Page.ABOUT);
 
-  NAVIGATION.append(LINK_BASKET, COUNT_ITEMS_BASKET, LINK_ABOUT);
+  NAVIGATION.append(
+    LINK_BASKET,
+    COUNT_ITEMS_BASKET,
+    BUTTON_CATALOG,
+    LINK_ABOUT,
+  );
 
   return NAVIGATION;
 }

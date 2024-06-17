@@ -134,6 +134,7 @@ export default function createProductInfo(
         handlerDecreaseClick(event, productID, variantID),
     },
   });
+  BUTTON_DECREASE.setAttribute('id', 'buttonDecrease');
 
   // Создание текстового поля для отображения количества
   const QUANTITY_DISPLAY = createElement(Tag.SPAN, {
@@ -150,6 +151,7 @@ export default function createProductInfo(
         handlerIncreaseClick(event, productID, variantID),
     },
   });
+  BUTTON_INCREASE.setAttribute('id', 'buttonIncrease');
 
   const DELETE_BUTTON = createButton({
     type: TypeButton.PRIMARY,

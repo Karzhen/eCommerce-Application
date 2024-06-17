@@ -15,19 +15,19 @@ export default function createFooter() {
     className: styles.wrapperAuthor,
   });
   const LINK_AUTHOR2 = createLink({
-    option: { className: styles.link, textContent: 'evvrod' },
+    option: { className: styles.linkFooter, textContent: 'evvrod' },
     handler: {},
   });
   LINK_AUTHOR2.setAttribute('href', 'https://github.com/evvrod');
 
   const LINK_AUTHOR1 = createLink({
-    option: { className: styles.link, textContent: 'tabrisel' },
+    option: { className: styles.linkFooter, textContent: 'tabrisel' },
     handler: {},
   });
   LINK_AUTHOR1.setAttribute('href', 'https://github.com/Tabrisel');
 
   const LINK_AUTHOR3 = createLink({
-    option: { className: styles.link, textContent: 'Karzhen' },
+    option: { className: styles.linkFooter, textContent: 'Karzhen' },
     handler: {},
   });
   LINK_AUTHOR3.setAttribute('href', 'https://github.com/Karzhen');

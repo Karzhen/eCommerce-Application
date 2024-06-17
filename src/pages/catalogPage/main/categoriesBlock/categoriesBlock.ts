@@ -50,7 +50,7 @@ function createCategories(goPage: (path: string) => void) {
         option: {
           id: `cat_${category.id}`,
           className: styles.tag,
-          textContent: `- ${category.name}`,
+          textContent: `${category.name}`,
         },
         handler: {
           handlerClick: (event: Event) => handlerLinkClick(event, goPage),
